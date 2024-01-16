@@ -1,6 +1,7 @@
 {
   "name": "sonwin-discord-clone",
   "version": "0.1.0",
+  "license": "MIT",
   "prisma": {
     "schema": "src/prisma/schema.prisma"
   },

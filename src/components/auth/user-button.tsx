@@ -26,7 +26,11 @@ export const UserButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <UserAvatar imageUrl={user?.image!} name={user?.name!} size="md" />
+        <UserAvatar
+          imageUrl={user?.image || ''}
+          name={user?.name || ''}
+          size="md"
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-80" align="end">
         <div className="flex  gap-x-2 p-2">
