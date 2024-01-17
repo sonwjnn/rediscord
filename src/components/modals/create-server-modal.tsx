@@ -22,14 +22,19 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { ServerSchema } from '@/schemas'
+import { useModal } from '@/store/use-modal-store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
-export const InitialModal = () => {
+export const CreateServerModal = () => {
+  const { isOpen, onClose, type } = useModal()
+
   const [isPending, startTransition] = useTransition()
+
+  const isModalOpen = isOpen && type === 'createServer'
 
   const form = useForm({
     resolver: zodResolver(ServerSchema),
@@ -44,14 +49,20 @@ export const InitialModal = () => {
       createServer(values)
         .then(() => {
           toast.success('Server created')
-          // closeRef?.current?.click()
+          form.reset()
+          onClose()
         })
         .catch(() => toast.error('Something went wrong'))
     })
   }
 
+  const handleClose = () => {
+    form.reset()
+    onClose()
+  }
+
   return (
-    <Dialog open>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className="overflow-hidden bg-white p-0 text-black">
         <DialogHeader className="px-6 pt-8">
           <DialogTitle className="text-center text-2xl font-bold">

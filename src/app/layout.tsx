@@ -9,6 +9,7 @@ import { SessionProvider } from 'next-auth/react'
 import { Open_Sans } from 'next/font/google'
 
 import './globals.css'
+import { Toaster } from '@/components/ui/sonner'
 
 const font = Open_Sans({ subsets: ['latin'] })
 
@@ -27,6 +28,7 @@ export default async function RootLayout({
     <SessionProvider session={session}>
       <html lang="en" suppressHydrationWarning>
         <body className={cn(font.className, 'bg-white dark:bg-[#313338]')}>
+          <Toaster />
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
