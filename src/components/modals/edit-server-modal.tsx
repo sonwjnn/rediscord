@@ -1,6 +1,6 @@
 'use client'
 
-import { createServer } from '@/actions/server'
+import { updateServer } from '@/actions/server'
 import { FileUpload } from '@/components/file-upload'
 import { Spinner } from '@/components/spinner'
 import { Button } from '@/components/ui/button'
@@ -22,16 +22,19 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { ServerSchema } from '@/schemas'
+import { useModal } from '@/store/use-modal-store'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTransition } from 'react'
+import { useEffect, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { useIsClient } from 'usehooks-ts'
 import * as z from 'zod'
 
-export const InitialModal = () => {
+export const EditServerModal = () => {
+  const { isOpen, onClose, type, data } = useModal()
   const [isPending, startTransition] = useTransition()
-  const isClient = useIsClient()
+
+  const isModalOpen = isOpen && type === 'editServer'
+  const { server } = data
 
   const form = useForm({
     resolver: zodResolver(ServerSchema),
@@ -41,20 +44,33 @@ export const InitialModal = () => {
     },
   })
 
+  useEffect(() => {
+    if (server) {
+      form.setValue('name', server.name)
+      form.setValue('image', server.image)
+    }
+  }, [server, form])
+
   const onSubmit = async (values: z.infer<typeof ServerSchema>) => {
+    if (!server) return
     startTransition(() => {
-      createServer(values)
+      updateServer(values, server?.id)
         .then(() => {
-          toast.success('Server created')
+          form.reset()
+          onClose()
+          toast.success('Server updated!')
         })
-        .catch(() => toast.error('Something went wrong'))
+        .catch(() => toast.error('Something went wrong!'))
     })
   }
 
-  if (!isClient) return null
+  const handleClose = () => {
+    form.reset()
+    onClose()
+  }
 
   return (
-    <Dialog open>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className="overflow-hidden bg-white p-0 text-black">
         <DialogHeader className="px-6 pt-8">
           <DialogTitle className="text-center text-2xl font-bold">
@@ -110,7 +126,7 @@ export const InitialModal = () => {
             <DialogFooter className="bg-gray-100 px-6 py-4">
               <Button variant="primary" disabled={isPending}>
                 {isPending ? <Spinner className="mr-2" /> : null}
-                Create
+                Save
               </Button>
             </DialogFooter>
           </form>

@@ -14,9 +14,9 @@ interface MemberProps {
 const roleIconMap = {
   [MemberRole.GUEST]: null,
   [MemberRole.MODERATOR]: (
-    <ShieldCheck className="ml-2 h-4 w-4 text-indigo-500" />
+    <ShieldCheck className="ml-2 size-4 text-indigo-500" />
   ),
-  [MemberRole.ADMIN]: <ShieldAlert className="ml-2 h-4 w-4 text-rose-500" />,
+  [MemberRole.ADMIN]: <ShieldAlert className="ml-2 size-4 text-rose-500" />,
 }
 
 export const ServerMember = ({ member, server }: MemberProps) => {

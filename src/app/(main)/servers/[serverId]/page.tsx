@@ -1,4 +1,4 @@
-import { getServerById } from '@/data/server'
+import { getServerWithChannelsById } from '@/data/server'
 import { redirect } from 'next/navigation'
 
 interface ServerIdPageProps {
@@ -8,7 +8,7 @@ interface ServerIdPageProps {
 }
 
 const ServerIdPage = async ({ params }: ServerIdPageProps) => {
-  const server = await getServerById(params.serverId)
+  const server = await getServerWithChannelsById(params.serverId)
 
   if (!server) {
     return redirect('/')

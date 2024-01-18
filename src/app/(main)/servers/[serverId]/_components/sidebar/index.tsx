@@ -1,7 +1,7 @@
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+import { getServerWithChannelsWithMembers } from '@/data/server'
 import { currentProfile } from '@/lib/auth'
-import { db } from '@/lib/db'
 import { ChannelType, MemberRole } from '@prisma/client'
 import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from 'lucide-react'
 import { redirect } from 'next/navigation'
@@ -17,17 +17,17 @@ interface SidebarProps {
 }
 
 const iconMap = {
-  [ChannelType.TEXT]: <Hash className="mr-2 h-4 w-4" />,
-  [ChannelType.AUDIO]: <Mic className="mr-2 h-4 w-4" />,
-  [ChannelType.VIDEO]: <Video className="mr-2 h-4 w-4" />,
+  [ChannelType.TEXT]: <Hash className="mr-2 size-4" />,
+  [ChannelType.AUDIO]: <Mic className="mr-2 size-4" />,
+  [ChannelType.VIDEO]: <Video className="mr-2 size-4" />,
 }
 
 const roleIconMap = {
   [MemberRole.GUEST]: null,
   [MemberRole.MODERATOR]: (
-    <ShieldCheck className="mr-2 h-4 w-4 text-indigo-500" />
+    <ShieldCheck className="mr-2 size-4 text-indigo-500" />
   ),
-  [MemberRole.ADMIN]: <ShieldAlert className="mr-2 h-4 w-4 text-rose-500" />,
+  [MemberRole.ADMIN]: <ShieldAlert className="mr-2 size-4 text-rose-500" />,
 }
 
 export const Sidebar = async ({ serverId }: SidebarProps) => {
@@ -37,26 +37,7 @@ export const Sidebar = async ({ serverId }: SidebarProps) => {
     return redirect('/')
   }
 
-  const server = await db.server.findUnique({
-    where: {
-      id: serverId,
-    },
-    include: {
-      channels: {
-        orderBy: {
-          createdAt: 'asc',
-        },
-      },
-      members: {
-        include: {
-          profile: true,
-        },
-        orderBy: {
-          role: 'asc',
-        },
-      },
-    },
-  })
+  const server = await getServerWithChannelsWithMembers(serverId)
 
   const textChannels = server?.channels.filter(
     channel => channel.type === ChannelType.TEXT
