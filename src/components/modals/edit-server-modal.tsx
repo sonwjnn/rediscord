@@ -107,7 +107,7 @@ export const EditServerModal = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-secondary/70">
+                    <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-zinc-300">
                       Server name
                     </FormLabel>
                     <FormControl>

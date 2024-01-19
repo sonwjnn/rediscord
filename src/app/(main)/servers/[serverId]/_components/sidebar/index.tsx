@@ -112,6 +112,7 @@ export const Sidebar = async ({ serverId }: SidebarProps) => {
             <Section
               sectionType="channels"
               channelType={ChannelType.TEXT}
+              server={server}
               role={role}
               label="Text Channels"
             />

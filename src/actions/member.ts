@@ -47,7 +47,7 @@ export const onKick = async (serverId: string, memberId: string) => {
         },
       },
     })
-    revalidatePath(`/server/${server.id}`)
+    revalidatePath(`/servers/${server.id}`)
 
     return server
   } catch {
@@ -107,7 +107,7 @@ export const onRoleChange = async (
       },
     })
 
-    revalidatePath(`/server/${server.id}`)
+    revalidatePath(`/servers/${server.id}`)
 
     return server
   } catch {

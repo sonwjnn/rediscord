@@ -60,7 +60,7 @@ export const InviteModal = () => {
           </DialogTitle>
         </DialogHeader>
         <div className="p-6">
-          <Label className="text-sm font-bold uppercase text-zinc-500 dark:text-secondary/70">
+          <Label className="text-sm font-bold uppercase text-zinc-500 dark:text-zinc-300">
             Server invite link
           </Label>
           <div className="mt-2 flex items-center gap-x-2">
@@ -82,7 +82,7 @@ export const InviteModal = () => {
             disabled={isPending}
             variant="link"
             size="sm"
-            className="mt-4 text-xs text-zinc-500"
+            className="mt-4 text-xs text-zinc-500 dark:text-zinc-300"
           >
             Generate a new link
             <RefreshCw

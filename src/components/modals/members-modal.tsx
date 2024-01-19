@@ -98,7 +98,7 @@ export const MembersModal = () => {
                 name={member.profile.name}
               />
               <div className="flex flex-col gap-y-1">
-                <div className="flex items-center gap-x-1 text-xs font-semibold">
+                <div className="flex items-center gap-x-1 text-xs font-semibold dark:text-zinc-300">
                   {member.profile.name}
                   {roleIconMap[member.role]}
                 </div>

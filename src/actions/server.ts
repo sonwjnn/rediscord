@@ -39,7 +39,7 @@ export const createServer = async (values: z.infer<typeof ServerSchema>) => {
     },
   })
 
-  revalidatePath(`/server/${server.id}`)
+  revalidatePath(`/servers/${server.id}`)
 
   return server
 }
@@ -96,7 +96,7 @@ export const updateServer = async (
     },
   })
 
-  revalidatePath(`/server/${server.id}`)
+  revalidatePath(`/servers/${server.id}`)
 
   return server
 }
@@ -138,6 +138,64 @@ export const updateMembersServerByInviteCode = async (inviteCode: string) => {
     },
   })
 
-  revalidatePath(`/server/${server.id}`)
+  revalidatePath(`/servers/${server.id}`)
+  return server
+}
+
+export const leaveServer = async (serverId: string) => {
+  const profile = await currentProfile()
+
+  if (!profile) {
+    throw new Error('Unauthorized')
+  }
+
+  if (!serverId) {
+    throw new Error('Server Id is missing')
+  }
+
+  const server = await db.server.update({
+    where: {
+      id: serverId,
+      profileId: {
+        not: profile.id,
+      },
+      members: {
+        some: {
+          profileId: profile.id,
+        },
+      },
+    },
+    data: {
+      members: {
+        deleteMany: {
+          profileId: profile.id,
+        },
+      },
+    },
+  })
+
+  revalidatePath(`/servers/${server.id}`)
+}
+
+export const deleteServer = async (serverId: string) => {
+  const profile = await currentProfile()
+
+  if (!profile) {
+    throw new Error('Unauthorized')
+  }
+
+  if (!serverId) {
+    throw new Error('Server Id is missing')
+  }
+
+  const server = await db.server.delete({
+    where: {
+      id: serverId,
+      profileId: profile.id,
+    },
+  })
+
+  revalidatePath(`/servers/${server.id}`)
+
   return server
 }

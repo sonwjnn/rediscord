@@ -76,7 +76,7 @@ export const CreateServerModal = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-8 px-6">
-              <div className="flex items-center justify-center text-center">
+              <div className="flex items-center justify-center text-center ">
                 <FormField
                   control={form.control}
                   name="image"
@@ -99,7 +99,7 @@ export const CreateServerModal = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-secondary/70">
+                    <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-zinc-300">
                       Server name
                     </FormLabel>
                     <FormControl>

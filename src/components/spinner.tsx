@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 import { type VariantProps, cva } from 'class-variance-authority'
 import { Loader } from 'lucide-react'
 
-const spinnerVariants = cva('text-white dark:text-neutral-900 animate-spin', {
+const spinnerVariants = cva('text-white animate-spin', {
   variants: {
     size: {
       default: 'size-4',
