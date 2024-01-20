@@ -1,7 +1,6 @@
+import { Sidebar } from '@/components/sidebar'
 import { getServerById } from '@/data/server'
 import { redirect } from 'next/navigation'
-
-import { Sidebar } from './_components/sidebar'
 
 const ServerIdLayout = async ({
   children,

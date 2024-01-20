@@ -1,9 +1,9 @@
-// import { ChatHeader } from '@/components/chat/chat-header'
-// import { ChatInput } from '@/components/chat/chat-input'
-// import { ChatMessages } from '@/components/chat/chat-messages'
-// import { MediaRoom } from '@/components/media-room'
-import { currentProfile } from '@/lib/auth'
-import { db } from '@/lib/db'
+import { ChatHeader } from '@/components/chat/chat-header'
+import { ChatInput } from '@/components/chat/chat-input'
+import { ChatMessages } from '@/components/chat/chat-messages'
+import { MediaRoom } from '@/components/media-room'
+import { getChannelById } from '@/data/channel'
+import { getCurrentMemberOfServer } from '@/data/member'
 import { ChannelType } from '@prisma/client'
 import { redirect } from 'next/navigation'
 
@@ -15,24 +15,9 @@ interface ChannelIdPageProps {
 }
 
 const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
-  const profile = await currentProfile()
+  const channel = await getChannelById(params.channelId)
 
-  if (!profile) {
-    return redirect('/auth/login')
-  }
-
-  const channel = await db.channel.findUnique({
-    where: {
-      id: params.channelId,
-    },
-  })
-
-  const member = await db.member.findFirst({
-    where: {
-      serverId: params.serverId,
-      profileId: profile.id,
-    },
-  })
+  const member = await getCurrentMemberOfServer(params.serverId)
 
   if (!channel || !member) {
     redirect('/')
@@ -40,8 +25,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
 
   return (
     <div className="flex h-full flex-col bg-white dark:bg-[#313338]">
-      ChannelId Page
-      {/* <ChatHeader
+      <ChatHeader
         name={channel.name}
         serverId={channel.serverId}
         type="channel"
@@ -78,7 +62,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
       )}
       {channel.type === ChannelType.VIDEO && (
         <MediaRoom chatId={channel.id} video={true} audio={true} />
-      )} */}
+      )}
     </div>
   )
 }

@@ -39,8 +39,8 @@ import { useState } from 'react'
 
 const roleIconMap = {
   GUEST: null,
-  MODERATOR: <ShieldCheck className="ml-2 h-4 w-4 text-indigo-500" />,
-  ADMIN: <ShieldAlert className="h-4 w-4 text-rose-500" />,
+  MODERATOR: <ShieldCheck className="ml-2 size-4 text-indigo-500" />,
+  ADMIN: <ShieldAlert className="size-4 text-rose-500" />,
 }
 
 export const MembersModal = () => {
@@ -109,12 +109,12 @@ export const MembersModal = () => {
                   <div className="ml-auto">
                     <DropdownMenu>
                       <DropdownMenuTrigger>
-                        <MoreVertical className="h-4 w-4 text-zinc-500" />
+                        <MoreVertical className="size-4 text-zinc-500" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent side="left">
                         <DropdownMenuSub>
                           <DropdownMenuSubTrigger className="flex items-center">
-                            <ShieldQuestion className="mr-2 h-4 w-4" />
+                            <ShieldQuestion className="mr-2 size-4" />
                             <span>Role</span>
                           </DropdownMenuSubTrigger>
                           <DropdownMenuPortal>
@@ -124,10 +124,10 @@ export const MembersModal = () => {
                                   handleRoleChange(member.id, 'GUEST')
                                 }
                               >
-                                <Shield className="mr-2 h-4 w-4" />
+                                <Shield className="mr-2 size-4" />
                                 Guest
                                 {member.role === 'GUEST' && (
-                                  <Check className="ml-auto h-4 w-4" />
+                                  <Check className="ml-auto size-4" />
                                 )}
                               </DropdownMenuItem>
                               <DropdownMenuItem
@@ -135,10 +135,10 @@ export const MembersModal = () => {
                                   handleRoleChange(member.id, 'MODERATOR')
                                 }
                               >
-                                <ShieldCheck className="mr-2 h-4 w-4" />
+                                <ShieldCheck className="mr-2 size-4" />
                                 Moderator
                                 {member.role === 'MODERATOR' && (
-                                  <Check className="ml-auto h-4 w-4" />
+                                  <Check className="ml-auto size-4" />
                                 )}
                               </DropdownMenuItem>
                             </DropdownMenuSubContent>
@@ -146,7 +146,7 @@ export const MembersModal = () => {
                         </DropdownMenuSub>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => handleKick(member.id)}>
-                          <Gavel className="mr-2 h-4 w-4" />
+                          <Gavel className="mr-2 size-4" />
                           Kick
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -154,7 +154,7 @@ export const MembersModal = () => {
                   </div>
                 )}
               {loadingId === member.id && (
-                <Loader2 className="ml-auto h-4 w-4 animate-spin text-zinc-500" />
+                <Loader2 className="ml-auto size-4 animate-spin text-zinc-500" />
               )}
             </div>
           ))}
