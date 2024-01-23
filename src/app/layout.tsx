@@ -1,15 +1,15 @@
 import { auth } from '@/auth'
+import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
 import { ModalProvider } from '@/providers/modal-provider'
 import { QueryProvider } from '@/providers/query-provider'
-// import { SocketProvider } from '@/components/providers/socket-provider'
+import { SocketProvider } from '@/providers/socket-provider'
 import { ThemeProvider } from '@/providers/theme-provider'
 import type { Metadata } from 'next'
 import { SessionProvider } from 'next-auth/react'
 import { Open_Sans } from 'next/font/google'
 
 import './globals.css'
-import { Toaster } from '@/components/ui/sonner'
 
 const font = Open_Sans({ subsets: ['latin'] })
 
@@ -35,10 +35,10 @@ export default async function RootLayout({
             enableSystem={false}
             storageKey="discord-theme"
           >
-            {/* <SocketProvider> */}
-            <ModalProvider />
-            <QueryProvider>{children}</QueryProvider>
-            {/* </SocketProvider> */}
+            <SocketProvider>
+              <ModalProvider />
+              <QueryProvider>{children}</QueryProvider>
+            </SocketProvider>
           </ThemeProvider>
         </body>
       </html>

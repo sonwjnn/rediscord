@@ -77,3 +77,13 @@ export const ChannelSchema = z.object({
     }),
   type: z.nativeEnum(ChannelType),
 })
+
+export const ChatItemSchema = z.object({
+  content: z.string().min(1),
+})
+
+export const MessageFileSchema = z.object({
+  fileUrl: z.string().min(1, {
+    message: 'Attachment is required.',
+  }),
+})

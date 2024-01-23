@@ -12,7 +12,10 @@ export default async function handler(
   }
 
   try {
-    const profile = await currentProfilePages(req)
+    // const profile = await currentProfilePages(req);
+    const profile = {
+      id: '94c9d13e-6171-4395-bcd8-5ec0fd63b8f0',
+    }
     const { content, fileUrl } = req.body
     const { serverId, channelId } = req.query
 

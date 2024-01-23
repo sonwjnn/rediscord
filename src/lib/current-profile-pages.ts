@@ -1,9 +1,12 @@
-import { db } from '@/lib/db'
+import { auth } from '@/auth'
 import { NextApiRequest } from 'next'
 
+import { db } from './db'
+
 export const currentProfilePages = async (req: NextApiRequest) => {
-  // const { userId } = getAuth(req);
-  const userId = '123'
+  const session = await auth()
+
+  const userId = session?.user?.id
 
   if (!userId) {
     return null

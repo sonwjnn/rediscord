@@ -1,16 +1,15 @@
 'use client'
 
+import { useChatQuery } from '@/hooks/use-chat-query'
+import { useChatScroll } from '@/hooks/use-chat-scroll'
+import { useChatSocket } from '@/hooks/use-chat-socket'
 import { Member, Message, Profile } from '@prisma/client'
 import { format } from 'date-fns'
 import { Loader2, ServerCrash } from 'lucide-react'
 import { ElementRef, Fragment, useRef } from 'react'
 
-// import { useChatQuery } from "@/hooks/use-chat-query";
-// import { useChatSocket } from "@/hooks/use-chat-socket";
-// import { useChatScroll } from "@/hooks/use-chat-scroll";
-
-// import { ChatWelcome } from "./chat-welcome";
-// import { ChatItem } from "./chat-item";
+import { ChatItem } from './chat-item'
+import { ChatWelcome } from './chat-welcome'
 
 const DATE_FORMAT = 'd MMM yyyy, HH:mm'
 
@@ -24,11 +23,10 @@ interface ChatMessagesProps {
   name: string
   member: Member
   chatId: string
-  apiUrl: string
   socketUrl: string
   socketQuery: Record<string, string>
-  paramKey: 'channelId' | 'conversationId'
-  paramValue: string
+  channelId?: string
+  conversationId?: string
   type: 'channel' | 'conversation'
 }
 
@@ -36,11 +34,10 @@ export const ChatMessages = ({
   name,
   member,
   chatId,
-  apiUrl,
   socketUrl,
   socketQuery,
-  paramKey,
-  paramValue,
+  channelId,
+  conversationId,
   type,
 }: ChatMessagesProps) => {
   const queryKey = `chat:${chatId}`
@@ -50,28 +47,23 @@ export const ChatMessages = ({
   const chatRef = useRef<ElementRef<'div'>>(null)
   const bottomRef = useRef<ElementRef<'div'>>(null)
 
-  // const {
-  //   data,
-  //   fetchNextPage,
-  //   hasNextPage,
-  //   isFetchingNextPage,
-  //   status,
-  // } = useChatQuery({
-  //   queryKey,
-  //   apiUrl,
-  //   paramKey,
-  //   paramValue,
-  // });
-  // useChatSocket({ queryKey, addKey, updateKey });
-  // useChatScroll({
-  //   chatRef,
-  //   bottomRef,
-  //   loadMore: fetchNextPage,
-  //   shouldLoadMore: !isFetchingNextPage && !!hasNextPage,
-  //   count: data?.pages?.[0]?.items?.length ?? 0,
-  // })
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useChatQuery({
+      queryKey,
+      type,
+      channelId: channelId || '',
+      conversationId: conversationId || '',
+    })
+  useChatSocket({ queryKey, addKey, updateKey })
+  useChatScroll({
+    chatRef,
+    bottomRef,
+    loadMore: fetchNextPage,
+    shouldLoadMore: !isFetchingNextPage && !!hasNextPage,
+    count: data?.pages?.[0]?.items?.length ?? 0,
+  })
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
         <Loader2 className="my-4 size-7 animate-spin text-zinc-500" />
@@ -95,29 +87,24 @@ export const ChatMessages = ({
 
   return (
     <div ref={chatRef} className="flex flex-1 flex-col overflow-y-auto py-4">
-      {/* {!hasNextPage && <div className="flex-1" />} */}
-      {/* {!hasNextPage && (
-        <ChatWelcome
-          type={type}
-          name={name}
-        />
-      )} */}
-      {/* {hasNextPage && (
+      {!hasNextPage && <div className="flex-1" />}
+      {!hasNextPage && <ChatWelcome type={type} name={name} />}
+      {hasNextPage && (
         <div className="flex justify-center">
           {isFetchingNextPage ? (
-            <Loader2 className="size-6 text-zinc-500 animate-spin my-4" />
+            <Loader2 className="my-4 size-6 animate-spin text-zinc-500" />
           ) : (
             <button
               onClick={() => fetchNextPage()}
-              className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 text-xs my-4 dark:hover:text-zinc-300 transition"
+              className="my-4 text-xs text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
             >
               Load previous messages
             </button>
           )}
         </div>
-      )} */}
+      )}
       <div className="mt-auto flex flex-col-reverse">
-        {/* {data?.pages?.map((group, i) => (
+        {data?.pages?.map((group, i) => (
           <Fragment key={i}>
             {group.items.map((message: MessageWithMemberWithProfile) => (
               <ChatItem
@@ -135,7 +122,7 @@ export const ChatMessages = ({
               />
             ))}
           </Fragment>
-        ))} */}
+        ))}
       </div>
       <div ref={bottomRef} />
     </div>

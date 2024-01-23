@@ -127,3 +127,47 @@ export const editChannel = async (
 
   return server
 }
+
+export const deleteChannel = async (serverId: string, channelId: string) => {
+  const profile = await currentProfile()
+
+  if (!profile) {
+    throw new Error('Unauthorized')
+  }
+
+  if (!serverId) {
+    throw new Error('Server ID missing')
+  }
+
+  if (!channelId) {
+    throw new Error('Channel ID missing')
+  }
+
+  const server = await db.server.update({
+    where: {
+      id: serverId,
+      members: {
+        some: {
+          profileId: profile.id,
+          role: {
+            in: [MemberRole.ADMIN, MemberRole.MODERATOR],
+          },
+        },
+      },
+    },
+    data: {
+      channels: {
+        delete: {
+          id: channelId,
+          name: {
+            not: 'general',
+          },
+        },
+      },
+    },
+  })
+
+  revalidatePath(`/servers/${serverId}`)
+
+  return server
+}
