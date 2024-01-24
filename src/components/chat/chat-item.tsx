@@ -1,6 +1,7 @@
 'use client'
 
 import { ActionTooltip } from '@/components/action-tooltip'
+import { Spinner } from '@/components/spinner'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -216,6 +217,7 @@ export const ChatItem = ({
                   )}
                 />
                 <Button disabled={isLoading} size="sm" variant="primary">
+                  {isLoading ? <Spinner className="mr-2" /> : null}
                   Save
                 </Button>
               </form>
