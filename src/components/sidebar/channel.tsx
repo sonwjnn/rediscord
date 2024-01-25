@@ -7,6 +7,8 @@ import { Channel, ChannelType, MemberRole, Server } from '@prisma/client'
 import { Edit, Hash, Lock, Mic, Trash, Video } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 
+import { Skeleton } from '../ui/skeleton'
+
 interface ChannelProps {
   channel: Channel
   server: Server
@@ -75,3 +77,10 @@ export const ServerChannel = ({ channel, server, role }: ChannelProps) => {
     </button>
   )
 }
+
+export const ServerChannelSkeleton = () => (
+  <li className="mb-1 flex w-full items-center gap-x-2 rounded-md px-2 py-2 transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50">
+    <Skeleton className="size-6  flex-shrink-0" />
+    <Skeleton className="h-4 w-40" />
+  </li>
+)

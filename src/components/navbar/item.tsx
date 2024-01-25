@@ -1,6 +1,7 @@
 'use client'
 
 import { ActionTooltip } from '@/components/action-tooltip'
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
@@ -40,5 +41,13 @@ export const Item = ({ id, imageUrl, name }: ItemProps) => {
         </div>
       </button>
     </ActionTooltip>
+  )
+}
+
+export const ItemSkeleton = () => {
+  return (
+    <li>
+      <Skeleton className="mx-3 flex h-[48px] w-[48px] overflow-hidden rounded-[24px] transition-all ease-linear" />
+    </li>
   )
 }

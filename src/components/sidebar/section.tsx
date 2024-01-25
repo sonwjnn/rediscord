@@ -6,6 +6,8 @@ import { ServerWithMembersWithProfiles } from '@/types'
 import { ChannelType, MemberRole } from '@prisma/client'
 import { Plus, Settings } from 'lucide-react'
 
+import { Skeleton } from '../ui/skeleton'
+
 interface SectionProps {
   label: string
   role?: MemberRole
@@ -51,3 +53,9 @@ export const Section = ({
     </div>
   )
 }
+
+export const SectionSkeleton = () => (
+  <div className="flex items-center  py-2">
+    <Skeleton className="w-8" />
+  </div>
+)

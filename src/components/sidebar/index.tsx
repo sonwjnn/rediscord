@@ -1,15 +1,17 @@
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
 import { getServerWithChannelsWithMembers } from '@/data/server'
 import { currentProfile } from '@/lib/auth'
+import { MOCK_CHANNELS } from '@/lib/mock'
 import { ChannelType, MemberRole } from '@prisma/client'
 import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from 'lucide-react'
 import { redirect } from 'next/navigation'
 
-import { ServerChannel } from './channel'
-import { Header } from './header'
+import { ServerChannel, ServerChannelSkeleton } from './channel'
+import { Header, HeaderSkeleton } from './header'
 import { ServerMember } from './member'
-import { Search } from './search'
+import { Search, SearchSkeleton } from './search'
 import { Section } from './section'
 
 interface SidebarProps {
@@ -61,7 +63,7 @@ export const Sidebar = async ({ serverId }: SidebarProps) => {
   )?.role
 
   return (
-    <div className="flex h-full w-full flex-col bg-[#F2F3F5] text-primary dark:bg-[#2B2D31]">
+    <aside className="flex h-full w-full flex-col bg-[#F2F3F5] text-primary dark:bg-[#2B2D31]">
       <Header server={server} role={role} />
       <ScrollArea className="flex-1 px-3">
         <div className="mt-2">
@@ -184,6 +186,40 @@ export const Sidebar = async ({ serverId }: SidebarProps) => {
           </div>
         )}
       </ScrollArea>
-    </div>
+    </aside>
+  )
+}
+
+const SectionSkeleton = () => {
+  return (
+    <>
+      <div className="mb-1 px-2">
+        <Skeleton className="h-3 w-20 " />
+      </div>
+      <ul className="space-y-[2px]">
+        {[...Array(MOCK_CHANNELS)].map((_, i) => (
+          <ServerChannelSkeleton key={i} />
+        ))}
+      </ul>
+    </>
+  )
+}
+
+export const SidebarSkeleton = () => {
+  return (
+    <aside className="flex h-full w-full flex-col bg-[#F2F3F5] text-primary dark:bg-[#2B2D31]">
+      <HeaderSkeleton />
+      <div className="mt-2">
+        <SearchSkeleton />
+      </div>
+
+      <Separator className="my-2 rounded-md bg-zinc-200 dark:bg-zinc-700" />
+
+      <div className="space-y-2">
+        {[...Array(3)].map((_, i) => (
+          <SectionSkeleton key={i} />
+        ))}
+      </div>
+    </aside>
   )
 }

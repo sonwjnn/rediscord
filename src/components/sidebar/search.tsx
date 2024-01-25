@@ -8,6 +8,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Search as SearchIcon } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -101,5 +102,13 @@ export const Search = ({ data }: SearchProps) => {
         </CommandList>
       </CommandDialog>
     </>
+  )
+}
+
+export const SearchSkeleton = () => {
+  return (
+    <div className="flex w-full items-center gap-x-2 rounded-md px-2 py-2 transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50">
+      <Skeleton className="h-6 w-full" />
+    </div>
   )
 }

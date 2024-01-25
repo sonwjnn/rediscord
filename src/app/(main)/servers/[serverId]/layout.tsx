@@ -1,6 +1,7 @@
-import { Sidebar } from '@/components/sidebar'
+import { Sidebar, SidebarSkeleton } from '@/components/sidebar'
 import { getServerById } from '@/data/server'
 import { redirect } from 'next/navigation'
+import { Suspense } from 'react'
 
 const ServerIdLayout = async ({
   children,
@@ -18,7 +19,9 @@ const ServerIdLayout = async ({
   return (
     <div className="h-full">
       <div className="fixed inset-y-0 z-20 hidden h-full w-60 flex-col md:flex">
-        <Sidebar serverId={params.serverId} />
+        <Suspense fallback={<SidebarSkeleton />}>
+          <Sidebar serverId={params.serverId} />
+        </Suspense>
       </div>
       <main className="h-full md:pl-60">{children}</main>
     </div>

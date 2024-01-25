@@ -7,6 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useModal } from '@/store/use-modal-store'
 import { ServerWithMembersWithProfiles } from '@/types'
 import { MemberRole } from '@prisma/client'
@@ -97,5 +98,14 @@ export const Header = ({ server, role }: HeaderProps) => {
         )}
       </DropdownMenuContent>
     </DropdownMenu>
+  )
+}
+
+export const HeaderSkeleton = () => {
+  return (
+    <div className=" flex h-12 w-full items-center justify-between border-b-2 border-neutral-200 px-3 transition hover:bg-zinc-700/10 dark:border-neutral-800 dark:hover:bg-zinc-700/50">
+      <Skeleton className="h-6 w-[100px]" />
+      <Skeleton className="size-6" />
+    </div>
   )
 }
