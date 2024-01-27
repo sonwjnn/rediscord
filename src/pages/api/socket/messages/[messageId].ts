@@ -1,4 +1,4 @@
-import { currentProfilePages } from '@/lib/current-profile-pages'
+import { currentUserPages } from '@/lib/current-profile-pages'
 import { db } from '@/lib/db'
 import { NextApiResponseServerIo } from '@/types'
 import { MemberRole } from '@prisma/client'
@@ -13,14 +13,14 @@ export default async function handler(
   }
 
   try {
-    // const profile = await currentProfilePages(req)
-    const profile = {
+    // const profile = await currentUserPages(req)
+    const user = {
       id: '94c9d13e-6171-4395-bcd8-5ec0fd63b8f0',
     }
     const { messageId, serverId, channelId } = req.query
     const { content } = req.body
 
-    if (!profile) {
+    if (!user) {
       return res.status(401).json({ error: 'Unauthorized' })
     }
 
@@ -37,7 +37,7 @@ export default async function handler(
         id: serverId as string,
         members: {
           some: {
-            profileId: profile.id,
+            userId: user.id,
           },
         },
       },
@@ -61,9 +61,7 @@ export default async function handler(
       return res.status(404).json({ error: 'Channel not found' })
     }
 
-    const member = server.members.find(
-      member => member.profileId === profile.id
-    )
+    const member = server.members.find(member => member.userId === user.id)
 
     if (!member) {
       return res.status(404).json({ error: 'Member not found' })
@@ -77,7 +75,7 @@ export default async function handler(
       include: {
         member: {
           include: {
-            profile: true,
+            user: true,
           },
         },
       },
@@ -109,7 +107,7 @@ export default async function handler(
         include: {
           member: {
             include: {
-              profile: true,
+              user: true,
             },
           },
         },
@@ -131,7 +129,7 @@ export default async function handler(
         include: {
           member: {
             include: {
-              profile: true,
+              user: true,
             },
           },
         },

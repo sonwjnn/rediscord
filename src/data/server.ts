@@ -1,11 +1,11 @@
-import { currentProfile } from '@/lib/auth'
+import { currentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
 
 export const getServerById = async (serverId: string) => {
   try {
-    const profile = await currentProfile()
+    const user = await currentUser()
 
-    if (!profile) {
+    if (!user) {
       throw new Error('Unauthorized')
     }
 
@@ -14,7 +14,7 @@ export const getServerById = async (serverId: string) => {
         id: serverId,
         members: {
           some: {
-            profileId: profile.id,
+            userId: user.id,
           },
         },
       },
@@ -27,9 +27,9 @@ export const getServerById = async (serverId: string) => {
 
 export const getServerWithChannelsById = async (serverId: string) => {
   try {
-    const profile = await currentProfile()
+    const user = await currentUser()
 
-    if (!profile) {
+    if (!user) {
       throw new Error('Unauthorized')
     }
 
@@ -38,7 +38,7 @@ export const getServerWithChannelsById = async (serverId: string) => {
         id: serverId,
         members: {
           some: {
-            profileId: profile.id,
+            userId: user.id,
           },
         },
       },
@@ -61,9 +61,9 @@ export const getServerWithChannelsById = async (serverId: string) => {
 
 export const getServerWithChannelsWithMembers = async (serverId: string) => {
   try {
-    const profile = await currentProfile()
+    const user = await currentUser()
 
-    if (!profile) {
+    if (!user) {
       throw new Error('Unauthorized')
     }
 
@@ -79,7 +79,7 @@ export const getServerWithChannelsWithMembers = async (serverId: string) => {
         },
         members: {
           include: {
-            profile: true,
+            user: true,
           },
           orderBy: {
             role: 'asc',
@@ -89,23 +89,33 @@ export const getServerWithChannelsWithMembers = async (serverId: string) => {
     })
     return server
   } catch {
-    throw new Error('Internal Error')
+    return null
   }
 }
 
-export const getSeversByProfileId = async (profileId: string) => {
+export const getSeversByuserId = async (userId: string) => {
   try {
     const servers = await db.server.findMany({
       where: {
         members: {
           some: {
-            profileId,
+            userId,
+          },
+        },
+      },
+      include: {
+        channels: {
+          where: {
+            name: 'general',
+          },
+          orderBy: {
+            createdAt: 'asc',
           },
         },
       },
     })
     return servers
   } catch {
-    throw new Error('Internal Error')
+    return null
   }
 }

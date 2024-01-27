@@ -1,71 +1,35 @@
 'use client'
 
-import { LogoutButton } from '@/components/auth/logout-button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Separator } from '@/components/ui/separator'
+import { Popover, PopoverTrigger } from '@/components/ui/popover'
+import { UserAvatar } from '@/components/user-avatar'
+import VoiceControls from '@/components/voice-status-footer/voice-status-controls'
+import PopoverContentMain from '@/components/voice-status-footer/voice-status-popover-content-main'
 import { useCurrentUser } from '@/hooks/use-current-user'
-import { Clapperboard, DoorOpen, Settings } from 'lucide-react'
+import { t } from '@/lib/i18n'
 import { useRouter } from 'next/navigation'
-
-import { UserAvatar } from '../user-avatar'
-import { SettingsButton } from './settings-button'
 
 export const UserButton = () => {
   const router = useRouter()
   const user = useCurrentUser()
 
-  const onDasboardClick = () => {
-    router.push(`/u/${user?.name}`)
-  }
+  if (!user) return null
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <UserAvatar
-          imageUrl={user?.image || ''}
-          name={user?.name || ''}
-          size="md"
-        />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-80" align="end">
-        <div className="flex  gap-x-2 p-2">
-          <UserAvatar imageUrl={user?.image!} name={user?.name!} size="lg" />
-
-          <div className="flex min-w-0 flex-col justify-center">
-            <h3 className="truncate text-base font-semibold">{user?.name}</h3>
-            <p className="truncate text-sm text-gray-500">{user?.email}</p>
-          </div>
-        </div>
-        <Separator />
-
-        <DropdownMenuItem
-          className="cursor-pointer px-4 py-3"
-          onClick={onDasboardClick}
-        >
-          <Clapperboard className="mr-2 size-4" />
-          Dashboard
-        </DropdownMenuItem>
-
-        <DropdownMenuItem className="px-4 py-3">
-          <SettingsButton className="flex w-full">
-            <Settings className="mr-2 mt-0.5 size-4" />
-            Manage account
-          </SettingsButton>
-        </DropdownMenuItem>
-
-        <Separator />
-        <DropdownMenuItem className="px-4 py-3 focus:bg-red-400 focus:bg-opacity-10 focus:text-red-500">
-          <LogoutButton className="flex w-full">
-            <DoorOpen className="mr-2 mt-0.5 size-4" />
-            Logout
-          </LogoutButton>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Popover>
+      <div className="bg-semibackground flex justify-between gap-1 px-2 py-1.5">
+        <PopoverTrigger asChild>
+          <button className="flex gap-2 rounded-md py-1 pl-0.5 pr-2 text-left leading-tight hover:bg-white/20">
+            <UserAvatar imageUrl={user?.image || ''} name={user?.name || ''} />
+            <div>
+              <div className="text-xs font-semibold">{user?.name}</div>
+              <div className="text-[11px] text-gray-300">
+                {t(`user.status.Online`)}
+              </div>
+            </div>
+          </button>
+        </PopoverTrigger>
+      </div>
+      <PopoverContentMain setCurrentUser={() => {}} />
+    </Popover>
   )
 }

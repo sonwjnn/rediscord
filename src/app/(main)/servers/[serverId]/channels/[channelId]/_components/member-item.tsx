@@ -2,13 +2,15 @@
 
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/user-avatar'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { cn } from '@/lib/utils'
-import { Member, MemberRole, Server, User } from '@prisma/client'
+import { MemberWithUser } from '@/types'
+import { MemberRole, Server } from '@prisma/client'
 import { ShieldAlert, ShieldCheck } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 
-interface MemberProps {
-  member: Member & { user: User }
+interface MemberItemProps {
+  member: MemberWithUser
   server: Server
 }
 
@@ -20,13 +22,16 @@ const roleIconMap = {
   [MemberRole.ADMIN]: <ShieldAlert className="ml-2 size-4 text-rose-500" />,
 }
 
-export const ServerMember = ({ member, server }: MemberProps) => {
+export const MemberItem = ({ member, server }: MemberItemProps) => {
+  const user = useCurrentUser()
   const params = useParams()
   const router = useRouter()
 
   const icon = roleIconMap[member.role]
 
   const onClick = () => {
+    if (user?.id === member.userId) return
+
     router.push(`/servers/${params?.serverId}/conversations/${member.id}`)
   }
 
@@ -53,7 +58,7 @@ export const ServerMember = ({ member, server }: MemberProps) => {
   )
 }
 
-export const ServerMemberSkeleton = () => (
+export const MemberItemSkeleton = () => (
   <div
     className={
       'group mb-1 flex w-full items-center gap-x-2 rounded-md px-2 py-2 transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50'

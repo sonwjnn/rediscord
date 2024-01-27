@@ -4,8 +4,12 @@ import { ChatMessages } from '@/components/chat/chat-messages'
 import { MediaRoom } from '@/components/media-room'
 import { getChannelById } from '@/data/channel'
 import { getCurrentMemberOfServer } from '@/data/member'
+import { getServerWithChannelsWithMembers } from '@/data/server'
+import { currentUser } from '@/lib/auth'
 import { ChannelType } from '@prisma/client'
 import { redirect } from 'next/navigation'
+
+import { Container } from './_components/container'
 
 interface ChannelIdPageProps {
   params: {
@@ -19,16 +23,26 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
 
   const member = await getCurrentMemberOfServer(params.serverId)
 
-  if (!channel || !member) {
-    redirect('/')
+  const user = await currentUser()
+
+  if (!user) {
+    return redirect('/')
+  }
+
+  const server = await getServerWithChannelsWithMembers(params.serverId)
+
+  if (!channel || !member || !server) {
+    return redirect('/')
   }
 
   return (
-    <div className="flex h-full flex-col bg-white dark:bg-[#313338]">
+    <Container members={server?.members} server={server}>
       <ChatHeader
         name={channel.name}
         serverId={channel.serverId}
         type="channel"
+        members={server.members}
+        server={server}
       />
       {channel.type === ChannelType.TEXT && (
         <>
@@ -61,7 +75,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
       {channel.type === ChannelType.VIDEO && (
         <MediaRoom chatId={channel.id} video={true} audio={true} />
       )}
-    </div>
+    </Container>
   )
 }
 

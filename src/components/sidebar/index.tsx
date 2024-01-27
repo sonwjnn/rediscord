@@ -2,15 +2,15 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getServerWithChannelsWithMembers } from '@/data/server'
-import { currentProfile } from '@/lib/auth'
-import { MOCK_CHANNELS } from '@/lib/mock'
+import { currentUser } from '@/lib/auth'
+import { MOCK_CHANNELS, MOCK_MEMBER } from '@/lib/mock'
 import { ChannelType, MemberRole } from '@prisma/client'
 import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from 'lucide-react'
 import { redirect } from 'next/navigation'
 
 import { ServerChannel, ServerChannelSkeleton } from './channel'
 import { Header, HeaderSkeleton } from './header'
-import { ServerMember } from './member'
+import { ServerMember, ServerMemberSkeleton } from './member'
 import { Search, SearchSkeleton } from './search'
 import { Section } from './section'
 
@@ -33,13 +33,17 @@ const roleIconMap = {
 }
 
 export const Sidebar = async ({ serverId }: SidebarProps) => {
-  const profile = await currentProfile()
+  const user = await currentUser()
 
-  if (!profile) {
+  if (!user) {
     return redirect('/')
   }
 
   const server = await getServerWithChannelsWithMembers(serverId)
+
+  if (!server) {
+    return redirect('/')
+  }
 
   const textChannels = server?.channels.filter(
     channel => channel.type === ChannelType.TEXT
@@ -50,17 +54,9 @@ export const Sidebar = async ({ serverId }: SidebarProps) => {
   const videoChannels = server?.channels.filter(
     channel => channel.type === ChannelType.VIDEO
   )
-  const members = server?.members.filter(
-    member => member.profileId !== profile.id
-  )
+  const members = server?.members.filter(member => member.userId !== user.id)
 
-  if (!server) {
-    return redirect('/')
-  }
-
-  const role = server.members.find(
-    member => member.profileId === profile.id
-  )?.role
+  const role = server.members.find(member => member.userId === user.id)?.role
 
   return (
     <aside className="flex h-full w-full flex-col bg-[#F2F3F5] text-primary dark:bg-[#2B2D31]">
@@ -101,7 +97,7 @@ export const Sidebar = async ({ serverId }: SidebarProps) => {
                 type: 'member',
                 data: members?.map(member => ({
                   id: member.id,
-                  name: member.profile.name,
+                  name: member.user.name || '',
                   icon: roleIconMap[member.role],
                 })),
               },
@@ -170,7 +166,7 @@ export const Sidebar = async ({ serverId }: SidebarProps) => {
             </div>
           </div>
         )}
-        {!!members?.length && (
+        {/* {!!members?.length && (
           <div className="mb-2">
             <Section
               sectionType="members"
@@ -184,22 +180,34 @@ export const Sidebar = async ({ serverId }: SidebarProps) => {
               ))}
             </div>
           </div>
-        )}
+        )} */}
       </ScrollArea>
     </aside>
   )
 }
 
-const SectionSkeleton = () => {
+const SectionSkeleton = ({ type }: { type: 'channel' | 'member' }) => {
   return (
     <>
       <div className="mb-1 px-2">
         <Skeleton className="h-3 w-20 " />
       </div>
       <ul className="space-y-[2px]">
-        {[...Array(MOCK_CHANNELS)].map((_, i) => (
-          <ServerChannelSkeleton key={i} />
-        ))}
+        {type === 'channel' && (
+          <>
+            {[...Array(2)].map((_, i) => (
+              <ServerChannelSkeleton key={i} />
+            ))}
+          </>
+        )}
+
+        {type === 'member' && (
+          <>
+            {[...Array(MOCK_MEMBER)].map((_, i) => (
+              <ServerMemberSkeleton key={i} />
+            ))}
+          </>
+        )}
       </ul>
     </>
   )
@@ -216,9 +224,11 @@ export const SidebarSkeleton = () => {
       <Separator className="my-2 rounded-md bg-zinc-200 dark:bg-zinc-700" />
 
       <div className="space-y-2">
-        {[...Array(3)].map((_, i) => (
-          <SectionSkeleton key={i} />
+        {[...Array(MOCK_CHANNELS)].map((_, i) => (
+          <SectionSkeleton type="channel" key={i} />
         ))}
+
+        <SectionSkeleton type="member" />
       </div>
     </aside>
   )

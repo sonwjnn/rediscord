@@ -29,7 +29,6 @@ import {
 import { useModal } from '@/store/use-modal-store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ChannelType } from '@prisma/client'
-import { useRouter } from 'next/navigation'
 import { useEffect, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -63,11 +62,11 @@ export const EditChannelModal = () => {
   })
 
   useEffect(() => {
-    if (channel) {
+    if (channel && isModalOpen) {
       form.setValue('name', channel.name)
       form.setValue('type', channel.type)
     }
-  }, [form, channel])
+  }, [form, channel, isModalOpen])
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (!server || !channel) return

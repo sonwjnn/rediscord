@@ -1,10 +1,12 @@
-import { Member, Profile, Server } from '@prisma/client'
+import { Member, Server, User } from '@prisma/client'
 import { Server as NetServer, Socket } from 'net'
 import { NextApiResponse } from 'next'
 import { Server as SocketIOServer } from 'socket.io'
 
-export type ServerWithMembersWithProfiles = Server & {
-  members: (Member & { profile: Profile })[]
+export type MemberWithUser = Member & { user: User }
+
+export type ServerWithMembersWithUsers = Server & {
+  members: MemberWithUser[]
 }
 
 export type NextApiResponseServerIo = NextApiResponse & {
@@ -14,3 +16,18 @@ export type NextApiResponseServerIo = NextApiResponse & {
     }
   }
 }
+
+export type VoiceStatus = {
+  mute?: boolean
+  deaf?: boolean
+  serverMuted?: boolean
+}
+
+export enum StaticUserStatuses {
+  Online = 'online',
+  Idle = 'idle',
+  DND = 'dnd',
+  Offline = 'offline',
+  Mobile = 'mobile',
+}
+export type UserStatuses = StaticUserStatuses | string

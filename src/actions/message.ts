@@ -1,6 +1,6 @@
 'use server'
 
-import { currentProfile } from '@/lib/auth'
+import { currentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { Message } from '@prisma/client'
 
@@ -14,9 +14,9 @@ export const getMessagesByChannelId = async ({
   channelId: string
 }) => {
   try {
-    const profile = await currentProfile()
+    const user = await currentUser()
 
-    if (!profile) {
+    if (!user) {
       throw new Error('Unauthorized')
     }
 
@@ -39,7 +39,7 @@ export const getMessagesByChannelId = async ({
         include: {
           member: {
             include: {
-              profile: true,
+              user: true,
             },
           },
         },
@@ -56,7 +56,7 @@ export const getMessagesByChannelId = async ({
         include: {
           member: {
             include: {
-              profile: true,
+              user: true,
             },
           },
         },

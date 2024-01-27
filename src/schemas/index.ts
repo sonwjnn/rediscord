@@ -83,6 +83,7 @@ export const ChatItemSchema = z.object({
 })
 
 export const MessageFileSchema = z.object({
+  content: z.string(),
   fileUrl: z.string().min(1, {
     message: 'Attachment is required.',
   }),

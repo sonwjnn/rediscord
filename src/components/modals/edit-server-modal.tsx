@@ -45,11 +45,11 @@ export const EditServerModal = () => {
   })
 
   useEffect(() => {
-    if (server) {
+    if (server && isModalOpen) {
       form.setValue('name', server.name)
       form.setValue('image', server.image)
     }
-  }, [server, form])
+  }, [server, form, isModalOpen])
 
   const onSubmit = async (values: z.infer<typeof ServerSchema>) => {
     if (!server) return

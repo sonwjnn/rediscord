@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useModal } from '@/store/use-modal-store'
-import { ServerWithMembersWithProfiles } from '@/types'
+import { ServerWithMembersWithUsers } from '@/types'
 import { MemberRole } from '@prisma/client'
 import {
   ChevronDown,
@@ -22,7 +22,7 @@ import {
 } from 'lucide-react'
 
 interface HeaderProps {
-  server: ServerWithMembersWithProfiles
+  server: ServerWithMembersWithUsers
   role?: MemberRole
 }
 

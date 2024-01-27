@@ -1,26 +1,46 @@
 import { InitialModal } from '@/components/modals/initial-modal'
+import { currentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { initialProfile } from '@/lib/initial-profile'
 import { redirect } from 'next/navigation'
 
 const SetupPage = async () => {
-  const profile = await initialProfile()
+  const user = await currentUser()
+
+  if (!user) {
+    return redirect('/auth/login')
+  }
 
   const server = await db.server.findFirst({
     where: {
       members: {
         some: {
-          profileId: profile.id,
+          userId: user.id,
+        },
+      },
+    },
+    include: {
+      channels: {
+        where: {
+          name: 'general',
+        },
+        orderBy: {
+          createdAt: 'asc',
         },
       },
     },
   })
 
-  if (server) {
-    return redirect(`/servers/${server.id}`)
+  if (!server) {
+    return <InitialModal />
   }
 
-  return <InitialModal />
+  const initialChannel = server?.channels[0]
+
+  if (initialChannel?.name !== 'general') {
+    return <InitialModal />
+  }
+
+  return redirect(`/servers/${server.id}/channels/${initialChannel?.id}`)
 }
 
 export default SetupPage

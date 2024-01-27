@@ -108,7 +108,7 @@ export const Search = ({ data }: SearchProps) => {
 export const SearchSkeleton = () => {
   return (
     <div className="flex w-full items-center gap-x-2 rounded-md px-2 py-2 transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50">
-      <Skeleton className="h-6 w-full" />
+      <Skeleton className="h-8 w-full" />
     </div>
   )
 }

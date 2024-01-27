@@ -14,11 +14,17 @@ const InviteCodePage = async ({ params }: InviteCodePageProps) => {
 
   const server = await updateMembersServerByInviteCode(params.inviteCode)
 
-  if (server) {
-    return redirect(`/servers/${server?.id}`)
+  if (!server) {
+    return redirect('/')
   }
 
-  return null
+  const initialChannel = server?.channels[0]
+
+  if (initialChannel?.name !== 'general') {
+    return redirect('/')
+  }
+
+  return redirect(`/servers/${server.id}/channels/${initialChannel?.id}`)
 }
 
 export default InviteCodePage

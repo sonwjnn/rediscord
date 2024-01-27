@@ -24,12 +24,12 @@ const findConversation = async (memberOneId: string, memberTwoId: string) => {
       include: {
         memberOne: {
           include: {
-            profile: true,
+            user: true,
           },
         },
         memberTwo: {
           include: {
-            profile: true,
+            user: true,
           },
         },
       },
@@ -52,12 +52,12 @@ const createNewConversation = async (
       include: {
         memberOne: {
           include: {
-            profile: true,
+            user: true,
           },
         },
         memberTwo: {
           include: {
-            profile: true,
+            user: true,
           },
         },
       },

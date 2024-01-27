@@ -3,19 +3,19 @@
 import { useChatQuery } from '@/hooks/use-chat-query'
 import { useChatScroll } from '@/hooks/use-chat-scroll'
 import { useChatSocket } from '@/hooks/use-chat-socket'
-import { Member, Message, Profile } from '@prisma/client'
+import { Member, Message, User } from '@prisma/client'
 import { format } from 'date-fns'
 import { Loader2, ServerCrash } from 'lucide-react'
 import { ElementRef, Fragment, useRef } from 'react'
 
-import { ChatItem } from './chat-item'
+import { ChatItem, ChatItemSkeleton } from './chat-item'
 import { ChatWelcome } from './chat-welcome'
 
 const DATE_FORMAT = 'd MMM yyyy, HH:mm'
 
-type MessageWithMemberWithProfile = Message & {
+type MessageWithMemberWithUser = Message & {
   member: Member & {
-    profile: Profile
+    user: User
   }
 }
 
@@ -63,16 +63,9 @@ export const ChatMessages = ({
     count: data?.pages?.[0]?.items?.length ?? 0,
   })
 
-  if (status === 'pending') {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center">
-        <Loader2 className="my-4 size-7 animate-spin text-zinc-500" />
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">
-          Loading messages...
-        </p>
-      </div>
-    )
-  }
+  // if (status === 'pending') {
+  //   return <ChatMessagesSkeleton />
+  // }
 
   if (status === 'error') {
     return (
@@ -106,7 +99,7 @@ export const ChatMessages = ({
       <div className="mt-auto flex flex-col-reverse">
         {data?.pages?.map((group, i) => (
           <Fragment key={i}>
-            {group.items.map((message: MessageWithMemberWithProfile) => (
+            {group.items.map((message: MessageWithMemberWithUser) => (
               <ChatItem
                 key={message.id}
                 id={message.id}
@@ -128,3 +121,11 @@ export const ChatMessages = ({
     </div>
   )
 }
+
+export const ChatMessagesSkeleton = () => (
+  <div className="h-full flex-1">
+    {[...Array(5)].map((_, i) => (
+      <ChatItemSkeleton key={i} />
+    ))}
+  </div>
+)

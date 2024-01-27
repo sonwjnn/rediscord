@@ -1,8 +1,11 @@
 import { LiveBadge } from '@/components/live-badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import StatusBadge from '@/components/ui/badge/status-badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
+import { StaticUserStatuses } from '@/types'
 import { type VariantProps, cva } from 'class-variance-authority'
+import { BsDiscord } from 'react-icons/bs'
 
 const avatarSizes = cva('', {
   variants: {
@@ -23,6 +26,7 @@ interface UserAvatarProps extends VariantProps<typeof avatarSizes> {
   isLive?: boolean
   showBadge?: boolean
   className?: string
+  status?: StaticUserStatuses
 }
 
 export const UserAvatar = ({
@@ -32,6 +36,7 @@ export const UserAvatar = ({
   showBadge,
   size,
   className,
+  status,
 }: UserAvatarProps) => {
   const canShowBadge = showBadge && isLive
 
@@ -46,14 +51,16 @@ export const UserAvatar = ({
       >
         <AvatarImage src={imageUrl} className="object-cover" />
         <AvatarFallback>
-          {name[0]}
-          {name[name.length - 1]}
+          <BsDiscord fontSize={18} />
         </AvatarFallback>
       </Avatar>
       {canShowBadge && (
         <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 transform">
           <LiveBadge />
         </div>
+      )}
+      {status && (
+        <StatusBadge className="absolute -bottom-1 -right-1" status={status} />
       )}
     </div>
   )

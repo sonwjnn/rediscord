@@ -1,6 +1,6 @@
 'use server'
 
-import { currentProfile } from '@/lib/auth'
+import { currentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { ServerSchema } from '@/schemas'
 import { MemberRole } from '@prisma/client'
@@ -17,24 +17,24 @@ export const createServer = async (values: z.infer<typeof ServerSchema>) => {
   }
 
   const { name, image } = validatedFields.data
-  const profile = await currentProfile()
+  const user = await currentUser()
 
-  if (!profile) {
+  if (!user) {
     return { error: 'Unauthorized!' }
   }
 
   const server = await db.server.create({
     data: {
       ...validatedFields.data,
-      profileId: profile.id,
+      userId: user.id,
       name,
       image,
       inviteCode: uuidv4(),
       channels: {
-        create: [{ name: 'general', profileId: profile.id }],
+        create: [{ name: 'general', userId: user.id }],
       },
       members: {
-        create: [{ profileId: profile.id, role: MemberRole.ADMIN }],
+        create: [{ userId: user.id, role: MemberRole.ADMIN }],
       },
     },
   })
@@ -45,9 +45,9 @@ export const createServer = async (values: z.infer<typeof ServerSchema>) => {
 }
 
 export const newInviteCode = async (serverId: string) => {
-  const profile = await currentProfile()
+  const user = await currentUser()
 
-  if (!profile) {
+  if (!user) {
     throw new Error('Unauthorized')
   }
 
@@ -58,7 +58,7 @@ export const newInviteCode = async (serverId: string) => {
   const server = await db.server.update({
     where: {
       id: serverId,
-      profileId: profile.id,
+      userId: user.id,
     },
     data: {
       inviteCode: uuidv4(),
@@ -79,16 +79,16 @@ export const updateServer = async (
   }
 
   const { name, image } = validatedFields.data
-  const profile = await currentProfile()
+  const user = await currentUser()
 
-  if (!profile) {
+  if (!user) {
     return { error: 'Unauthorized!' }
   }
 
   const server = await db.server.update({
     where: {
       id: serverId,
-      profileId: profile.id,
+      userId: user.id,
     },
     data: {
       name,
@@ -102,9 +102,9 @@ export const updateServer = async (
 }
 
 export const updateMembersServerByInviteCode = async (inviteCode: string) => {
-  const profile = await currentProfile()
+  const user = await currentUser()
 
-  if (!profile) {
+  if (!user) {
     throw new Error('Unauthorized')
   }
 
@@ -113,7 +113,7 @@ export const updateMembersServerByInviteCode = async (inviteCode: string) => {
       inviteCode: inviteCode,
       members: {
         some: {
-          profileId: profile.id,
+          userId: user.id,
         },
       },
     },
@@ -131,10 +131,13 @@ export const updateMembersServerByInviteCode = async (inviteCode: string) => {
       members: {
         create: [
           {
-            profileId: profile.id,
+            userId: user.id,
           },
         ],
       },
+    },
+    include: {
+      channels: true,
     },
   })
 
@@ -143,9 +146,9 @@ export const updateMembersServerByInviteCode = async (inviteCode: string) => {
 }
 
 export const leaveServer = async (serverId: string) => {
-  const profile = await currentProfile()
+  const user = await currentUser()
 
-  if (!profile) {
+  if (!user) {
     throw new Error('Unauthorized')
   }
 
@@ -156,19 +159,19 @@ export const leaveServer = async (serverId: string) => {
   const server = await db.server.update({
     where: {
       id: serverId,
-      profileId: {
-        not: profile.id,
+      userId: {
+        not: user.id,
       },
       members: {
         some: {
-          profileId: profile.id,
+          userId: user.id,
         },
       },
     },
     data: {
       members: {
         deleteMany: {
-          profileId: profile.id,
+          userId: user.id,
         },
       },
     },
@@ -178,9 +181,9 @@ export const leaveServer = async (serverId: string) => {
 }
 
 export const deleteServer = async (serverId: string) => {
-  const profile = await currentProfile()
+  const user = await currentUser()
 
-  if (!profile) {
+  if (!user) {
     throw new Error('Unauthorized')
   }
 
@@ -191,7 +194,7 @@ export const deleteServer = async (serverId: string) => {
   const server = await db.server.delete({
     where: {
       id: serverId,
-      profileId: profile.id,
+      userId: user.id,
     },
   })
 

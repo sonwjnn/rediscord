@@ -5,12 +5,13 @@ import { Spinner } from '@/components/spinner'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/user-avatar'
 import { cn } from '@/lib/utils'
 import { ChatItemSchema } from '@/schemas'
 import { useModal } from '@/store/use-modal-store'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Member, MemberRole, Profile } from '@prisma/client'
+import { Member, MemberRole, User } from '@prisma/client'
 import axios from 'axios'
 import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from 'lucide-react'
 import Image from 'next/image'
@@ -24,7 +25,7 @@ interface ChatItemProps {
   id: string
   content: string
   member: Member & {
-    profile: Profile
+    user: User
   }
   timestamp: string
   fileUrl: string | null
@@ -115,7 +116,7 @@ export const ChatItem = ({
   const isModerator = currentMember.role === MemberRole.MODERATOR
   const isOwner = currentMember.id === member.id
   const canDeleteMessage = !deleted && (isAdmin || isModerator || isOwner)
-  const canEditMessage = !deleted && isOwner && !fileUrl
+  const canEditMessage = !deleted && isOwner
   const isPDF = fileType === 'pdf' && fileUrl
   const isImage = !isPDF && fileUrl
 
@@ -126,10 +127,7 @@ export const ChatItem = ({
           onClick={onMemberClick}
           className="cursor-pointer transition hover:drop-shadow-md"
         >
-          <UserAvatar
-            imageUrl={member.profile.image}
-            name={member.profile.name}
-          />
+          <UserAvatar imageUrl={member.user.image!} name={member.user.name!} />
         </div>
         <div className="flex w-full flex-col">
           <div className="flex items-center gap-x-2">
@@ -138,7 +136,7 @@ export const ChatItem = ({
                 onClick={onMemberClick}
                 className="cursor-pointer text-sm font-semibold hover:underline"
               >
-                {member.profile.name}
+                {member.user.name}
               </p>
               <ActionTooltip label={member.role}>
                 {roleIconMap[member.role]}
@@ -176,7 +174,7 @@ export const ChatItem = ({
               </a>
             </div>
           )}
-          {!fileUrl && !isEditing && (
+          {!isEditing && (
             <p
               className={cn(
                 'text-sm text-zinc-600 dark:text-zinc-300',
@@ -192,7 +190,7 @@ export const ChatItem = ({
               )}
             </p>
           )}
-          {!fileUrl && isEditing && (
+          {isEditing && (
             <Form {...form}>
               <form
                 className="flex w-full items-center gap-x-2 pt-2"
@@ -254,3 +252,13 @@ export const ChatItem = ({
     </div>
   )
 }
+
+export const ChatItemSkeleton = () => (
+  <div className="flex w-full items-center gap-x-2 p-4 transition hover:bg-black/5">
+    <Skeleton className="min-h-8 min-w-8 rounded-full" />
+    <div className="flex w-full flex-col gap-y-2">
+      <Skeleton className="h-4 w-40" />
+      <Skeleton className="h-20 w-full md:w-80" />
+    </div>
+  </div>
+)

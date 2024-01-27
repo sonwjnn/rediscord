@@ -1,6 +1,7 @@
 'use client'
 
 import { FileUpload } from '@/components/file-upload'
+import { Spinner } from '@/components/spinner'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -31,6 +32,7 @@ export const MessageFileModal = () => {
     resolver: zodResolver(MessageFileSchema),
     defaultValues: {
       fileUrl: '',
+      content: '',
     },
   })
 
@@ -50,10 +52,11 @@ export const MessageFileModal = () => {
 
       await axios.post(url, {
         ...values,
-        content: values.fileUrl,
+        content: query?.content,
       })
 
       form.reset()
+      query?.reset()
       router.refresh()
       handleClose()
     } catch (error) {
@@ -95,6 +98,7 @@ export const MessageFileModal = () => {
             </div>
             <DialogFooter className="bg-gray-100 px-6 py-4">
               <Button variant="primary" disabled={isLoading}>
+                {isLoading ? <Spinner className="mr-2" /> : null}
                 Send
               </Button>
             </DialogFooter>

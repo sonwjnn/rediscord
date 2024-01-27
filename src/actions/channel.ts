@@ -1,6 +1,6 @@
 'use server'
 
-import { currentProfile } from '@/lib/auth'
+import { currentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { ChannelSchema } from '@/schemas'
 import { MemberRole } from '@prisma/client'
@@ -19,9 +19,9 @@ export const createChannel = async (
 
   const { name, type } = validatedFields.data
 
-  const profile = await currentProfile()
+  const user = await currentUser()
 
-  if (!profile) {
+  if (!user) {
     throw new Error('Unauthorized')
   }
 
@@ -38,7 +38,7 @@ export const createChannel = async (
       id: serverId,
       members: {
         some: {
-          profileId: profile.id,
+          userId: user.id,
           role: {
             in: [MemberRole.ADMIN, MemberRole.MODERATOR],
           },
@@ -48,7 +48,7 @@ export const createChannel = async (
     data: {
       channels: {
         create: {
-          profileId: profile.id,
+          userId: user.id,
           name,
           type,
         },
@@ -74,9 +74,9 @@ export const editChannel = async (
 
   const { name, type } = validatedFields.data
 
-  const profile = await currentProfile()
+  const user = await currentUser()
 
-  if (!profile) {
+  if (!user) {
     throw new Error('Unauthorized')
   }
 
@@ -97,7 +97,7 @@ export const editChannel = async (
       id: serverId,
       members: {
         some: {
-          profileId: profile.id,
+          userId: user.id,
           role: {
             in: [MemberRole.ADMIN, MemberRole.MODERATOR],
           },
@@ -129,9 +129,9 @@ export const editChannel = async (
 }
 
 export const deleteChannel = async (serverId: string, channelId: string) => {
-  const profile = await currentProfile()
+  const user = await currentUser()
 
-  if (!profile) {
+  if (!user) {
     throw new Error('Unauthorized')
   }
 
@@ -148,7 +148,7 @@ export const deleteChannel = async (serverId: string, channelId: string) => {
       id: serverId,
       members: {
         some: {
-          profileId: profile.id,
+          userId: user.id,
           role: {
             in: [MemberRole.ADMIN, MemberRole.MODERATOR],
           },

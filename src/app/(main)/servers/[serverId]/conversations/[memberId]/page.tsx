@@ -3,8 +3,8 @@ import { ChatInput } from '@/components/chat/chat-input'
 import { ChatMessages } from '@/components/chat/chat-messages'
 import { MediaRoom } from '@/components/media-room'
 import { getOrCreateConversation } from '@/data/conversation'
-import { getCurrentMemberOfServerWithProfile } from '@/data/member'
-import { currentProfile } from '@/lib/auth'
+import { getCurrentMemberOfServerWithUser } from '@/data/member'
+import { currentUser } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 
 interface MemberIdPageProps {
@@ -18,15 +18,13 @@ interface MemberIdPageProps {
 }
 
 const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
-  const profile = await currentProfile()
+  const user = await currentUser()
 
-  if (!profile) {
+  if (!user) {
     return redirect('/auth/login')
   }
 
-  const currentMember = await getCurrentMemberOfServerWithProfile(
-    params.serverId
-  )
+  const currentMember = await getCurrentMemberOfServerWithUser(params.serverId)
 
   if (!currentMember) {
     return redirect('/')
@@ -43,13 +41,16 @@ const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
 
   const { memberOne, memberTwo } = conversation
 
-  const otherMember = memberOne.profileId === profile.id ? memberTwo : memberOne
+  const otherMember = memberOne.userId === user.id ? memberTwo : memberOne
+
+  const otherMemberName = otherMember.user.name || ''
+  const otherImage = otherMember.user.image || ''
 
   return (
     <div className="flex h-full flex-col bg-white dark:bg-[#313338]">
       <ChatHeader
-        imageUrl={otherMember.profile.image}
-        name={otherMember.profile.name}
+        imageUrl={otherImage}
+        name={otherMemberName}
         serverId={params.serverId}
         type="conversation"
       />
@@ -60,7 +61,7 @@ const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
         <>
           <ChatMessages
             member={currentMember}
-            name={otherMember.profile.name}
+            name={otherMemberName}
             chatId={conversation.id}
             type="conversation"
             conversationId={conversation.id}
@@ -70,7 +71,7 @@ const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
             }}
           />
           <ChatInput
-            name={otherMember.profile.name}
+            name={otherMemberName}
             type="conversation"
             apiUrl="/api/socket/direct-messages"
             query={{

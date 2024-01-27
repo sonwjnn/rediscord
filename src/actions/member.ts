@@ -1,15 +1,15 @@
 'use server'
 
-import { currentProfile } from '@/lib/auth'
+import { currentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { MemberRole } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 
 export const onKick = async (serverId: string, memberId: string) => {
   try {
-    const profile = await currentProfile()
+    const user = await currentUser()
 
-    if (!profile) {
+    if (!user) {
       throw new Error('Unauthorized')
     }
 
@@ -24,14 +24,14 @@ export const onKick = async (serverId: string, memberId: string) => {
     const server = await db.server.update({
       where: {
         id: serverId,
-        profileId: profile.id,
+        userId: user.id,
       },
       data: {
         members: {
           deleteMany: {
             id: memberId,
-            profileId: {
-              not: profile.id,
+            userId: {
+              not: user.id,
             },
           },
         },
@@ -39,7 +39,7 @@ export const onKick = async (serverId: string, memberId: string) => {
       include: {
         members: {
           include: {
-            profile: true,
+            user: true,
           },
           orderBy: {
             role: 'asc',
@@ -61,9 +61,9 @@ export const onRoleChange = async (
   role: MemberRole
 ) => {
   try {
-    const profile = await currentProfile()
+    const user = await currentUser()
 
-    if (!profile) {
+    if (!user) {
       throw new Error('Unauthorized')
     }
 
@@ -78,15 +78,15 @@ export const onRoleChange = async (
     const server = await db.server.update({
       where: {
         id: serverId,
-        profileId: profile.id,
+        userId: user.id,
       },
       data: {
         members: {
           update: {
             where: {
               id: memberId,
-              profileId: {
-                not: profile.id,
+              userId: {
+                not: user.id,
               },
             },
             data: {
@@ -98,7 +98,7 @@ export const onRoleChange = async (
       include: {
         members: {
           include: {
-            profile: true,
+            user: true,
           },
           orderBy: {
             role: 'asc',

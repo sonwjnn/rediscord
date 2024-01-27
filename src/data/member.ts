@@ -1,18 +1,18 @@
-import { currentProfile } from '@/lib/auth'
+import { currentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
 
 export const getCurrentMemberOfServer = async (serverId: string) => {
   try {
-    const profile = await currentProfile()
+    const user = await currentUser()
 
-    if (!profile) {
+    if (!user) {
       throw new Error('Unauthorized')
     }
 
     const member = await db.member.findFirst({
       where: {
         serverId,
-        profileId: profile.id,
+        userId: user.id,
       },
     })
     return member
@@ -21,21 +21,21 @@ export const getCurrentMemberOfServer = async (serverId: string) => {
   }
 }
 
-export const getCurrentMemberOfServerWithProfile = async (serverId: string) => {
+export const getCurrentMemberOfServerWithUser = async (serverId: string) => {
   try {
-    const profile = await currentProfile()
+    const user = await currentUser()
 
-    if (!profile) {
+    if (!user) {
       throw new Error('Unauthorized')
     }
 
     const member = await db.member.findFirst({
       where: {
         serverId,
-        profileId: profile.id,
+        userId: user.id,
       },
       include: {
-        profile: true,
+        user: true,
       },
     })
     return member

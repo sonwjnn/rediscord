@@ -3,7 +3,6 @@
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { LiveKitRoom, VideoConference } from '@livekit/components-react'
 import '@livekit/components-styles'
-import { Channel } from '@prisma/client'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -53,3 +52,5 @@ export const MediaRoom = ({ chatId, video, audio }: MediaRoomProps) => {
     </LiveKitRoom>
   )
 }
+
+export const MediaRoomSkeleton = () => <div>MediaRoom Loading...</div>

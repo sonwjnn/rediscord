@@ -10,14 +10,15 @@ interface ItemProps {
   id: string
   imageUrl: string
   name: string
+  initialChannelId: string
 }
 
-export const Item = ({ id, imageUrl, name }: ItemProps) => {
+export const Item = ({ id, initialChannelId, imageUrl, name }: ItemProps) => {
   const params = useParams()
   const router = useRouter()
 
   const onClick = () => {
-    router.push(`/servers/${id}`)
+    router.push(`/servers/${id}/channels/${initialChannelId}`)
   }
 
   return (
@@ -32,7 +33,7 @@ export const Item = ({ id, imageUrl, name }: ItemProps) => {
         />
         <div
           className={cn(
-            'group relative mx-3 flex h-[48px] w-[48px] overflow-hidden rounded-[24px] transition-all ease-linear group-hover:rounded-[16px]',
+            'group relative mx-3 flex h-[48px] w-[48px] overflow-hidden rounded-[24px] transition-all ease-linear active:translate-y-[1px] group-hover:rounded-[16px]',
             params?.serverId === id &&
               'rounded-[16px] bg-primary/10 text-primary'
           )}

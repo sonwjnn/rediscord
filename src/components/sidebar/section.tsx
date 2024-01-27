@@ -2,7 +2,7 @@
 
 import { ActionTooltip } from '@/components/action-tooltip'
 import { useModal } from '@/store/use-modal-store'
-import { ServerWithMembersWithProfiles } from '@/types'
+import { ServerWithMembersWithUsers } from '@/types'
 import { ChannelType, MemberRole } from '@prisma/client'
 import { Plus, Settings } from 'lucide-react'
 
@@ -13,7 +13,7 @@ interface SectionProps {
   role?: MemberRole
   sectionType: 'channels' | 'members'
   channelType?: ChannelType
-  server?: ServerWithMembersWithProfiles
+  server?: ServerWithMembersWithUsers
 }
 
 export const Section = ({
