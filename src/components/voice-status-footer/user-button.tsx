@@ -1,8 +1,8 @@
 'use client'
 
 import { Popover, PopoverTrigger } from '@/components/ui/popover'
+import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/user-avatar'
-import VoiceControls from '@/components/voice-status-footer/voice-status-controls'
 import PopoverContentMain from '@/components/voice-status-footer/voice-status-popover-content-main'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { t } from '@/lib/i18n'
@@ -16,13 +16,15 @@ export const UserButton = () => {
 
   return (
     <Popover>
-      <div className="bg-semibackground flex justify-between gap-1 px-2 py-1.5">
+      <div className=" flex min-w-[120px] justify-between gap-1">
         <PopoverTrigger asChild>
-          <button className="flex gap-2 rounded-md py-1 pl-0.5 pr-2 text-left leading-tight hover:bg-white/20">
+          <button className="flex gap-2 rounded-md py-1 pl-0.5 pr-2 text-left leading-tight transition hover:bg-zinc-300 dark:hover:bg-white/10 ">
             <UserAvatar imageUrl={user?.image || ''} name={user?.name || ''} />
             <div>
-              <div className="text-xs font-semibold">{user?.name}</div>
-              <div className="text-[11px] text-gray-300">
+              <div className="line-clamp-1 text-xs font-semibold">
+                {user?.name}
+              </div>
+              <div className="line-clamp-1 text-[11px] text-zinc-500 dark:text-zinc-400">
                 {t(`user.status.Online`)}
               </div>
             </div>
@@ -33,3 +35,13 @@ export const UserButton = () => {
     </Popover>
   )
 }
+
+export const UserButtonSkeleton = () => (
+  <div className={'flex min-w-[120px] items-start gap-x-1 py-1'}>
+    <Skeleton className="size-8 rounded-full" />
+    <div className="mt-1 flex flex-col gap-y-1">
+      <Skeleton className="h-2 w-20" />
+      <Skeleton className="h-2 w-12" />
+    </div>
+  </div>
+)

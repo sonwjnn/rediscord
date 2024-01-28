@@ -2,7 +2,7 @@ import { LiveBadge } from '@/components/live-badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import StatusBadge from '@/components/ui/badge/status-badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { cn } from '@/lib/utils'
+import { cn, stringToColor } from '@/lib/utils'
 import { StaticUserStatuses } from '@/types'
 import { type VariantProps, cva } from 'class-variance-authority'
 import { BsDiscord } from 'react-icons/bs'
@@ -40,6 +40,7 @@ export const UserAvatar = ({
 }: UserAvatarProps) => {
   const canShowBadge = showBadge && isLive
 
+  const color = stringToColor(name || '')
   return (
     <div className="relative">
       <Avatar
@@ -50,8 +51,8 @@ export const UserAvatar = ({
         )}
       >
         <AvatarImage src={imageUrl} className="object-cover" />
-        <AvatarFallback>
-          <BsDiscord fontSize={18} />
+        <AvatarFallback style={{ backgroundColor: color }}>
+          <BsDiscord className="text-white" fontSize={18} />
         </AvatarFallback>
       </Avatar>
       {canShowBadge && (

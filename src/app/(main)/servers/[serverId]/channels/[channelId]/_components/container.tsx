@@ -3,10 +3,10 @@
 import { cn } from '@/lib/utils'
 import { useMemberSidebar } from '@/store/use-member-sidebar'
 import { MemberWithUser, ServerWithMembersWithUsers } from '@/types'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useIsClient, useMediaQuery } from 'usehooks-ts'
 
-import { MemberSidedbar } from './member-sidebar'
+import { MemberSidebar, MemberSidebarSkeleton } from './member-sidebar'
 
 interface ContainerProps {
   children: React.ReactNode
@@ -32,7 +32,10 @@ export const Container = ({ children, members, server }: ContainerProps) => {
   return (
     <div className="h-full bg-white dark:bg-[#313338]">
       <div
-        className={cn('flex h-full flex-col', isCollapsed ? 'mr-0' : 'mr-60')}
+        className={cn(
+          'mr-60 flex h-full flex-col',
+          isCollapsed ? 'mr-0' : 'mr-60'
+        )}
       >
         {children}
       </div>
@@ -43,7 +46,9 @@ export const Container = ({ children, members, server }: ContainerProps) => {
           isCollapsed && 'w-0'
         )}
       >
-        <MemberSidedbar members={members} server={server} />
+        <Suspense fallback={<MemberSidebarSkeleton />}>
+          <MemberSidebar members={members} server={server} />
+        </Suspense>
       </aside>
     </div>
   )

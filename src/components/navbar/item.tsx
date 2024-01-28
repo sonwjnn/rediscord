@@ -1,6 +1,6 @@
 'use client'
 
-import { ActionTooltip } from '@/components/action-tooltip'
+import { Hint } from '@/components/hint'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
@@ -22,7 +22,7 @@ export const Item = ({ id, initialChannelId, imageUrl, name }: ItemProps) => {
   }
 
   return (
-    <ActionTooltip side="right" align="center" label={name}>
+    <Hint side="right" align="center" label={name}>
       <button onClick={onClick} className="group relative flex items-center">
         <div
           className={cn(
@@ -41,7 +41,7 @@ export const Item = ({ id, initialChannelId, imageUrl, name }: ItemProps) => {
           <Image fill src={imageUrl} alt="Channel" />
         </div>
       </button>
-    </ActionTooltip>
+    </Hint>
   )
 }
 

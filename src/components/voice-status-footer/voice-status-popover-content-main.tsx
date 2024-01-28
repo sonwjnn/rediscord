@@ -11,6 +11,7 @@ import { UserAvatar } from '@/components/user-avatar'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { StaticUserStatuses, UserStatuses } from '@/types'
 import { User } from '@prisma/client'
+import { format } from 'date-fns'
 import Image from 'next/image'
 import React from 'react'
 import { AiOutlineRight } from 'react-icons/ai'
@@ -56,10 +57,12 @@ function PopoverContentMain({ setCurrentUser }: PopoverContentMainProps) {
           className="absolute -top-12 right-0 h-6 w-6  rounded bg-black  object-cover p-0.5"
         />
         <p className="text-lg font-semibold">{currentUser?.name}</p>
-        <p className="text-xs">{currentUser?.name}</p>
+        <p className="text-xs">{currentUser?.email}</p>
         <Separator className="mt-2 h-[1px]" />
         <p className="mt-2 text-xs font-semibold">DISCORD MEMBER SINCE</p>
-        <p className=" py-2 text-xs">3 dec 2019</p>
+        <p className=" py-2 text-xs">
+          {format(new Date(currentUser?.createdAt || ''), 'd MMM yyyy')}
+        </p>
         <Separator className="h-[1px]" />
         <Tooltip open={open} onOpenChange={setOpen}>
           <TooltipTrigger asChild>

@@ -1,5 +1,3 @@
-import { UserButton } from '@/components/auth/user-button'
-import { ModeToggle } from '@/components/mode-toggle'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { getSeversByuserId } from '@/data/server'
@@ -39,9 +37,6 @@ export const Navbar = async () => {
           </div>
         ))}
       </ScrollArea>
-      <div className="mt-auto flex flex-col items-center gap-y-4 pb-3">
-        <ModeToggle />
-      </div>
     </Wrapper>
   )
 }

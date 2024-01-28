@@ -1,6 +1,6 @@
 'use client'
 
-import { ActionTooltip } from '@/components/action-tooltip'
+import { Hint } from '@/components/hint'
 import { Spinner } from '@/components/spinner'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
@@ -138,9 +138,7 @@ export const ChatItem = ({
               >
                 {member.user.name}
               </p>
-              <ActionTooltip label={member.role}>
-                {roleIconMap[member.role]}
-              </ActionTooltip>
+              <Hint label={member.role}>{roleIconMap[member.role]}</Hint>
             </div>
             <span className="text-xs text-zinc-500 dark:text-zinc-400">
               {timestamp}
@@ -229,14 +227,14 @@ export const ChatItem = ({
       {canDeleteMessage && (
         <div className="absolute -top-2 right-5 hidden items-center gap-x-2 rounded-sm border bg-white p-1 group-hover:flex dark:bg-zinc-800">
           {canEditMessage && (
-            <ActionTooltip label="Edit">
+            <Hint label="Edit">
               <Edit
                 onClick={() => setIsEditing(true)}
                 className="ml-auto h-4 w-4 cursor-pointer text-zinc-500 transition hover:text-zinc-600 dark:hover:text-zinc-300"
               />
-            </ActionTooltip>
+            </Hint>
           )}
-          <ActionTooltip label="Delete">
+          <Hint label="Delete">
             <Trash
               onClick={() =>
                 onOpen('deleteMessage', {
@@ -246,7 +244,7 @@ export const ChatItem = ({
               }
               className="ml-auto h-4 w-4 cursor-pointer text-zinc-500 transition hover:text-zinc-600 dark:hover:text-zinc-300"
             />
-          </ActionTooltip>
+          </Hint>
         </div>
       )}
     </div>

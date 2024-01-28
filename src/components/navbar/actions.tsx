@@ -1,6 +1,6 @@
 'use client'
 
-import { ActionTooltip } from '@/components/action-tooltip'
+import { Hint } from '@/components/hint'
 import { useModal } from '@/store/use-modal-store'
 import { Plus } from 'lucide-react'
 
@@ -9,7 +9,7 @@ export const Actions = () => {
 
   return (
     <div>
-      <ActionTooltip side="right" align="center" label="Add a server">
+      <Hint side="right" align="center" label="Add a server">
         <button
           onClick={() => onOpen('createServer')}
           className="group flex items-center"
@@ -21,7 +21,7 @@ export const Actions = () => {
             />
           </div>
         </button>
-      </ActionTooltip>
+      </Hint>
     </div>
   )
 }

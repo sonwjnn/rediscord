@@ -1,6 +1,6 @@
 'use client'
 
-import { ActionTooltip } from '@/components/action-tooltip'
+import { Hint } from '@/components/hint'
 import { useModal } from '@/store/use-modal-store'
 import { ServerWithMembersWithUsers } from '@/types'
 import { ChannelType, MemberRole } from '@prisma/client'
@@ -31,24 +31,24 @@ export const Section = ({
         {label}
       </p>
       {role !== MemberRole.GUEST && sectionType === 'channels' && (
-        <ActionTooltip label="Create Channel" side="top">
+        <Hint label="Create Channel" side="top">
           <button
             onClick={() => onOpen('createChannel', { channelType, server })}
             className="text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
           >
             <Plus className="size-4" />
           </button>
-        </ActionTooltip>
+        </Hint>
       )}
       {role === MemberRole.ADMIN && sectionType === 'members' && (
-        <ActionTooltip label="Manage Members" side="top">
+        <Hint label="Manage Members" side="top">
           <button
             onClick={() => onOpen('members', { server })}
             className="text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
           >
             <Settings className="size-4" />
           </button>
-        </ActionTooltip>
+        </Hint>
       )}
     </div>
   )

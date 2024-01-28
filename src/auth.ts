@@ -64,6 +64,7 @@ export const {
         session.user.name = token.name
         session.user.email = token.email
         session.user.isOAuth = token.isOAuth
+        session.user.createdAt = token.createdAt
       }
 
       return session
@@ -81,6 +82,7 @@ export const {
       token.name = existingUser.name
       token.email = existingUser.email
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled
+      token.createdAt = existingUser.createdAt
 
       return token
     },

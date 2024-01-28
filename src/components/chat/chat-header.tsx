@@ -1,15 +1,16 @@
 'use client'
 
+import { Hint } from '@/components/hint'
+import { MemberMobileToggle } from '@/components/member-mobile-toggle'
 import { MobileToggle } from '@/components/mobile-toggle'
 import { SocketIndicator } from '@/components/socket-indicator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/user-avatar'
 import { useMemberSidebar } from '@/store/use-member-sidebar'
 import { MemberWithUser, ServerWithMembersWithUsers } from '@/types'
-import { Hash, UsersRoundIcon } from 'lucide-react'
+import { Hash } from 'lucide-react'
+import { HiUsers } from 'react-icons/hi2'
 
-import { ActionTooltip } from '../action-tooltip'
-import { MemberMobileToggle } from '../member-mobile-toggle'
 import { ChatVideoButton } from './chat-video-button'
 
 interface ChatHeaderProps {
@@ -55,15 +56,18 @@ export const ChatHeader = ({
       <div className="ml-auto flex items-center">
         {type === 'channel' && (
           <div className="mr-2 cursor-pointer">
-            <ActionTooltip
+            <Hint
               label={`${isCollapsed ? 'Show member list' : 'Hide member list'}`}
               side="bottom"
             >
-              <UsersRoundIcon
-                className="hidden text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 md:block"
-                onClick={onClick}
-              />
-            </ActionTooltip>
+              <div>
+                <HiUsers
+                  className="hidden text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 md:block"
+                  size={22}
+                  onClick={onClick}
+                />
+              </div>
+            </Hint>
             <MemberMobileToggle server={server} members={members} />
           </div>
         )}

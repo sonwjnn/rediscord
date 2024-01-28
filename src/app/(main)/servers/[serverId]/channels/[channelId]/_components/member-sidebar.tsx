@@ -5,9 +5,9 @@ import { MemberWithUser, ServerWithMembersWithUsers } from '@/types'
 import { MemberRole } from '@prisma/client'
 import { ShieldAlert, ShieldCheck } from 'lucide-react'
 
-import { MemberItem } from './member-item'
+import { MemberItem, MemberItemSkeleton } from './member-item'
 
-interface MemberSidedbarProps {
+interface MemberSidebarProps {
   server: ServerWithMembersWithUsers
   members: MemberWithUser[]
 }
@@ -20,7 +20,7 @@ const roleIconMap = {
   [MemberRole.ADMIN]: <ShieldAlert className="mr-2 size-4 text-rose-500" />,
 }
 
-export const MemberSidedbar = ({ server, members }: MemberSidedbarProps) => {
+export const MemberSidebar = ({ server, members }: MemberSidebarProps) => {
   const user = useCurrentUser()
   // const server = await getServerWithChannelsWithMembers(serverId)
 
@@ -59,3 +59,11 @@ export const MemberSidedbar = ({ server, members }: MemberSidedbarProps) => {
     </aside>
   )
 }
+
+export const MemberSidebarSkeleton = () => (
+  <>
+    {[...Array(8)].map((_, i) => (
+      <MemberItemSkeleton key={i} />
+    ))}
+  </>
+)

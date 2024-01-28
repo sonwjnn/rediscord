@@ -1,6 +1,6 @@
 'use client'
 
-import { ActionTooltip } from '@/components/action-tooltip'
+import { Hint } from '@/components/hint'
 import { cn } from '@/lib/utils'
 import { ModalType, useModal } from '@/store/use-modal-store'
 import { Channel, ChannelType, MemberRole, Server } from '@prisma/client'
@@ -57,18 +57,18 @@ export const ServerChannel = ({ channel, server, role }: ChannelProps) => {
       </p>
       {channel.name !== 'general' && role !== MemberRole.GUEST && (
         <div className="ml-auto flex items-center gap-x-2">
-          <ActionTooltip label="Edit">
+          <Hint label="Edit">
             <Edit
               onClick={e => onAction(e, 'editChannel')}
               className="hidden size-4 text-zinc-500 transition hover:text-zinc-600 group-hover:block dark:text-zinc-400 dark:hover:text-zinc-300"
             />
-          </ActionTooltip>
-          <ActionTooltip label="Delete">
+          </Hint>
+          <Hint label="Delete">
             <Trash
               onClick={e => onAction(e, 'deleteChannel')}
               className="hidden size-4 text-zinc-500 transition hover:text-zinc-600 group-hover:block dark:text-zinc-400 dark:hover:text-zinc-300"
             />
-          </ActionTooltip>
+          </Hint>
         </div>
       )}
       {channel.name === 'general' && (

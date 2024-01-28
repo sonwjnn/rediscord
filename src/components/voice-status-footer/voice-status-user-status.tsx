@@ -1,11 +1,12 @@
-import StatusBadge from "@/components/ui/badge/status-badge";
-import Divider from "@/components/ui/divider";
-import { ListItem } from "@/components/ui/list";
-import { UserStatuses } from "@/lib/entities/user";
+import StatusBadge from '@/components/ui/badge/status-badge'
+// import { ListItem } from '@/components/ui/list'
+import { Separator } from '@/components/ui/separator'
+import { UserStatuses } from '@/types'
+
 interface UserStatusProps {
-  statuses: { value: string }[];
-  handleSubmit: (status: UserStatuses) => void;
-  setOpen: (open: boolean) => void;
+  statuses: { value: string }[]
+  handleSubmit: (status: UserStatuses) => void
+  setOpen: (open: boolean) => void
 }
 
 function UserStatus({ statuses, handleSubmit, setOpen }: UserStatusProps) {
@@ -13,9 +14,9 @@ function UserStatus({ statuses, handleSubmit, setOpen }: UserStatusProps) {
     <div className="leading-[16px]">
       {statuses.map((status, index) => (
         <>
-          <ListItem
+          {/* <ListItem
             onClick={() => {
-              setOpen(false), handleSubmit(status.value);
+              setOpen(false), handleSubmit(status.value)
             }}
             className="group my-1 min-w-[180px] max-w-[380px] flex-col  !items-start !rounded text-gray-300 hover:!bg-primary"
             key={index}
@@ -31,26 +32,26 @@ function UserStatus({ statuses, handleSubmit, setOpen }: UserStatusProps) {
               </p>
             </div>
             <div className="ml-5 text-[12px]">
-              {status.value === "offline" && (
+              {status.value === 'offline' && (
                 <p>
                   You won&apos;t appear as available, but you&apos;ll have
                   access to all Discord features.
                 </p>
               )}
-              {status.value === "dnd" && (
+              {status.value === 'dnd' && (
                 <p>You will not receive desktop notifications.</p>
               )}
             </div>
-          </ListItem>
-          <Divider
+          </ListItem> */}
+          <Separator
             className={`my-2 h-[1px] w-full ${
-              status.value === "online" ? "block" : "hidden"
+              status.value === 'online' ? 'block' : 'hidden'
             } `}
           />
         </>
       ))}
     </div>
-  );
+  )
 }
 
-export default UserStatus;
+export default UserStatus

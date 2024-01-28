@@ -1,9 +1,10 @@
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import React from 'react'
+import { useModal } from '@/store/use-modal-store'
+import React, { useEffect } from 'react'
 import { BsGearFill, BsHeadphones, BsMicFill } from 'react-icons/bs'
 
-import { ActionTooltip } from '../action-tooltip'
-import VoiceStatusButton from './voice-status-button'
+import { Hint } from '../hint'
 
 interface VoiceControlsProps {
   voiceStatus: {
@@ -17,19 +18,41 @@ interface VoiceControlsProps {
     }
   ) => void
 }
-function VoiceControls({ voiceStatus, setVoiceStatus }: VoiceControlsProps) {
+export const VoiceControls = ({
+  voiceStatus,
+  setVoiceStatus,
+}: VoiceControlsProps) => {
+  const { onOpen } = useModal()
+
   const toggleMute = () => {
-    setVoiceStatus(prev => ({
-      ...prev,
-      mute: !prev?.mute,
-    }))
+    setVoiceStatus(prev => {
+      if (prev?.deaf)
+        return {
+          mute: !prev?.mute,
+          deaf: false,
+        }
+
+      return {
+        ...prev,
+        mute: !prev?.mute,
+      }
+    })
   }
 
   const toggleDeaf = () => {
-    setVoiceStatus(prev => ({
-      ...prev,
-      deaf: !prev?.deaf,
-    }))
+    setVoiceStatus(prev => {
+      if (!prev?.deaf) {
+        return {
+          mute: true,
+          deaf: true,
+        }
+      }
+
+      return {
+        mute: false,
+        deaf: false,
+      }
+    })
   }
 
   const muteTooltipText =
@@ -38,28 +61,27 @@ function VoiceControls({ voiceStatus, setVoiceStatus }: VoiceControlsProps) {
 
   return (
     <div className="flex items-center">
-      <ActionTooltip label={muteTooltipText}>
+      <Hint label={muteTooltipText}>
         <button
           onClick={toggleMute}
           className={cn(
-            'group relative flex h-8 w-8 items-center justify-center rounded-md hover:bg-gray-700',
-            'text-gray-300 hover:text-gray-200'
+            'group relative flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-300 dark:hover:bg-white/10',
+            'text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 '
           )}
         >
           <BsMicFill fontSize={18} />
-          {voiceStatus.mute ||
-            (voiceStatus.deaf && (
-              <div className="border-semibackground absolute h-3/4 w-[5px] rotate-45 rounded-sm border-[2px] bg-red-500 group-hover:border-gray-700"></div>
-            ))}
+          {voiceStatus.mute && (
+            <div className="border-semibackground absolute h-3/4 w-[5px] rotate-45 rounded-sm border-[2px] bg-red-500 group-hover:border-gray-700"></div>
+          )}
         </button>
-      </ActionTooltip>
+      </Hint>
 
-      <ActionTooltip label={deafTooltipText}>
+      <Hint label={deafTooltipText}>
         <button
           onClick={toggleDeaf}
           className={cn(
-            'group relative flex h-8 w-8 items-center justify-center rounded-md hover:bg-gray-700',
-            'text-gray-300 hover:text-gray-200'
+            'group relative flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-300 dark:hover:bg-white/10',
+            'text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300'
           )}
         >
           <BsHeadphones fontSize={20} />
@@ -67,20 +89,27 @@ function VoiceControls({ voiceStatus, setVoiceStatus }: VoiceControlsProps) {
             <div className="border-semibackground absolute h-3/4 w-[5px] rotate-45 rounded-sm border-[2px] bg-red-500 group-hover:border-gray-700"></div>
           )}
         </button>
-      </ActionTooltip>
+      </Hint>
 
-      <ActionTooltip label="Settings">
+      <Hint label="Settings">
         <button
+          onClick={() => onOpen('settings')}
           className={cn(
-            'group relative flex h-8 w-8 items-center justify-center rounded-md hover:bg-gray-700',
-            'text-gray-300 hover:text-gray-200'
+            'group relative flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-300 dark:hover:bg-white/10',
+            'text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300'
           )}
         >
           <BsGearFill fontSize={18} />
         </button>
-      </ActionTooltip>
+      </Hint>
     </div>
   )
 }
 
-export default VoiceControls
+export const VoiceControlsSkeleton = () => (
+  <div className="flex items-center gap-x-2">
+    <Skeleton className="size-6 " />
+    <Skeleton className="size-6 " />
+    <Skeleton className="size-6 " />
+  </div>
+)
