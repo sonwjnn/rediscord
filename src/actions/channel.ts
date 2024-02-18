@@ -21,7 +21,7 @@ export const createChannel = async (
 
   const user = await currentUser()
 
-  if (!user) {
+  if (!user?.id) {
     throw new Error('Unauthorized')
   }
 

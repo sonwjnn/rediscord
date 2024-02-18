@@ -11,7 +11,7 @@ export const {
   auth,
   signIn,
   signOut,
-  update,
+  unstable_update,
 } = NextAuth({
   pages: {
     signIn: '/auth/login',
@@ -31,6 +31,10 @@ export const {
     async signIn({ user, account }) {
       if (account?.provider !== 'credentials') {
         return true
+      }
+
+      if (!user?.id) {
+        return false
       }
 
       const existingUser = await getUserById(user.id)
@@ -57,12 +61,9 @@ export const {
       }
 
       if (session.user) {
-        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean
-      }
-
-      if (session.user) {
         session.user.name = token.name
-        session.user.email = token.email
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled
+        session.user.email = token.email as string
         session.user.isOAuth = token.isOAuth
         session.user.createdAt = token.createdAt
       }

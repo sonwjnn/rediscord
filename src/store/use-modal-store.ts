@@ -14,6 +14,7 @@ export type ModalType =
   | 'messageFile'
   | 'deleteMessage'
   | 'settings'
+  | 'switchAccount'
 
 interface ModalData {
   server?: Server

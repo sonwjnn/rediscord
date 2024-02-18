@@ -1,8 +1,5 @@
 import { Sidebar, SidebarSkeleton } from '@/components/sidebar'
-import {
-  VoiceStatusFooter,
-  VoiceStatusFooterSkeleton,
-} from '@/components/voice-status-footer/voice-status-footer'
+import { VoiceStatus, VoiceStatusSkeleton } from '@/components/voice-status'
 import { getServerById } from '@/data/server'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
@@ -26,8 +23,8 @@ const ServerIdLayout = async ({
         <Suspense fallback={<SidebarSkeleton />}>
           <Sidebar serverId={params.serverId} />
         </Suspense>
-        <Suspense fallback={<VoiceStatusFooterSkeleton />}>
-          <VoiceStatusFooter />
+        <Suspense fallback={<VoiceStatusSkeleton />}>
+          <VoiceStatus />
         </Suspense>
       </div>
       <main className="h-full md:pl-60">{children}</main>

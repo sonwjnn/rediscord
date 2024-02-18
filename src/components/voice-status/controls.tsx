@@ -1,12 +1,12 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { useModal } from '@/store/use-modal-store'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { BsGearFill, BsHeadphones, BsMicFill } from 'react-icons/bs'
 
 import { Hint } from '../hint'
 
-interface VoiceControlsProps {
+interface ControlsProps {
   voiceStatus: {
     mute?: boolean
     deaf?: boolean
@@ -18,10 +18,7 @@ interface VoiceControlsProps {
     }
   ) => void
 }
-export const VoiceControls = ({
-  voiceStatus,
-  setVoiceStatus,
-}: VoiceControlsProps) => {
+export const Controls = ({ voiceStatus, setVoiceStatus }: ControlsProps) => {
   const { onOpen } = useModal()
 
   const toggleMute = () => {
@@ -106,7 +103,7 @@ export const VoiceControls = ({
   )
 }
 
-export const VoiceControlsSkeleton = () => (
+export const ControlsSkeleton = () => (
   <div className="flex items-center gap-x-2">
     <Skeleton className="size-6 " />
     <Skeleton className="size-6 " />

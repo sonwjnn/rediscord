@@ -8,6 +8,7 @@ import {
   publicRoutes,
 } from '@/routes'
 import NextAuth from 'next-auth'
+import { NextResponse } from 'next/server'
 
 const { auth } = NextAuth(authConfig)
 
@@ -23,14 +24,14 @@ export default auth(req => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname)
 
   if (isApiAuthRoute || isApiWebhooksRoute || isApiUploadthingRoute) {
-    return null
+    return NextResponse.next()
   }
 
   if (isAuthRoute) {
     if (isLoggedIn) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
     }
-    return null
+    return NextResponse.next()
   }
 
   if (!isLoggedIn && !isPublicRoute) {
@@ -46,7 +47,7 @@ export default auth(req => {
     )
   }
 
-  return null
+  return NextResponse.next()
 })
 
 export const config = {

@@ -12,6 +12,7 @@ import { LeaveServerModal } from '@/components/modals/leave-server-modal'
 import { MembersModal } from '@/components/modals/members-modal'
 import { MessageFileModal } from '@/components/modals/message-file-modal'
 import { SettingsModal } from '@/components/modals/settings-modal'
+import { SwitchAccountModal } from '@/components/modals/switch-account-modal'
 import { useIsClient } from 'usehooks-ts'
 
 export const ModalProvider = () => {
@@ -35,6 +36,7 @@ export const ModalProvider = () => {
       <DeleteChannelModal />
       <DeleteMessageModal />
       <SettingsModal />
+      <SwitchAccountModal />
     </>
   )
 }

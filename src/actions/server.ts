@@ -19,7 +19,7 @@ export const createServer = async (values: z.infer<typeof ServerSchema>) => {
   const { name, image } = validatedFields.data
   const user = await currentUser()
 
-  if (!user) {
+  if (!user?.id) {
     return { error: 'Unauthorized!' }
   }
 
@@ -104,7 +104,7 @@ export const updateServer = async (
 export const updateMembersServerByInviteCode = async (inviteCode: string) => {
   const user = await currentUser()
 
-  if (!user) {
+  if (!user?.id) {
     throw new Error('Unauthorized')
   }
 

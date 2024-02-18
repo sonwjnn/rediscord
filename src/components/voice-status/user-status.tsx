@@ -3,28 +3,34 @@ import StatusBadge from '@/components/ui/badge/status-badge'
 import { Separator } from '@/components/ui/separator'
 import { UserStatuses } from '@/types'
 
+import { PopupItem } from './item'
+
 interface UserStatusProps {
   statuses: { value: string }[]
   handleSubmit: (status: UserStatuses) => void
   setOpen: (open: boolean) => void
 }
 
-function UserStatus({ statuses, handleSubmit, setOpen }: UserStatusProps) {
+export const UserStatus = ({
+  statuses,
+  handleSubmit,
+  setOpen,
+}: UserStatusProps) => {
   return (
     <div className="leading-[16px]">
       {statuses.map((status, index) => (
         <>
-          {/* <ListItem
+          <PopupItem
             onClick={() => {
               setOpen(false), handleSubmit(status.value)
             }}
-            className="group my-1 min-w-[180px] max-w-[380px] flex-col  !items-start !rounded text-gray-300 hover:!bg-primary"
+            className="group my-1 min-w-[180px] max-w-[380px] flex-col  items-start rounded hover:bg-[#4752c4] hover:text-white"
             key={index}
           >
             <div className="flex items-center">
               <StatusBadge
-                customBackgroundColor="bg-black group-hover:!bg-primary"
-                className="relative h-[9px]  w-[9px] !border-none group-hover:!bg-white"
+                customBackgroundColor="bg-black group-hover:bg-primary"
+                className="relative h-[9px]  w-[9px] !border-none group-hover:bg-white"
                 status={status.value}
               />
               <p className="ml-2">
@@ -42,7 +48,7 @@ function UserStatus({ statuses, handleSubmit, setOpen }: UserStatusProps) {
                 <p>You will not receive desktop notifications.</p>
               )}
             </div>
-          </ListItem> */}
+          </PopupItem>
           <Separator
             className={`my-2 h-[1px] w-full ${
               status.value === 'online' ? 'block' : 'hidden'
@@ -53,5 +59,3 @@ function UserStatus({ statuses, handleSubmit, setOpen }: UserStatusProps) {
     </div>
   )
 }
-
-export default UserStatus
