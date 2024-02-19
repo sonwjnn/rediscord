@@ -12,7 +12,7 @@ import {
 import { UserAvatar } from '@/components/user-avatar'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { StaticUserStatuses, UserStatuses } from '@/types'
-import { User } from '@prisma/client'
+import { Statuses, User } from '@prisma/client'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import React, { useState } from 'react'
@@ -25,16 +25,20 @@ import { UserStatus } from './user-status'
 import DialogContentMain from './voice-status-dialog-content-main'
 
 export const VoiceStatusContent = () => {
-  const currentUser = useCurrentUser()
+  const user = useCurrentUser()
+
   const [open, setOpen] = useState(false)
-  const statuses = Object.values(StaticUserStatuses)
+
+  if (!user) return null
+
+  const statuses = Object.values(Statuses)
     .slice(0, 4)
     .map(status => ({
       value: status,
     }))
 
   const handleSubmit = (status: UserStatuses) => {
-    const updatedUser = { ...currentUser, status: status }
+    const updatedUser = { ...user, status: status }
   }
 
   const toolTipContent = (
@@ -48,9 +52,10 @@ export const VoiceStatusContent = () => {
     <>
       <div className=" h-[60px] w-full rounded-t-md bg-gray-300"></div>
       <UserAvatar
-        className="relative -top-4 left-8 scale-[2]  ring-[3px] ring-zinc-200/90 dark:ring-[#1e1f22]"
-        imageUrl={currentUser?.image || ''}
-        name={currentUser?.name || ''}
+        className="-top-4 left-8 scale-[2] ring-[3px] ring-zinc-200/90 dark:ring-[#1e1f22]"
+        imageUrl={user?.image || ''}
+        name={user?.name || ''}
+        status={user?.status}
       />
       <div className="relative mt-6 rounded-lg bg-white p-2 dark:bg-black">
         <Image
@@ -60,12 +65,12 @@ export const VoiceStatusContent = () => {
           alt="hashtag image"
           className="absolute -top-12 right-0 h-6 w-6  rounded bg-white object-cover p-0.5 text-white  dark:bg-black dark:text-black"
         />
-        <p className="text-lg font-semibold">{currentUser?.name}</p>
-        <p className="text-xs">{currentUser?.email}</p>
+        <p className="text-lg font-semibold">{user?.name}</p>
+        <p className="text-xs">{user?.email}</p>
         <Separator className="mt-2" />
         <p className="mt-2 text-xs font-semibold">DISCORD MEMBER SINCE</p>
         <p className=" py-2 text-xs">
-          {format(new Date(currentUser?.createdAt || ''), 'd MMM yyyy')}
+          {format(new Date(user?.createdAt), 'd MMM yyyy')}
         </p>
         <Hint
           label=""
@@ -77,19 +82,16 @@ export const VoiceStatusContent = () => {
           <PopupItem className="group mt-2 flex items-center justify-between space-x-2 rounded py-1  active:bg-[#4752c4]">
             <div className=" flex items-center justify-center">
               <StatusBadge
-                className="relative !border-black group-hover:!border-foreground group-active:!border-primary"
-                customBackgroundColor="!bg-black group-hover:!bg-foreground group-active:!bg-primary"
-                // status={currentUser.status}
-                status={'online'}
+                className="size-[9px] border-none"
+                status={user?.status}
               />
-              {/* <p className="ml-2">{currentUser.status}</p> */}
-              <p className="ml-2">{'online'}</p>
+              <p className="ml-2 capitalize">{user.status.toLowerCase()}</p>
             </div>
             <AiOutlineRight size="10" className="justify-self-end" />
           </PopupItem>
         </Hint>
         {/* <DialogContentMain
-          currentUser={currentUser}
+          user={user}
           handleSubmit={handleSubmit}
           statuses={statuses}
         /> */}

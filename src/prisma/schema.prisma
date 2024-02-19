@@ -28,6 +28,14 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
+enum Statuses {
+  ONLINE
+  IDLE
+  DND
+  OFFLINE
+  MOBILE
+}
+
 model User {
   id                    String                 @id @default(cuid())
   name                  String?                @unique
@@ -39,6 +47,7 @@ model User {
   accounts              Account[]
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
+  status                Statuses               @default(ONLINE)
 
   servers  Server[]
   members  Member[]

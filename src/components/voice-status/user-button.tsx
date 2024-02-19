@@ -23,7 +23,11 @@ export const UserButton = () => {
       <div className=" flex min-w-[120px] justify-between gap-1">
         <PopoverTrigger>
           <button className="flex gap-2 rounded-md py-1 pl-0.5 pr-2 text-left leading-tight transition hover:bg-zinc-300 dark:hover:bg-white/10 ">
-            <UserAvatar imageUrl={user?.image || ''} name={user?.name || ''} />
+            <UserAvatar
+              imageUrl={user?.image || ''}
+              name={user?.name || ''}
+              status={user?.status}
+            />
             <div>
               <div className="line-clamp-1 text-xs font-semibold">
                 {user?.name}

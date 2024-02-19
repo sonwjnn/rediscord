@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import StatusBadge from '@/components/ui/badge/status-badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn, stringToColor } from '@/lib/utils'
-import { StaticUserStatuses } from '@/types'
+import { Statuses } from '@prisma/client'
 import { type VariantProps, cva } from 'class-variance-authority'
 import { BsDiscord } from 'react-icons/bs'
 
@@ -26,7 +26,7 @@ interface UserAvatarProps extends VariantProps<typeof avatarSizes> {
   isLive?: boolean
   showBadge?: boolean
   className?: string
-  status?: StaticUserStatuses
+  status?: Statuses
 }
 
 export const UserAvatar = ({
@@ -42,12 +42,13 @@ export const UserAvatar = ({
 
   const color = stringToColor(name || '')
   return (
-    <div className="relative">
+    <div
+      className={cn('relative rounded-full', className, avatarSizes({ size }))}
+    >
       <Avatar
         className={cn(
           isLive && 'border border-background ring-2 ring-rose-500',
-          avatarSizes({ size }),
-          className
+          avatarSizes({ size })
         )}
       >
         <AvatarImage src={imageUrl} className="object-cover" />

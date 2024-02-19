@@ -12,6 +12,17 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
   Form,
   FormControl,
   FormField,
@@ -32,6 +43,7 @@ import { ChannelSchema } from '@/schemas'
 import { useModal } from '@/store/use-modal-store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ChannelType } from '@prisma/client'
+import { MoreVertical } from 'lucide-react'
 import { useEffect, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -96,7 +108,7 @@ export const SwitchAccountModal = () => {
           <div className=" mt-4 flex items-center justify-between rounded bg-[#F2F3F5] py-2 pl-3 pr-2 dark:bg-[#2B2D31]">
             <div className="flex items-center">
               <UserAvatar
-                size="md"
+                className="size-10"
                 imageUrl={user?.image || ''}
                 name={user?.name || ''}
               />
@@ -105,20 +117,25 @@ export const SwitchAccountModal = () => {
                 <p className=" text-green-500">Active account</p>
               </div>
             </div>
-            {/* <Popover>
-                    <PopoverTrigger>
-                      <BsThreeDots className=" text-xl hover:text-gray-200" />
-                    </PopoverTrigger>
-                    <PopoverContent className="w-24 border-none bg-background p-1.5">
-                      <div className=" rounded font-medium leading-[18px] text-red-500 hover:bg-red-500 hover:text-white">
-                        Logout
-                      </div>
-                    </PopoverContent>
-            </Popover> */}
+            <div className="ml-auto">
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <MoreVertical className="size-5 text-zinc-500" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="bottom">
+                  <DropdownMenuItem
+                  //  onClick={() => handleKick(member.id)}
+                  >
+                    {/* <Gavel className="mr-2 size-4" /> */}
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
         <DialogFooter className="bg-gray-100 px-6 py-4">
-          <Button variant="primary" disabled={isPending}>
+          <Button className="mx-auto" variant="link" disabled={isPending}>
             {isPending ? <Spinner className="mr-2" /> : null}
             Add Account
           </Button>
