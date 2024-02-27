@@ -1,27 +1,25 @@
-const translation = {
-  user: {
-    status: {
-      online: 'Online',
-      idle: 'Idle',
-      dnd: "Don't Disturb",
-      offline: 'Offline',
-      mobile: 'Mobile',
-    },
-  },
-}
+import { Statuses } from '@prisma/client'
 
-type TranslationKeys = keyof typeof translation
+export const t = (status: string | undefined) => {
+	try {
+		if (!status) return null
 
-export const t = (key: string) => {
-  try {
-    const keys = key.toLowerCase().split('.') as TranslationKeys[]
-    let result: any = translation
-    for (const k of keys) {
-      result = result[k]
-    }
-    return result
-  } catch (error) {
-    console.error(error)
-    return key
-  }
+		switch (status) {
+			case Statuses.ONLINE:
+				return 'Online'
+			case Statuses.IDLE:
+				return 'Idle'
+			case Statuses.DND:
+				return "Don't Disturb"
+			case Statuses.OFFLINE:
+				return 'Offline'
+			case Statuses.MOBILE:
+				return 'Mobile'
+			default:
+				return 'Online'
+		}
+	} catch (error) {
+		console.error(error)
+		return status
+	}
 }

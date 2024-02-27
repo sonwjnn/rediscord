@@ -7,6 +7,7 @@ import { DeleteMessageModal } from '@/components/modals/delete-message-modal'
 import { DeleteServerModal } from '@/components/modals/delete-server-modal'
 import { EditChannelModal } from '@/components/modals/edit-channel-modal'
 import { EditServerModal } from '@/components/modals/edit-server-modal'
+import { EditUserStatusModal } from '@/components/modals/edit-user-status-modal'
 import { InviteModal } from '@/components/modals/invite-modal'
 import { LeaveServerModal } from '@/components/modals/leave-server-modal'
 import { MembersModal } from '@/components/modals/members-modal'
@@ -16,27 +17,28 @@ import { SwitchAccountModal } from '@/components/modals/switch-account-modal'
 import { useIsClient } from 'usehooks-ts'
 
 export const ModalProvider = () => {
-  const isClient = useIsClient()
+	const isClient = useIsClient()
 
-  if (!isClient) {
-    return null
-  }
+	if (!isClient) {
+		return null
+	}
 
-  return (
-    <>
-      <CreateChannelModal />
-      <CreateServerModal />
-      <InviteModal />
-      <EditServerModal />
-      <MembersModal />
-      <LeaveServerModal />
-      <DeleteServerModal />
-      <EditChannelModal />
-      <MessageFileModal />
-      <DeleteChannelModal />
-      <DeleteMessageModal />
-      <SettingsModal />
-      <SwitchAccountModal />
-    </>
-  )
+	return (
+		<>
+			<CreateChannelModal />
+			<CreateServerModal />
+			<InviteModal />
+			<EditServerModal />
+			<MembersModal />
+			<LeaveServerModal />
+			<DeleteServerModal />
+			<EditChannelModal />
+			<MessageFileModal />
+			<DeleteChannelModal />
+			<DeleteMessageModal />
+			<SettingsModal />
+			<SwitchAccountModal />
+			<EditUserStatusModal />
+		</>
+	)
 }
