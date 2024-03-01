@@ -8,13 +8,13 @@ interface StatusBadgeProps extends React.HTMLAttributes<HTMLDivElement> {
 	idleClassName?: string
 }
 
-export default function StatusBadge({
+export const StatusBadge = ({
 	status,
 	isIDLEBackground = true,
 	className,
 	idleClassName,
 	...props
-}: StatusBadgeProps) {
+}: StatusBadgeProps) => {
 	return (
 		<div
 			className={cn(

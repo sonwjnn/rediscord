@@ -12,6 +12,7 @@ import { UserStatus } from './user-status'
 import { useModal } from '@/store/use-modal-store'
 import { CopyIcon, SmileIcon } from 'lucide-react'
 import { Dispatch, SetStateAction } from 'react'
+import { stringToColor } from '@/lib/utils'
 
 interface VoiceStatusContentProps {
 	setOpen: Dispatch<SetStateAction<boolean>>
@@ -19,6 +20,7 @@ interface VoiceStatusContentProps {
 
 export const VoiceStatusContent = ({ setOpen }: VoiceStatusContentProps) => {
 	const user = useCurrentUser()
+	const color = stringToColor(user?.name || '')
 
 	const { onOpen } = useModal()
 
@@ -31,14 +33,18 @@ export const VoiceStatusContent = ({ setOpen }: VoiceStatusContentProps) => {
 
 	return (
 		<>
-			<div className=' h-[60px] w-full rounded-t-md bg-gray-300'></div>
+			<div
+				className=' h-[60px] w-full rounded-t-md bg-gray-300'
+				style={{ backgroundColor: color }}
+			>
+			</div>
 			<UserAvatar
 				className='-top-4 left-8 scale-[2] ring-[3px] ring-zinc-200/90 dark:ring-[#1e1f22]'
 				imageUrl={user?.image || ''}
 				name={user?.name || ''}
 				status={user?.status}
 			/>
-			<div className='relative mt-6 rounded-lg bg-white p-2 dark:bg-black'>
+			<div className='relative mt-6 rounded-lg bg-white py-2 px-3 dark:bg-black'>
 				<Image
 					src='/hashtag.png'
 					height={28}

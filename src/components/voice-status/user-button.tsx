@@ -23,7 +23,7 @@ export const UserButton = () => {
 	return (
 		<Popover open={isOpen} onOpenChange={onOpenChange}>
 			<div className=' flex min-w-[120px] justify-between gap-1'>
-				<PopoverTrigger>
+				<PopoverTrigger asChild>
 					<button className='group flex gap-2 rounded-md py-1 pl-0.5 pr-2 text-left leading-tight transition hover:bg-zinc-300 dark:hover:bg-white/10 '>
 						<UserAvatar
 							imageUrl={user?.image || ''}

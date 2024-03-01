@@ -1,6 +1,6 @@
 import { LiveBadge } from '@/components/live-badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import StatusBadge from '@/components/ui/badge/status-badge'
+import { StatusBadge } from '@/components/status-badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn, stringToColor } from '@/lib/utils'
 import { Statuses } from '@prisma/client'

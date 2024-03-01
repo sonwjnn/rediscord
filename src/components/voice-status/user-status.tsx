@@ -1,6 +1,6 @@
 'use client'
 
-import StatusBadge from '@/components/ui/badge/status-badge'
+import { StatusBadge } from '@/components/status-badge'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import { Statuses } from '@prisma/client'
@@ -12,7 +12,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from '@/components/ui/popover'
-import { useState, useTransition } from 'react'
+import { Fragment, useState, useTransition } from 'react'
 import { AiOutlineRight } from 'react-icons/ai'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { updateUserStatus } from '@/actions/user'
@@ -32,6 +32,7 @@ export const UserStatus = () => {
 		startTransition(() => {
 			updateUserStatus(value, user?.id!)
 				.then(() => {
+					toast.success('User status updated!')
 				})
 				.catch(() => toast.error('Something went wrong!'))
 		})
@@ -71,9 +72,10 @@ export const UserStatus = () => {
 					sideOffset={0}
 				>
 					{formattedStatuses.map((status, index) => (
-						<>
+						<Fragment key={status}>
 							<PopupItem
-								onClick={() => onChangeStatus(status)}
+								onClick={() =>
+									onChangeStatus(status)}
 								className='group my-1 min-w-[180px] max-w-[380px] flex-col  items-start rounded hover:bg-[#4752c4] hover:text-white dark:hover:bg-[#4752c4]'
 								key={index}
 							>
@@ -111,7 +113,7 @@ export const UserStatus = () => {
 										: 'hidden',
 								)}
 							/>
-						</>
+						</Fragment>
 					))}
 				</PopoverContent>
 			</Popover>
