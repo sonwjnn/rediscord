@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { UserAvatar } from '@/components/user-avatar'
-import { getServerById } from '@/data/server'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { stringToColor } from '@/lib/utils'
 import { MemberWithUser } from '@/types'
@@ -13,8 +12,8 @@ import { format } from 'date-fns'
 import { Forward, MessageCircleMore } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
 import { BsDiscord } from 'react-icons/bs'
+import { RoleBadge } from './role-badge'
 
 interface MemberButtonProps {
 	member: MemberWithUser
@@ -57,22 +56,22 @@ export const MemberButton = ({ server, member }: MemberButtonProps) => {
 				<p className='text-xs'>{member.user.bio}</p>
 				<Separator className='mt-2' />
 				<div className='my-2'>
-					<p className='text-xs font-semibold'>
+					<p className='text-xs font-bold'>
 						MEMBER SINCE
 					</p>
 					<div className='flex gap-x-3'>
-						<p className='flex py-2 text-xs items-center gap-x-1'>
+						<div className='flex py-2 text-xs items-center gap-x-1'>
 							<BsDiscord className='text-[#ABAFB7]' size={14} />
 							{format(
 								new Date(member.user.createdAt),
 								'd MMM yyyy',
 							)}
-						</p>
+						</div>
 
 						<div className='flex items-center'>
 							<div className='size-1 rounded-full bg-[#4C4D55]' />
 						</div>
-						<p className='flex items-center gap-x-1 py-2 text-xs'>
+						<div className='flex items-center gap-x-1 py-2 text-xs'>
 							<div className='relative rounded-full'>
 								<Avatar className='size-4'>
 									<AvatarImage
@@ -85,40 +84,18 @@ export const MemberButton = ({ server, member }: MemberButtonProps) => {
 								</Avatar>
 							</div>
 							{format(new Date(member.createdAt), 'd MMM yyyy')}
-						</p>
+						</div>
 					</div>
 				</div>
 
 				<div className='my-2'>
-					<p className='text-xs font-semibold'>
+					<p className='text-xs font-bold'>
 						ROLES
 					</p>
 					<div className='flex gap-x-3'>
-						<p className='flex py-2 text-xs items-center gap-x-1'>
-							<BsDiscord className='text-[#ABAFB7]' size={14} />
-							{format(
-								new Date(member.user.createdAt),
-								'd MMM yyyy',
-							)}
-						</p>
-
-						<div className='flex items-center'>
-							<div className='size-1 rounded-full bg-[#4C4D55]' />
+						<div className='flex py-2 text-xs items-center gap-x-1'>
+							<RoleBadge role={member.role} />
 						</div>
-						<p className='flex items-center gap-x-1 py-2 text-xs'>
-							<div className='relative rounded-full'>
-								<Avatar className='size-4'>
-									<AvatarImage
-										src={server?.image}
-										className='object-cover'
-									/>
-									<AvatarFallback>
-										{server?.name}
-									</AvatarFallback>
-								</Avatar>
-							</div>
-							{format(new Date(member.createdAt), 'd MMM yyyy')}
-						</p>
 					</div>
 				</div>
 				<Button

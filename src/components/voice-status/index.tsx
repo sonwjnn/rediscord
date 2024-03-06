@@ -9,12 +9,12 @@ import { useCurrentUser } from '@/hooks/use-current-user'
 import { VoiceStatus as VoiceStatusType } from '@/types'
 import { redirect } from 'next/navigation'
 import { useState } from 'react'
-import { useIsClient } from 'usehooks-ts'
 
 import { Controls, ControlsSkeleton } from './controls'
+import { useOrigin } from '@/hooks/use-origin'
 
 export const VoiceStatus = () => {
-	const isClient = useIsClient()
+	const origin = useOrigin()
 	const [voiceStatus, setVoiceStatus] = useState<VoiceStatusType>({
 		mute: true,
 	})
@@ -22,7 +22,7 @@ export const VoiceStatus = () => {
 
 	if (!user) return redirect('/')
 
-	if (!isClient) return <VoiceStatusSkeleton />
+	if (!origin) return <VoiceStatusSkeleton />
 
 	return (
 		<TooltipProvider>

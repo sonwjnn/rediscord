@@ -43,7 +43,7 @@
     "livekit-server-sdk": "^1.2.7",
     "lucide-react": "^0.309.0",
     "next": "14.0.4",
-    "next-auth": "^5.0.0-beta.11",
+    "next-auth": "beta",
     "next-themes": "^0.2.1",
     "query-string": "^8.1.0",
     "react": "^18",

@@ -20,6 +20,7 @@ import { useState } from 'react'
 interface MemberItemProps {
 	member: MemberWithUser
 	server: Server
+	type: 'member' | 'own'
 }
 
 const roleIconMap = {
@@ -30,7 +31,9 @@ const roleIconMap = {
 	[MemberRole.ADMIN]: <ShieldAlert className='ml-2 size-4 text-rose-500' />,
 }
 
-export const MemberItem = ({ member, server }: MemberItemProps) => {
+export const MemberItem = (
+	{ member, server, type = 'member' }: MemberItemProps,
+) => {
 	const user = useCurrentUser()
 	const params = useParams()
 	const router = useRouter()
@@ -49,6 +52,8 @@ export const MemberItem = ({ member, server }: MemberItemProps) => {
 		router.push(`/servers/${params?.serverId}/conversations/${member.id}`)
 	}
 
+	const data = type === 'member' ? member.user : user
+
 	return (
 		<Popover open={isOpen} onOpenChange={onOpenChange}>
 			<div className=' flex min-w-[120px] justify-between gap-1'>
@@ -62,9 +67,9 @@ export const MemberItem = ({ member, server }: MemberItemProps) => {
 						)}
 					>
 						<UserAvatar
-							imageUrl={member.user.image || ''}
-							name={member.user.name || ''}
-							status={member.user.status}
+							imageUrl={data?.image || ''}
+							name={data?.name || ''}
+							status={data?.status}
 						/>
 						<p
 							className={cn(

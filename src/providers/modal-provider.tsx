@@ -14,12 +14,12 @@ import { MembersModal } from '@/components/modals/members-modal'
 import { MessageFileModal } from '@/components/modals/message-file-modal'
 import { SettingsModal } from '@/components/modals/settings-modal'
 import { SwitchAccountModal } from '@/components/modals/switch-account-modal'
-import { useIsClient } from 'usehooks-ts'
+import { useOrigin } from '@/hooks/use-origin'
 
 export const ModalProvider = () => {
-	const isClient = useIsClient()
+	const origin = useOrigin()
 
-	if (!isClient) {
+	if (!origin) {
 		return null
 	}
 

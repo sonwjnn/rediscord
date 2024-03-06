@@ -4,18 +4,18 @@ import { logout } from '@/actions/logout'
 import { cn } from '@/lib/utils'
 
 interface LogoutButtonProps {
-  children?: React.ReactNode
-  className?: string
+	children?: React.ReactNode
+	className?: string
 }
 
 export const LogoutButton = ({ children, className }: LogoutButtonProps) => {
-  const onClick = () => {
-    logout()
-  }
+	const onClick = () => {
+		logout()
+	}
 
-  return (
-    <span onClick={onClick} className={cn('cursor-pointer', className)}>
-      {children}
-    </span>
-  )
+	return (
+		<span onClick={onClick} className={cn('cursor-pointer', className)}>
+			{children}
+		</span>
+	)
 }

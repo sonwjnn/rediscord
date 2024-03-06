@@ -11,12 +11,12 @@ export type ExtendedUser = DefaultSession['user'] & {
 	createdAt: Date
 }
 
-declare module '@auth/core/types' {
+declare module 'next-auth' {
 	interface Session {
 		user: ExtendedUser
 	}
 }
 
-declare module '@auth/core/jwt' {
+declare module 'next-auth/jwt' {
 	interface JWT extends ExtendedUser {}
 }

@@ -17,11 +17,13 @@ import { AiOutlineRight } from 'react-icons/ai'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { updateUserStatus } from '@/actions/user'
 import { toast } from 'sonner'
+import { useSession } from 'next-auth/react'
 
 const formattedStatuses = Object.values(Statuses).slice(0, 4)
 
 export const UserStatus = () => {
 	const user = useCurrentUser()
+	const { update } = useSession()
 	const [hoverPopover, setHoverPopover] = useState(false)
 
 	const [isPending, startTransition] = useTransition()
@@ -32,6 +34,7 @@ export const UserStatus = () => {
 		startTransition(() => {
 			updateUserStatus(value, user?.id!)
 				.then(() => {
+					update()
 					toast.success('User status updated!')
 				})
 				.catch(() => toast.error('Something went wrong!'))

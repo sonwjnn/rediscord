@@ -4,6 +4,7 @@ import { getTwoFactorConfirmationByUserId } from '@/data/two-factor-confirmation
 import { getUserById } from '@/data/user'
 import { db } from '@/lib/db'
 import { PrismaAdapter } from '@auth/prisma-adapter'
+import { CleaningDelay, Statuses } from '@prisma/client'
 import NextAuth from 'next-auth'
 
 export const {
@@ -63,13 +64,15 @@ export const {
 
 			if (session.user) {
 				session.user.name = token.name
-				session.user.isTwoFactorEnabled = token.isTwoFactorEnabled
+				session.user.isTwoFactorEnabled = token
+					.isTwoFactorEnabled as boolean
 				session.user.email = token.email as string
-				session.user.isOAuth = token.isOAuth
-				session.user.status = token.status
-				session.user.bio = token.bio
-				session.user.cleaningDelay = token.cleaningDelay
-				session.user.createdAt = token.createdAt
+				session.user.isOAuth = token.isOAuth as boolean
+				session.user.status = token.status as Statuses
+				session.user.bio = token.bio as string
+				session.user.cleaningDelay = token
+					.cleaningDelay as CleaningDelay
+				session.user.createdAt = token.createdAt as Date
 			}
 
 			return session
