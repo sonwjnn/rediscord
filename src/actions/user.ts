@@ -3,7 +3,7 @@
 import { currentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
 
-import { CustomUserStatusSchema } from '@/schemas'
+import { CustomUserStatusSchema, UserSchema } from '@/schemas'
 import { Statuses } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -66,4 +66,37 @@ export const updateUserStatus = async (
 	} catch {
 		throw new Error('Internal Error')
 	}
+}
+
+export const updateUser = async (
+	values: z.infer<typeof UserSchema>,
+	serverId: string,
+) => {
+	const validatedFields = UserSchema.safeParse(values)
+
+	if (!validatedFields.success) {
+		return { error: 'Invalid fields!' }
+	}
+
+	const { name, image } = validatedFields.data
+	const user = await currentUser()
+
+	if (!user) {
+		return { error: 'Unauthorized!' }
+	}
+
+	const server = await db.server.update({
+		where: {
+			id: serverId,
+			userId: user.id,
+		},
+		data: {
+			name,
+			image,
+		},
+	})
+
+	revalidatePath(`/servers/${server.id}`)
+
+	return server
 }

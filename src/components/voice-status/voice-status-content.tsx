@@ -13,6 +13,7 @@ import { useModal } from '@/store/use-modal-store'
 import { CopyIcon, SmileIcon } from 'lucide-react'
 import { Dispatch, SetStateAction } from 'react'
 import { stringToColor } from '@/lib/utils'
+import { EditProfileButton } from './edit-profile-button'
 
 interface VoiceStatusContentProps {
 	setOpen: Dispatch<SetStateAction<boolean>>
@@ -34,9 +35,10 @@ export const VoiceStatusContent = ({ setOpen }: VoiceStatusContentProps) => {
 	return (
 		<>
 			<div
-				className=' h-[60px] w-full rounded-t-md bg-gray-300'
+				className='relative h-[60px] w-full rounded-t-md bg-gray-300'
 				style={{ backgroundColor: color }}
 			>
+				<EditProfileButton className='absolute right-1 top-1' />
 			</div>
 			<UserAvatar
 				className='-top-4 left-8 scale-[2] ring-[3px] ring-zinc-200/90 dark:ring-[#1e1f22]'

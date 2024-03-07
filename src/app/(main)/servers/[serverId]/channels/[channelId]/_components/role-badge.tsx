@@ -25,7 +25,7 @@ export const RoleBadge = ({ role, className }: RoleBadgeProps) => {
 	return (
 		<div
 			className={cn(
-				'rounded-sm bg-[#212228] p-1 px-1.5 text-center text-[10px] font-semibold uppercase tracking-wide flex gap-x-1.5 ',
+				'rounded-sm bg-[#] bg-zinc-200  dark:bg-[#212228] p-1 px-1.5 text-center text-[10px] font-semibold uppercase tracking-wide flex gap-x-1.5 ',
 				className,
 			)}
 		>

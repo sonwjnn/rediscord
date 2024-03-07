@@ -16,6 +16,7 @@ export type ModalType =
 	| 'settings'
 	| 'switchAccount'
 	| 'editUserStatus'
+	| 'editProfile'
 
 interface ModalData {
 	server?: Server

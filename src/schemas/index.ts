@@ -68,6 +68,11 @@ export const ServerSchema = z.object({
 	image: z.string().min(1, { message: 'Server image is required' }),
 })
 
+export const UserSchema = z.object({
+	name: z.string().min(1, { message: 'User name is required' }),
+	image: z.string().min(1, { message: 'User image is required' }),
+})
+
 export const CustomUserStatusSchema = z.object({
 	bio: z.string().min(1, {
 		message: 'Custom status text is required',

@@ -6,6 +6,7 @@ import { DeleteChannelModal } from '@/components/modals/delete-channel-modal'
 import { DeleteMessageModal } from '@/components/modals/delete-message-modal'
 import { DeleteServerModal } from '@/components/modals/delete-server-modal'
 import { EditChannelModal } from '@/components/modals/edit-channel-modal'
+import { EditProfileModal } from '@/components/modals/edit-profile-modal'
 import { EditServerModal } from '@/components/modals/edit-server-modal'
 import { EditUserStatusModal } from '@/components/modals/edit-user-status-modal'
 import { InviteModal } from '@/components/modals/invite-modal'
@@ -39,6 +40,7 @@ export const ModalProvider = () => {
 			<SettingsModal />
 			<SwitchAccountModal />
 			<EditUserStatusModal />
+			<EditProfileModal />
 		</>
 	)
 }
