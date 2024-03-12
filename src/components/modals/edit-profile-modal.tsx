@@ -25,6 +25,7 @@ import { useCurrentUser } from '@/hooks/use-current-user'
 import { UserSchema } from '@/schemas'
 import { useModal } from '@/store/use-modal-store'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useSession } from 'next-auth/react'
 import { useEffect, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -34,6 +35,7 @@ export const EditProfileModal = () => {
 	const { isOpen, onClose, type } = useModal()
 	const [isPending, startTransition] = useTransition()
 	const user = useCurrentUser()
+	const { update } = useSession()
 
 	const isModalOpen = isOpen && type === 'editProfile'
 
@@ -58,6 +60,7 @@ export const EditProfileModal = () => {
 			updateUser(values, user?.id as string)
 				.then(() => {
 					onClose()
+					update()
 					form.reset()
 					toast.success('User updated!')
 				})
@@ -71,10 +74,6 @@ export const EditProfileModal = () => {
 			form.reset()
 		}, 200)
 	}
-
-	useEffect(() => {
-		console.log(form.getValues('image'))
-	}, [form])
 
 	return (
 		<Dialog open={isModalOpen} onOpenChange={handleClose}>

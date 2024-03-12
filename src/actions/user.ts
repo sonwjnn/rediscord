@@ -36,8 +36,6 @@ export const updateCustomUserStatus = async (
 		},
 	})
 
-	revalidatePath(`/`)
-
 	return response
 }
 
@@ -60,7 +58,6 @@ export const updateUserStatus = async (
 				status,
 			},
 		})
-		revalidatePath(`/`)
 
 		return response
 	} catch {
@@ -70,7 +67,7 @@ export const updateUserStatus = async (
 
 export const updateUser = async (
 	values: z.infer<typeof UserSchema>,
-	serverId: string,
+	userId: string,
 ) => {
 	const validatedFields = UserSchema.safeParse(values)
 
@@ -79,16 +76,14 @@ export const updateUser = async (
 	}
 
 	const { name, image } = validatedFields.data
-	const user = await currentUser()
 
-	if (!user) {
+	if (!userId) {
 		return { error: 'Unauthorized!' }
 	}
 
-	const server = await db.server.update({
+	const res = await db.user.update({
 		where: {
-			id: serverId,
-			userId: user.id,
+			id: userId,
 		},
 		data: {
 			name,
@@ -96,7 +91,5 @@ export const updateUser = async (
 		},
 	})
 
-	revalidatePath(`/servers/${server.id}`)
-
-	return server
+	return res
 }

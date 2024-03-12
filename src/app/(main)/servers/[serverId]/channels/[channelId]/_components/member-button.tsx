@@ -14,6 +14,8 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { BsDiscord } from 'react-icons/bs'
 import { RoleBadge } from './role-badge'
+import { useEffect, useState } from 'react'
+import { usePalette } from 'color-thief-react'
 
 interface MemberButtonProps {
 	member: MemberWithUser
@@ -23,7 +25,26 @@ export const MemberButton = ({ server, member }: MemberButtonProps) => {
 	const user = useCurrentUser()
 	const router = useRouter()
 
-	const color = stringToColor(member.user.name || '')
+	const [bgColor, setBgColor] = useState<string>('')
+	const { data: color } = usePalette(
+		member?.user?.image as string,
+		10,
+		'hex',
+		{
+			crossOrigin: 'Anonymous',
+			quality: 100,
+		},
+	)
+
+	useEffect(() => {
+		if (color) {
+			setBgColor(color?.[2] ?? '#e0e0e0')
+		} else {
+			const stringColor = stringToColor(member.user.name || '')
+
+			setBgColor(stringColor)
+		}
+	}, [color, member.user.name])
 
 	const onClick = () => {
 		if (user?.id === member.userId) return
@@ -35,7 +56,7 @@ export const MemberButton = ({ server, member }: MemberButtonProps) => {
 		<div>
 			<div
 				className=' h-[60px] w-full rounded-t-md bg-gray-300'
-				style={{ backgroundColor: color }}
+				style={{ backgroundColor: bgColor }}
 			>
 			</div>
 			<UserAvatar
@@ -98,16 +119,18 @@ export const MemberButton = ({ server, member }: MemberButtonProps) => {
 						</div>
 					</div>
 				</div>
-				<Button
-					className='w-full  bg-zinc-700/10  text-zinc-600 hover:bg-zinc-700/20 hover:text-zinc-600 focus-visible:bg-gray-800/50 focus-visible:text-gray-100  focus-visible:ring-0 dark:text-zinc-400 dark:hover:bg-zinc-700/50 dark:hover:text-zinc-300'
-					onClick={onClick}
-				>
-					<div className='flex items-center'>
-						<MessageCircleMore size={18} className='mr-2' />Send a
-						message
-					</div>
-					<Forward size={18} className='ml-auto' />
-				</Button>
+				{user?.id !== member.userId && (
+					<Button
+						className='w-full  bg-zinc-700/10  text-zinc-600 hover:bg-zinc-700/20 hover:text-zinc-600 focus-visible:bg-gray-800/50 focus-visible:text-gray-100  focus-visible:ring-0 dark:text-zinc-400 dark:hover:bg-zinc-700/50 dark:hover:text-zinc-300'
+						onClick={onClick}
+					>
+						<div className='flex items-center'>
+							<MessageCircleMore size={18} className='mr-2' />Send
+							a message
+						</div>
+						<Forward size={18} className='ml-auto' />
+					</Button>
+				)}
 			</div>
 		</div>
 	)

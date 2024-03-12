@@ -30,6 +30,7 @@ export const UserButton = () => {
 							name={user?.name || ''}
 							status={user?.status}
 						/>
+
 						<div>
 							<div className='line-clamp-1 text-xs font-semibold'>
 								{user?.name}

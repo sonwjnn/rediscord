@@ -50,6 +50,7 @@ import { toast } from 'sonner'
 import * as z from 'zod'
 
 import { UserAvatar } from '../user-avatar'
+import { LogoutButton } from '../auth/logout-button'
 
 export const SwitchAccountModal = () => {
 	const { isOpen, onClose, type, data } = useModal()
@@ -125,16 +126,14 @@ export const SwitchAccountModal = () => {
 									<MoreVertical className='size-5 text-zinc-500' />
 								</DropdownMenuTrigger>
 								<DropdownMenuContent side='bottom'>
-									<DropdownMenuItem
-										//  onClick={() => handleKick(member.id)}
-									>
-										<div className='flex items-center cursor-pointer text-sm text-rose-500'>
+									<DropdownMenuItem>
+										<LogoutButton className='flex items-center cursor-pointer text-sm text-rose-500'>
 											<LogOutIcon
 												size={18}
 												className='mr-2'
 											/>
 											Log out
-										</div>
+										</LogoutButton>
 									</DropdownMenuItem>
 								</DropdownMenuContent>
 							</DropdownMenu>

@@ -55,7 +55,10 @@ export const UserAvatar = ({
 					avatarSizes({ size }),
 				)}
 			>
-				<AvatarImage src={imageUrl} className='object-cover' />
+				<AvatarImage
+					src={imageUrl}
+					className='object-cover'
+				/>
 				<AvatarFallback style={{ backgroundColor: color }}>
 					<BsDiscord className='text-white' fontSize={18} />
 				</AvatarFallback>

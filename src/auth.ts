@@ -64,6 +64,7 @@ export const {
 
 			if (session.user) {
 				session.user.name = token.name
+				session.user.image = token.image as string
 				session.user.isTwoFactorEnabled = token
 					.isTwoFactorEnabled as boolean
 				session.user.email = token.email as string
@@ -88,6 +89,7 @@ export const {
 
 			token.isOAuth = !!existingAccount
 			token.name = existingUser.name
+			token.image = existingUser.image
 			token.email = existingUser.email
 			token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled
 			token.status = existingUser.status

@@ -52,6 +52,7 @@ export const MemberItem = (
 		router.push(`/servers/${params?.serverId}/conversations/${member.id}`)
 	}
 
+	//TODO: Data not re-render when user change
 	const data = type === 'member' ? member.user : user
 
 	return (
@@ -78,7 +79,7 @@ export const MemberItem = (
 									'text-primary dark:text-zinc-200 dark:group-hover:text-white',
 							)}
 						>
-							{member.user.name}
+							{data?.name}
 						</p>
 						{icon}
 					</div>

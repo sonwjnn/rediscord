@@ -11,9 +11,10 @@ import { SwitchAccount } from './switch-account'
 import { UserStatus } from './user-status'
 import { useModal } from '@/store/use-modal-store'
 import { CopyIcon, SmileIcon } from 'lucide-react'
-import { Dispatch, SetStateAction } from 'react'
-import { stringToColor } from '@/lib/utils'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { EditProfileButton } from './edit-profile-button'
+import { usePalette } from 'color-thief-react'
+import { stringToColor } from '@/lib/utils'
 
 interface VoiceStatusContentProps {
 	setOpen: Dispatch<SetStateAction<boolean>>
@@ -21,11 +22,19 @@ interface VoiceStatusContentProps {
 
 export const VoiceStatusContent = ({ setOpen }: VoiceStatusContentProps) => {
 	const user = useCurrentUser()
-	const color = stringToColor(user?.name || '')
+	const [bgColor, setBgColor] = useState<string>('')
+	const { data: color } = usePalette(user?.image as string, 10, 'hex', {
+		crossOrigin: 'Anonymous',
+		quality: 100,
+	})
 
 	const { onOpen } = useModal()
 
-	if (!user) return null
+	useEffect(() => {
+		if (color) {
+			setBgColor(color?.[2] ?? '#e0e0e0')
+		}
+	}, [color, user])
 
 	const onCopy = () => {
 		navigator.clipboard.writeText(`${user?.id}`)
@@ -36,7 +45,7 @@ export const VoiceStatusContent = ({ setOpen }: VoiceStatusContentProps) => {
 		<>
 			<div
 				className='relative h-[60px] w-full rounded-t-md bg-gray-300'
-				style={{ backgroundColor: color }}
+				style={{ backgroundColor: bgColor }}
 			>
 				<EditProfileButton className='absolute right-1 top-1' />
 			</div>
