@@ -1,5 +1,5 @@
 import { JWT } from '@auth/core/jwt'
-import { CleaningDelay, Statuses } from '@prisma/client'
+import { CleaningDelay, MemberRole, Statuses } from '@prisma/client'
 import NextAuth, { type DefaultSession } from 'next-auth'
 
 export type ExtendedUser = DefaultSession['user'] & {

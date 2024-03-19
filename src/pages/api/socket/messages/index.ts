@@ -14,7 +14,7 @@ export default async function handler(
   try {
     // const profile = await currentUserPages(req);
     const user = {
-      id: '94c9d13e-6171-4395-bcd8-5ec0fd63b8f0',
+      id: 'clrw47sxe0000ui635jh8ptjs',
     }
     const { content, fileUrl } = req.body
     const { serverId, channelId } = req.query

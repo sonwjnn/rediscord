@@ -25,6 +25,7 @@ import { useCurrentUser } from '@/hooks/use-current-user'
 import { UserSchema } from '@/schemas'
 import { useModal } from '@/store/use-modal-store'
 import { zodResolver } from '@hookform/resolvers/zod'
+import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import { useEffect, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
@@ -56,6 +57,8 @@ export const EditProfileModal = () => {
 
 	const onSubmit = async (values: z.infer<typeof UserSchema>) => {
 		if (!user) return
+
+		const oldUserImage = user?.image
 		startTransition(() => {
 			updateUser(values, user?.id as string)
 				.then(() => {
@@ -64,7 +67,13 @@ export const EditProfileModal = () => {
 					form.reset()
 					toast.success('User updated!')
 				})
-				.catch(() => toast.error('Something went wrong!'))
+				.then(async () => {
+					await axios.delete('/api/uploadthing', {
+						data: {
+							url: oldUserImage,
+						},
+					})
+				}).catch(() => toast.error('Something went wrong!'))
 		})
 	}
 

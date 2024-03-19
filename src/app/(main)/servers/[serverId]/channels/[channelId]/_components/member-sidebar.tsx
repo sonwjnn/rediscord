@@ -6,6 +6,8 @@ import { MemberRole } from '@prisma/client'
 import { ShieldAlert, ShieldCheck } from 'lucide-react'
 
 import { MemberItem, MemberItemSkeleton } from './member-item'
+import { OwnItem } from './own-item'
+import { Separator } from '@/components/ui/separator'
 
 interface MemberSidebarProps {
 	server: ServerWithMembersWithUsers
@@ -38,6 +40,11 @@ export const MemberSidebar = ({ server, members }: MemberSidebarProps) => {
 
 	const role = server.members.find((member) => member.userId === user?.id)
 		?.role
+
+	const hasMember = server.members.filter((member) =>
+		member.userId !== user?.id
+	)
+
 	return (
 		<aside className='flex h-full w-full flex-col bg-[#F2F3F5] text-primary dark:bg-[#2B2D31]'>
 			<ScrollArea className='flex-1 px-3'>
@@ -45,34 +52,43 @@ export const MemberSidebar = ({ server, members }: MemberSidebarProps) => {
 					<Section
 						sectionType='members'
 						role={role}
-						label='Members'
+						label={`${role} (You)`}
+						server={server}
+						isSettings={true}
+					/>
+					<OwnItem
+						role={role || MemberRole.GUEST}
 						server={server}
 					/>
-					<div className='space-y-2'>
-						{!!members
-							? members.map((member) => (
-								<>
-									{member.user.id === user?.id
-										? (
-											<MemberItem
-												key={member.id}
-												member={member}
-												server={server}
-												type='own'
-											/>
-										)
-										: (
-											<MemberItem
-												key={member.id}
-												member={member}
-												server={server}
-												type='member'
-											/>
-										)}
-								</>
-							))
-							: null}
-					</div>
+
+					{hasMember.length
+						? (
+							<>
+								<Section
+									sectionType='members'
+									role={role}
+									label={`Members - ${hasMember.length}`}
+									server={server}
+								/>
+
+								<div className='space-y-2'>
+									{!!members
+										? members.map((member) => (
+											<>
+												{member.userId !== user?.id && (
+													<MemberItem
+														key={member.id}
+														member={member}
+														server={server}
+													/>
+												)}
+											</>
+										))
+										: null}
+								</div>
+							</>
+						)
+						: null}
 				</div>
 			</ScrollArea>
 		</aside>

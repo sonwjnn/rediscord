@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation'
 import { Actions } from './actions'
 import { Item, ItemSkeleton } from './item'
 import { Wrapper } from './wrapper'
+import { DirectMessages } from './direct-messages'
 
 export const Navbar = async () => {
 	const user = await currentUser()
@@ -23,7 +24,7 @@ export const Navbar = async () => {
 
 	return (
 		<Wrapper>
-			<Actions />
+			<DirectMessages />
 			<Separator className='mx-auto h-[2px] w-10 rounded-md bg-zinc-300 dark:bg-zinc-700' />
 			<ScrollArea className='w-full flex-1'>
 				{servers.map((server) => (
@@ -36,6 +37,8 @@ export const Navbar = async () => {
 						/>
 					</div>
 				))}
+
+				<Actions />
 			</ScrollArea>
 		</Wrapper>
 	)

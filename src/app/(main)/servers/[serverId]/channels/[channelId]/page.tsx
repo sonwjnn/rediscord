@@ -36,7 +36,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
   }
 
   return (
-    <Container members={server?.members} server={server}>
+    <>
       <ChatHeader
         name={channel.name}
         serverId={channel.serverId}
@@ -44,38 +44,40 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
         members={server.members}
         server={server}
       />
-      {channel.type === ChannelType.TEXT && (
-        <>
-          <ChatMessages
-            member={member}
-            name={channel.name}
-            chatId={channel.id}
-            type="channel"
-            socketUrl="/api/socket/messages"
-            socketQuery={{
-              channelId: channel.id,
-              serverId: channel.serverId,
-            }}
-            channelId={channel.id}
-          />
-          <ChatInput
-            name={channel.name}
-            type="channel"
-            apiUrl="/api/socket/messages"
-            query={{
-              channelId: channel.id,
-              serverId: channel.serverId,
-            }}
-          />
-        </>
-      )}
-      {channel.type === ChannelType.AUDIO && (
-        <MediaRoom chatId={channel.id} video={false} audio={true} />
-      )}
-      {channel.type === ChannelType.VIDEO && (
-        <MediaRoom chatId={channel.id} video={true} audio={true} />
-      )}
-    </Container>
+      <Container members={server?.members} server={server}>
+        {channel.type === ChannelType.TEXT && (
+          <>
+            <ChatMessages
+              member={member}
+              name={channel.name}
+              chatId={channel.id}
+              type="channel"
+              socketUrl="/api/socket/messages"
+              socketQuery={{
+                channelId: channel.id,
+                serverId: channel.serverId,
+              }}
+              channelId={channel.id}
+            />
+            <ChatInput
+              name={channel.name}
+              type="channel"
+              apiUrl="/api/socket/messages"
+              query={{
+                channelId: channel.id,
+                serverId: channel.serverId,
+              }}
+            />
+          </>
+        )}
+        {channel.type === ChannelType.AUDIO && (
+          <MediaRoom chatId={channel.id} video={false} audio={true} />
+        )}
+        {channel.type === ChannelType.VIDEO && (
+          <MediaRoom chatId={channel.id} video={true} audio={true} />
+        )}
+      </Container>
+    </>
   )
 }
 

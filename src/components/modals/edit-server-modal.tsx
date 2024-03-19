@@ -24,6 +24,7 @@ import { Input } from '@/components/ui/input'
 import { ServerSchema } from '@/schemas'
 import { useModal } from '@/store/use-modal-store'
 import { zodResolver } from '@hookform/resolvers/zod'
+import axios from 'axios'
 import { useEffect, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -53,12 +54,21 @@ export const EditServerModal = () => {
 
 	const onSubmit = async (values: z.infer<typeof ServerSchema>) => {
 		if (!server) return
+
+		const oldServerImage = server.image
 		startTransition(() => {
-			updateServer(values, server?.id)
+			updateServer(values, server.id)
 				.then(() => {
 					onClose()
 					form.reset()
 					toast.success('Server updated!')
+				})
+				.then(async () => {
+					await axios.delete('/api/uploadthing', {
+						data: {
+							url: oldServerImage,
+						},
+					})
 				})
 				.catch(() => toast.error('Something went wrong!'))
 		})

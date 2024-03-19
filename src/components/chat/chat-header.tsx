@@ -40,7 +40,7 @@ export const ChatHeader = ({
     }
   }
   return (
-    <div className="text-md flex h-12 items-center border-b-2 border-neutral-200 px-3 font-semibold dark:border-neutral-800">
+    <div className="text-md flex h-12 items-center border-b-2 border-neutral-200 px-3 font-semibold  dark:border-neutral-800">
       <MobileToggle serverId={serverId} />
       {type === 'channel' && (
         <Hash className="mr-2 size-5 text-zinc-500 dark:text-zinc-400" />

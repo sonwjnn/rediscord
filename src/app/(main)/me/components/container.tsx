@@ -7,7 +7,7 @@ import { MemberWithUser, ServerWithMembersWithUsers } from '@/types'
 import { Suspense, useEffect } from 'react'
 import { useMediaQuery } from 'usehooks-ts'
 
-import { MemberSidebar, MemberSidebarSkeleton } from './member-sidebar'
+// import { MemberSidebar, MemberSidebarSkeleton } from './member-sidebar'
 
 interface ContainerProps {
   children: React.ReactNode
@@ -31,7 +31,7 @@ export const Container = ({ children, members, server }: ContainerProps) => {
   }
 
   return (
-    <div className="h-[calc(100%-48px)] bg-white dark:bg-[#313338]">
+    <div className="h-full bg-white dark:bg-[#313338]">
       <div
         className={cn(
           'mr-60 flex h-full flex-col',
@@ -43,13 +43,13 @@ export const Container = ({ children, members, server }: ContainerProps) => {
 
       <aside
         className={cn(
-          'fixed inset-y-0 right-0 top-12 z-20 hidden h-full w-60 flex-col md:flex',
+          'fixed inset-y-0 right-0 z-20 hidden h-full w-60 flex-col md:flex',
           isCollapsed && 'w-0'
         )}
       >
-        <Suspense fallback={<MemberSidebarSkeleton />}>
+        {/* <Suspense fallback={<MemberSidebarSkeleton />}>
           <MemberSidebar members={members} server={server} />
-        </Suspense>
+        </Suspense> */}
       </aside>
     </div>
   )
