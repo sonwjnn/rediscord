@@ -1,32 +1,36 @@
 'use client'
 
 import { Hint } from '@/components/hint'
+import { MemberProfile } from '@/components/member/member-profile'
 import { Spinner } from '@/components/spinner'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/user-avatar'
+import { getServerById } from '@/data/server'
 import { cn } from '@/lib/utils'
 import { ChatItemSchema } from '@/schemas'
 import { useModal } from '@/store/use-modal-store'
+import { MemberWithUser, ServerWithMembersWithUsers } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Member, MemberRole, User } from '@prisma/client'
+import { Member, MemberRole, Server, User } from '@prisma/client'
 import axios from 'axios'
 import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from 'lucide-react'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import qs from 'query-string'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
+
+import { MemberProfileWrapper } from '../member/member-profile-wrapper'
 
 interface ChatItemProps {
   id: string
   content: string
-  member: Member & {
-    user: User
-  }
+  member: MemberWithUser
+  server?: ServerWithMembersWithUsers
   timestamp: string
   fileUrl: string | null
   deleted: boolean
@@ -46,6 +50,7 @@ export const ChatItem = ({
   id,
   content,
   member,
+  server,
   timestamp,
   fileUrl,
   deleted,
@@ -55,6 +60,7 @@ export const ChatItem = ({
   socketQuery,
 }: ChatItemProps) => {
   const [isEditing, setIsEditing] = useState(false)
+
   const { onOpen } = useModal()
   const params = useParams()
   const router = useRouter()
@@ -120,24 +126,31 @@ export const ChatItem = ({
   const isPDF = fileType === 'pdf' && fileUrl
   const isImage = !isPDF && fileUrl
 
+  if (!server) return null
+
   return (
     <div className="group relative flex w-full items-center p-4 transition hover:bg-black/5">
       <div className="group flex w-full items-start gap-x-2">
-        <div
-          onClick={onMemberClick}
-          className="cursor-pointer transition hover:drop-shadow-md"
-        >
-          <UserAvatar imageUrl={member.user.image!} name={member.user.name!} />
-        </div>
+        <MemberProfileWrapper server={server} member={member}>
+          <div
+            // onClick={onMemberClick}
+            className="cursor-pointer transition hover:drop-shadow-md"
+          >
+            <UserAvatar
+              imageUrl={member.user.image!}
+              name={member.user.name!}
+            />
+          </div>
+        </MemberProfileWrapper>
+
         <div className="flex w-full flex-col">
           <div className="flex items-center gap-x-2">
             <div className="flex items-center">
-              <p
-                onClick={onMemberClick}
-                className="cursor-pointer text-sm font-semibold hover:underline"
-              >
-                {member.user.name}
-              </p>
+              <MemberProfileWrapper server={server} member={member}>
+                <p className="cursor-pointer text-sm font-semibold text-zinc-600 hover:underline dark:text-zinc-300">
+                  {member.user.name}
+                </p>
+              </MemberProfileWrapper>
               <Hint label={member.role}>{roleIconMap[member.role]}</Hint>
             </div>
             <span className="text-xs text-zinc-500 dark:text-zinc-400">

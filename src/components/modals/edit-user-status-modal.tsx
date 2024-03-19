@@ -34,7 +34,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Statuses } from '@prisma/client'
 import { CleaningDelay } from '@prisma/client'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import { useEffect, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -50,8 +49,6 @@ const formattedCleaningDelay = [
 export const EditUserStatusModal = () => {
   const { isOpen, onClose, type } = useModal()
   const [isPending, startTransition] = useTransition()
-
-  const router = useRouter()
 
   const isModalOpen = isOpen && type === 'editUserStatus'
 

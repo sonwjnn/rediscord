@@ -3,6 +3,7 @@
 import { useChatQuery } from '@/hooks/use-chat-query'
 import { useChatScroll } from '@/hooks/use-chat-scroll'
 import { useChatSocket } from '@/hooks/use-chat-socket'
+import { ServerWithMembersWithUsers } from '@/types'
 import { Member, Message, User } from '@prisma/client'
 import { format } from 'date-fns'
 import { Loader2, ServerCrash } from 'lucide-react'
@@ -22,6 +23,7 @@ type MessageWithMemberWithUser = Message & {
 interface ChatMessagesProps {
   name: string
   member: Member
+  server?: ServerWithMembersWithUsers
   chatId: string
   socketUrl: string
   socketQuery: Record<string, string>
@@ -33,6 +35,7 @@ interface ChatMessagesProps {
 export const ChatMessages = ({
   name,
   member,
+  server,
   chatId,
   socketUrl,
   socketQuery,
@@ -104,6 +107,7 @@ export const ChatMessages = ({
                 key={message.id}
                 id={message.id}
                 currentMember={member}
+                server={server}
                 member={message.member}
                 content={message.content}
                 fileUrl={message.fileUrl}
