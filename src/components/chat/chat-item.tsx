@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/user-avatar'
 import { getServerById } from '@/data/server'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { cn } from '@/lib/utils'
 import { ChatItemSchema } from '@/schemas'
 import { useModal } from '@/store/use-modal-store'
@@ -59,6 +60,7 @@ export const ChatItem = ({
   socketUrl,
   socketQuery,
 }: ChatItemProps) => {
+  const user = useCurrentUser()
   const [isEditing, setIsEditing] = useState(false)
 
   const { onOpen } = useModal()
@@ -101,7 +103,7 @@ export const ChatItem = ({
         query: socketQuery,
       })
 
-      await axios.patch(url, values)
+      await axios.patch(url, { ...values, user })
 
       form.reset()
       setIsEditing(false)

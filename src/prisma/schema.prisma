@@ -37,13 +37,11 @@ enum Statuses {
 }
 
 enum CleaningDelay {
-	FOUR_HOURS
-	ONE_HOUR
-	THIRTY_MINUTE
+  FOUR_HOURS
+  ONE_HOUR
+  THIRTY_MINUTE
   DO_NOT_CLEAN
 }
-
-
 
 model User {
   id                    String                 @id @default(cuid())

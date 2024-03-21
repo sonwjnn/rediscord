@@ -3,6 +3,7 @@
 import { EmojiPicker } from '@/components/emoji-picker'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { useModal } from '@/store/use-modal-store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
@@ -26,6 +27,7 @@ const formSchema = z.object({
 })
 
 export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
+  const user = useCurrentUser()
   const { onOpen } = useModal()
   const router = useRouter()
 
@@ -45,7 +47,7 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
         query,
       })
 
-      await axios.post(url, values)
+      await axios.post(url, { ...values, user })
 
       form.reset()
       router.refresh()

@@ -1,4 +1,3 @@
-import { currentUserPages } from '@/lib/current-profile-pages'
 import { db } from '@/lib/db'
 import { NextApiResponseServerIo } from '@/types'
 import { MemberRole } from '@prisma/client'
@@ -13,12 +12,9 @@ export default async function handler(
   }
 
   try {
-    // const profile = await currentUserPages(req)
-    const user = {
-      id: 'clrw47sxe0000ui635jh8ptjs',
-    }
     const { messageId, serverId, channelId } = req.query
-    const { content } = req.body
+
+    const { content, user } = req.body
 
     if (!user) {
       return res.status(401).json({ error: 'Unauthorized' })

@@ -1,4 +1,3 @@
-import { currentUserPages } from '@/lib/current-profile-pages'
 import { db } from '@/lib/db'
 import { NextApiResponseServerIo } from '@/types'
 import { NextApiRequest } from 'next'
@@ -12,11 +11,7 @@ export default async function handler(
   }
 
   try {
-    // const profile = await currentUserPages(req);
-    const user = {
-      id: 'clrw47sxe0000ui635jh8ptjs',
-    }
-    const { content, fileUrl } = req.body
+    const { content, fileUrl, user } = req.body
     const { serverId, channelId } = req.query
 
     if (!user) {

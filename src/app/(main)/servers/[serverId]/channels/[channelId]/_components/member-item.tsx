@@ -1,5 +1,6 @@
 'use client'
 
+import { MemberProfile } from '@/components/member/member-profile'
 import {
   Popover,
   PopoverContent,
@@ -14,8 +15,6 @@ import { MemberRole, Server } from '@prisma/client'
 import { ShieldAlert, ShieldCheck } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
-
-import { MemberProfile } from '../../../../../../../components/member/member-profile'
 
 interface MemberItemProps {
   member: MemberWithUser
@@ -68,7 +67,7 @@ export const MemberItem = ({ member, server }: MemberItemProps) => {
                   'text-primary dark:text-zinc-200 dark:group-hover:text-white'
               )}
             >
-              <div className="flex max-w-[120px] justify-center">
+              <div className="flex flex-col max-w-[120px] justify-center">
                 <div className="truncate">{data?.name}</div>
                 <div className="truncate text-[10px] leading-tight">
                   {data?.bio}
