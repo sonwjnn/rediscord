@@ -4,7 +4,7 @@ import { getServerWithChannelsWithMembers } from '@/data/server'
 import { currentUser } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 
-import { Container } from './components/container'
+import { Container } from './_components/container'
 
 interface ChannelIdPageProps {
   params: {

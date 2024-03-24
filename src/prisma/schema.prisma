@@ -61,6 +61,15 @@ model User {
   members  Member[]
   channels Channel[]
 
+  friendsInitiated Friend[] @relation("FriendOne")
+  friendsReceived  Friend[] @relation("FriendTwo")
+
+  requesting  Request[] @relation("Requesting")
+  requestedBy Request[] @relation("RequestedBy")
+
+  blocking  Block[] @relation("Blocking")
+  blockedBy Block[] @relation("BlockedBy")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -227,4 +236,42 @@ model DirectMessage {
 
   @@index([memberId])
   @@index([conversationId])
+}
+
+model Friend {
+  id String @id @default(cuid())
+
+  userOneId String
+  userOne   User   @relation(name: "FriendOne", fields: [userOneId], references: [id], onDelete: Cascade)
+
+  userTwoId String
+  userTwo   User   @relation(name: "FriendTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
+
+  @@unique([userOneId, userTwoId])
+  @@index([userTwoId])
+}
+
+model Request {
+  id String @id @default(cuid())
+
+  userOneId String
+  userOne   User   @relation(name: "Requesting", fields: [userOneId], references: [id], onDelete: Cascade)
+
+  userTwoId String
+  userTwo   User   @relation(name: "RequestedBy", fields: [userTwoId], references: [id], onDelete: Cascade)
+
+  @@unique([userOneId, userTwoId])
+  @@index([userTwoId])
+}
+
+model Block {
+  id        String @id @default(cuid())
+  blockerId String
+  blockedId String
+  blocker   User   @relation(name: "Blocking", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked   User   @relation(name: "BlockedBy", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@index([blockerId])
+  @@index([blockedId])
 }

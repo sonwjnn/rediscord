@@ -1,13 +1,12 @@
 'use client'
 
 import { Hint } from '@/components/hint'
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { ModalType, useModal } from '@/store/use-modal-store'
 import { Channel, ChannelType, MemberRole, Server } from '@prisma/client'
 import { Edit, Hash, Lock, Mic, Trash, Video } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
-
-import { Skeleton } from '../ui/skeleton'
 
 interface ChannelProps {
   channel: Channel

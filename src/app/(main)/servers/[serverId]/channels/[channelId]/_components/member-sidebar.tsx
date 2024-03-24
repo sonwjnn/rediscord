@@ -1,4 +1,4 @@
-import { Section } from '@/components/sidebar/section'
+import { Section } from '@/components/server-sidebar/section'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { MemberWithUser, ServerWithMembersWithUsers } from '@/types'
