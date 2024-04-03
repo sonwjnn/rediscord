@@ -46,7 +46,7 @@
     "next": "14.0.4",
     "next-auth": "beta",
     "next-themes": "^0.2.1",
-    "prisma": "^5.11.0",
+    "prisma": "^5.12.0",
     "query-string": "^8.1.0",
     "react": "^18",
     "react-dom": "^18",
