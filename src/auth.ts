@@ -14,7 +14,7 @@ export const {
   signOut,
   unstable_update,
 } = NextAuth({
-  trustHost: true,
+  secret: '6974bce2653867a21df92e578da5dfa4',
   pages: {
     signIn: '/auth/login',
     error: '/auth/error',
