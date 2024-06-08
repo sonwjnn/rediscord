@@ -60,20 +60,20 @@ export const MemberItem = ({ member, server }: MemberItemProps) => {
               name={data?.name || ''}
               status={data?.status}
             />
-            <p
+            <div
               className={cn(
                 'text-sm font-semibold text-zinc-500 transition group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300',
                 params?.memberId === member.id &&
                   'text-primary dark:text-zinc-200 dark:group-hover:text-white'
               )}
             >
-              <div className="flex flex-col max-w-[120px] justify-center">
+              <div className="flex max-w-[120px] flex-col justify-center">
                 <div className="truncate">{data?.name}</div>
                 <div className="truncate text-[10px] leading-tight">
                   {data?.bio}
                 </div>
               </div>
-            </p>
+            </div>
             {icon}
           </div>
         </PopoverTrigger>

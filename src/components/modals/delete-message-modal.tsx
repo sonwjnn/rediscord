@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { useModal } from '@/store/use-modal-store'
 import axios from 'axios'
 import qs from 'query-string'
@@ -17,6 +18,7 @@ import { useState } from 'react'
 
 export const DeleteMessageModal = () => {
   const { isOpen, onClose, type, data } = useModal()
+  const user = useCurrentUser()
 
   const isModalOpen = isOpen && type === 'deleteMessage'
   const { apiUrl, query } = data
@@ -25,13 +27,17 @@ export const DeleteMessageModal = () => {
 
   const onClick = async () => {
     try {
+      if (!user) {
+        return
+      }
+
       setIsLoading(true)
       const url = qs.stringifyUrl({
         url: apiUrl || '',
         query,
       })
 
-      await axios.delete(url)
+      await axios.delete(url, { data: { user } })
 
       onClose()
     } catch (error) {

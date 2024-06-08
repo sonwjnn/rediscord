@@ -18,12 +18,6 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
 
   const member = await getCurrentMemberOfServer(params.serverId)
 
-  const user = await currentUser()
-
-  if (!user) {
-    return redirect('/')
-  }
-
   const server = await getServerWithChannelsWithMembers(params.serverId)
 
   return <div>Direct Message Page</div>

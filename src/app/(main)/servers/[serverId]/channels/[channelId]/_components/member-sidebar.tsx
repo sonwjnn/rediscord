@@ -4,6 +4,7 @@ import { useCurrentUser } from '@/hooks/use-current-user'
 import { MemberWithUser, ServerWithMembersWithUsers } from '@/types'
 import { MemberRole } from '@prisma/client'
 import { ShieldAlert, ShieldCheck } from 'lucide-react'
+import { Fragment } from 'react'
 
 import { MemberItem, MemberItemSkeleton } from './member-item'
 import { OwnItem } from './own-item'
@@ -66,15 +67,11 @@ export const MemberSidebar = ({ server, members }: MemberSidebarProps) => {
               <div className="space-y-2">
                 {!!members
                   ? members.map(member => (
-                      <>
+                      <Fragment key={member.id}>
                         {member.userId !== user?.id && (
-                          <MemberItem
-                            key={member.id}
-                            member={member}
-                            server={server}
-                          />
+                          <MemberItem member={member} server={server} />
                         )}
-                      </>
+                      </Fragment>
                     ))
                   : null}
               </div>
