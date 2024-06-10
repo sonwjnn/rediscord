@@ -1,26 +1,26 @@
-import { getChannelById } from '@/data/channel'
-import { getCurrentMemberOfServer } from '@/data/member'
-import { getServerWithChannelsWithMembers } from '@/data/server'
+import { getFirstConversationsByUserId } from '@/data/direct-message'
 import { currentUser } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 
-import { Container } from './_components/container'
+const MeLayout = async () => {
+  const user = await currentUser()
 
-interface ChannelIdPageProps {
-  params: {
-    serverId: string
-    channelId: string
+  if (!user || !user.id) {
+    return redirect('/auth/login')
   }
+
+  const conversation = await getFirstConversationsByUserId(user.id)
+
+  if (!conversation) {
+    return
+  }
+
+  const otherMember =
+    conversation.memberOne.userId === user.id
+      ? conversation.memberTwo
+      : conversation.memberOne
+
+  return redirect(`/me/${otherMember.serverId}/${otherMember.id}`)
 }
 
-const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
-  const channel = await getChannelById(params.channelId)
-
-  const member = await getCurrentMemberOfServer(params.serverId)
-
-  const server = await getServerWithChannelsWithMembers(params.serverId)
-
-  return <div>Direct Message Page</div>
-}
-
-export default ChannelIdPage
+export default MeLayout

@@ -1,8 +1,6 @@
+import { DMSidebar, DMSidebarSkeleton } from '@/components/dm-sidebar'
 import { VoiceStatus, VoiceStatusSkeleton } from '@/components/voice-status'
-import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
-
-import { DMSidebar, DMSidebarSkeleton } from './_components/dm-sidebar'
 
 const DMLayout = async ({ children }: { children: React.ReactNode }) => {
   return (

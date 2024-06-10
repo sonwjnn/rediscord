@@ -66,6 +66,7 @@ export const getDirectMessageByConversationId = async ({
       })
     }
 
+
     let nextCursor = null
 
     if (directMessages.length === DIRECT_MESSAGES_BATCH) {

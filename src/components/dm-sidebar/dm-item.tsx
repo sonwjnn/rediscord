@@ -3,13 +3,13 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/user-avatar'
 import { cn } from '@/lib/utils'
-import { Member, MemberRole, Server, User } from '@prisma/client'
+import { MemberWithUser } from '@/types'
+import { MemberRole } from '@prisma/client'
 import { ShieldAlert, ShieldCheck } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 
 interface MemberProps {
-  member: Member & { user: User }
-  server: Server
+  member: MemberWithUser
 }
 
 const roleIconMap = {
@@ -20,14 +20,14 @@ const roleIconMap = {
   [MemberRole.ADMIN]: <ShieldAlert className="ml-2 size-4 text-rose-500" />,
 }
 
-export const ServerMember = ({ member, server }: MemberProps) => {
+export const DMItem = ({ member }: MemberProps) => {
   const params = useParams()
   const router = useRouter()
 
-  const icon = roleIconMap[member.role]
+  // const icon = roleIconMap[member.role]
 
   const onClick = () => {
-    router.push(`/servers/${params?.serverId}/conversations/${member.id}`)
+    router.push(`/me/${member.serverId}/${member.id}`)
   }
 
   return (
@@ -48,12 +48,12 @@ export const ServerMember = ({ member, server }: MemberProps) => {
       >
         {member.user.name}
       </p>
-      {icon}
+      {/* {icon} */}
     </button>
   )
 }
 
-export const ServerMemberSkeleton = () => (
+export const DMItemSkeleton = () => (
   <div
     className={
       'group mb-1 flex w-full items-center gap-x-2 rounded-md px-2 py-2 transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50'
