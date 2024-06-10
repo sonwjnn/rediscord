@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { MessageFileSchema } from '@/schemas'
 import { useModal } from '@/store/use-modal-store'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -22,6 +23,7 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 export const MessageFileModal = () => {
+  const user = useCurrentUser()
   const { isOpen, onClose, type, data } = useModal()
   const router = useRouter()
 
@@ -53,6 +55,7 @@ export const MessageFileModal = () => {
       await axios.post(url, {
         ...values,
         content: query?.content,
+        user
       })
 
       form.reset()
