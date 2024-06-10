@@ -4,7 +4,7 @@ import { Hint } from '@/components/hint'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 
 interface ItemProps {
   id: string
@@ -15,6 +15,7 @@ interface ItemProps {
 
 export const Item = ({ id, initialChannelId, imageUrl, name }: ItemProps) => {
   const params = useParams()
+  const pathname = usePathname()
   const router = useRouter()
 
   const onClick = () => {
@@ -28,7 +29,9 @@ export const Item = ({ id, initialChannelId, imageUrl, name }: ItemProps) => {
           className={cn(
             'absolute left-0 w-[4px] rounded-r-full bg-primary transition-all ease-linear',
             params?.serverId !== id && 'group-hover:h-[20px]',
-            params?.serverId === id ? 'h-[36px]' : 'h-[8px]'
+            !pathname?.includes('/me') && params?.serverId === id
+              ? 'h-[36px]'
+              : 'h-[8px]'
           )}
         />
         <div
