@@ -12,12 +12,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useModal } from '@/store/use-modal-store'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useTransition } from 'react'
 import { toast } from 'sonner'
 
 export const DeleteChannelModal = () => {
   const { isOpen, onClose, type, data } = useModal()
+  const params = useParams()
   const router = useRouter()
 
   const isModalOpen = isOpen && type === 'deleteChannel'
@@ -27,12 +28,14 @@ export const DeleteChannelModal = () => {
   const onClick = async () => {
     if (!server || !channel) return
 
+    const canRedirect = params?.channelId === channel.id
+
     startTransition(() => {
       deleteChannel(server.id, channel.id)
         .then(() => {
           toast.success('Channel deleted!')
           onClose()
-          router.push(`/servers/${server.id}`)
+          canRedirect && router.push(`/servers/${server.id}`)
         })
         .catch(() => toast.error('Something went wrong'))
     })
