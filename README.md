@@ -12,7 +12,7 @@ This project aims to deliver a real-time chat application that fosters efficient
 
 ## Features
 
-- 🔒 **Authentication:** Login, logout, 2FA, OAuth with Google & GitHub.  
+- 🔒 **Authentication:** Login, logout, OAuth with Google & GitHub.  
 - 💬 **Real-time Messaging:** Send, edit, delete messages
 - 🎙️ **Voice & Video Calls:** Join voice/video channels with Livekit support.  
 - 📢 **Channels & Communities:** Create, manage, and customize chat channels.  
