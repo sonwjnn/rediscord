@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">Rediscord</h1> <div align="center"> <strong>Rediscord is a real-time communication platform inspired by Discord</strong><br> Build a modern messaging app with channels, voice & video calls, and communities. </div> <br>
 
-## Getting Started
+<br>
 
-First, run the development server:
+# About The Project
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+In the digital age, online communication has become an essential part of both personal and professional life. Platforms like Discord provide seamless real-time messaging, voice, and video interactions, helping users build and engage in various communities.
+
+However, many existing solutions lack customization, control, and extensibility for businesses and individuals who want a private communication environment. Recognizing these needs, our team has developed Rediscord—a modern, feature-rich Discord alternative.
+
+This project aims to deliver a real-time chat application that fosters efficient collaboration and interaction, integrating voice & video communication, channels, and private messaging for an enhanced user experience.
+
+## Features
+
+- 🔒 **Authentication:** Login, logout, 2FA, OAuth with Google & GitHub.  
+- 💬 **Real-time Messaging:** Send, edit, delete messages
+- 🎙️ **Voice & Video Calls:** Join voice/video channels with Livekit support.  
+- 📢 **Channels & Communities:** Create, manage, and customize chat channels.  
+- 🔍 **User & Role Management:** Manage users, roles, and permissions for communities.  
+- 📂 **File Sharing:** Upload and share images and documents.
+- 🌐 **Deployment:** Deploy the website on Vercel. 
+
+## Tech Stack
+
+- **IDE:** Visual Studio Code for front-end and back-end development.  
+- **Database Management:** PostgreSQL managed using NeonDB and.  
+- **Browsers:** Google Chrome and Microsoft Edge Dev.  
+- **Back-end:** Server actions of NextJS, Prisma ORM, TypeScript.  
+- **Front-end:** NextJS, ReactJS, TypeScript, TailwindCSS, ShadcnUI, AuthJS.  
+
+## Cloning the repository
+
+```sh
+git clone https://github.com/sonwjnn/rediscord.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Install
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+bun install
+# or
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Setup .env file
 
-## Learn More
+```sh
+DATABASE_URL=
+DIRECT_URL=
 
-To learn more about Next.js, take a look at the following resources:
+AUTH_SECRET=
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 
-## Deploy on Vercel
+RESEND_API_KEY=
+NEXT_PUBLIC_APP_URL=
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+LIVEKIT_API_URL=
+LIVEKIT_API_KEY=
+LIVEKIT_API_SECRET=
+NEXT_PUBLIC_LIVEKIT_SERVER_URL=
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+UPLOADTHING_SECRET=
+UPLOADTHING_APP_ID=
+
+```
+
+## Usage
+
+```sh
+# Run project
+bun dev
+```
