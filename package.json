@@ -7,6 +7,8 @@
   },
   "scripts": {
     "dev": "next dev",
+    "dev:all": "concurrently \"bun run dev:webhook\" \"bun run dev\"",
+    "dev:webhook": "ngrok http --url=grizzly-ethical-longhorn.ngrok-free.app 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -38,6 +40,7 @@
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
     "color-thief-react": "^2.1.0",
+    "concurrently": "^9.1.2",
     "date-fns": "^3.2.0",
     "emoji-mart": "^5.5.2",
     "livekit-client": "^1.15.8",

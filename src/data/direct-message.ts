@@ -2,43 +2,17 @@ import { db } from '@/lib/db'
 
 export const getConversationsByUserId = async (userId: string) => {
   try {
-    const members = await db.member.findMany({
-      where: {
-        userId,
-      },
-    })
-
-    if (!members) {
-      throw new Error('Members not found')
-    }
-
     const conversations = await db.conversation.findMany({
       where: {
         OR: [
-          {
-            memberOneId: {
-              in: members.map(member => member.id),
-            },
-          },
-          {
-            memberTwoId: {
-              in: members.map(member => member.id),
-            },
-          },
+          { userOneId: userId },
+          { userTwoId: userId },
         ],
       },
 
       include: {
-        memberOne: {
-          include: {
-            user: true,
-          },
-        },
-        memberTwo: {
-          include: {
-            user: true,
-          },
-        },
+        userOne: true,
+        userTwo: true,
       },
     })
 
@@ -50,43 +24,17 @@ export const getConversationsByUserId = async (userId: string) => {
 
 export const getFirstConversationsByUserId = async (userId: string) => {
   try {
-    const members = await db.member.findMany({
-      where: {
-        userId,
-      },
-    })
-
-    if (!members) {
-      throw new Error('Members not found')
-    }
-
     const [conversation] = await db.conversation.findMany({
       where: {
         OR: [
-          {
-            memberOneId: {
-              in: members.map(member => member.id),
-            },
-          },
-          {
-            memberTwoId: {
-              in: members.map(member => member.id),
-            },
-          },
+          { userOneId: userId },
+          { userTwoId: userId },
         ],
       },
 
       include: {
-        memberOne: {
-          include: {
-            user: true,
-          },
-        },
-        memberTwo: {
-          include: {
-            user: true,
-          },
-        },
+        userOne: true,
+        userTwo: true,
       },
       take: 1,
     })

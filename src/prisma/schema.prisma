@@ -61,6 +61,11 @@ model User {
   members  Member[]
   channels Channel[]
 
+  directMessages DirectMessage[]
+
+  conversationsInitiated Conversation[] @relation("UserOne")
+  conversationsReceived  Conversation[] @relation("UserTwo")
+
   friendsInitiated Friend[] @relation("FriendOne")
   friendsReceived  Friend[] @relation("FriendTwo")
 
@@ -144,10 +149,6 @@ model Member {
   server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   messages       Message[]
-  directMessages DirectMessage[]
-
-  conversationsInitiated Conversation[] @relation("MemberOne")
-  conversationsReceived  Conversation[] @relation("MemberTwo")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -206,16 +207,18 @@ model Message {
 model Conversation {
   id String @id @default(uuid())
 
-  memberOneId String
-  memberOne   Member @relation("MemberOne", fields: [memberOneId], references: [id], onDelete: Cascade)
+  userOneId String
+  userOne   User @relation("UserOne", fields: [userOneId], references: [id], onDelete: Cascade)
 
-  memberTwoId String
-  memberTwo   Member @relation("MemberTwo", fields: [memberTwoId], references: [id], onDelete: Cascade)
+  userTwoId String
+  userTwo   User @relation("UserTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
 
   directMessages DirectMessage[]
 
-  @@unique([memberOneId, memberTwoId])
-  @@index([memberTwoId])
+  isVisible Boolean @default(true)
+
+  @@unique([userOneId, userTwoId])
+  @@index([userTwoId])
 }
 
 model DirectMessage {
@@ -223,8 +226,8 @@ model DirectMessage {
   content String  @db.Text
   fileUrl String? @db.Text
 
-  memberId String
-  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  userId String
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
@@ -234,7 +237,7 @@ model DirectMessage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([memberId])
+  @@index([userId])
   @@index([conversationId])
 }
 

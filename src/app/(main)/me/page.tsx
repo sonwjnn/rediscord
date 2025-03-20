@@ -15,12 +15,7 @@ const MeLayout = async () => {
     return
   }
 
-  const otherMember =
-    conversation.memberOne.userId === user.id
-      ? conversation.memberTwo
-      : conversation.memberOne
-
-  return redirect(`/me/${otherMember.serverId}/${otherMember.id}`)
+  return <>User ID PAGE</>
 }
 
 export default MeLayout

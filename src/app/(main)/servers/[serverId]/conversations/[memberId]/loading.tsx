@@ -1,6 +1,6 @@
 import { ChatHeaderSkeleton } from '@/components/chat/chat-header'
 import { ChatInputSkeleton } from '@/components/chat/chat-input'
-import { ChatMessagesSkeleton } from '@/components/chat/chat-messages'
+import { ChatMessagesSkeleton } from '@/components/chat/chat-channel-messages'
 import { MediaRoomSkeleton } from '@/components/media-room'
 
 const ConversationIdLoadingPage = () => {

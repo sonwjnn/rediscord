@@ -45,7 +45,7 @@ export const MemberProfile = ({ server, member }: MemberProfileProps) => {
   const onClick = () => {
     if (user?.id === member.userId) return
 
-    router.push(`/servers/${server.id}/conversations/${member.id}`)
+    router.push(`/me/${member.userId}`)
   }
 
   return (
