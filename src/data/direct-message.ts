@@ -8,6 +8,14 @@ export const getConversationsByUserId = async (userId: string) => {
           { userOneId: userId },
           { userTwoId: userId },
         ],
+        NOT: {
+          hiddenConversations: {
+            some: {
+              userId: userId,
+              isActive: false
+            }
+          }
+        }
       },
 
       include: {

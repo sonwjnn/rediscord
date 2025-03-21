@@ -10,6 +10,7 @@ import { BsDiscord } from 'react-icons/bs'
 const avatarSizes = cva('', {
 	variants: {
 		size: {
+      xs: 'size-6',
 			default: 'size-8',
 			md: 'size-12',
 			lg: 'size-14',

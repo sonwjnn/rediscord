@@ -2,10 +2,9 @@ import { ChatDirectMessages } from '@/components/chat/chat-direct-messages';
 import { ChatHeader } from '@/components/chat/chat-header';
 import { ChatInput } from '@/components/chat/chat-input';
 import { MediaRoom } from '@/components/media-room';
-import { getOrCreateConversation } from '@/data/conversation'
+import { getOrCreateConversation } from '@/actions/conversation'
 import { currentUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-
 
 interface UserIdPageProps {
   params: {
@@ -24,10 +23,7 @@ const UserIdPage = async ({ params, searchParams }: UserIdPageProps) => {
     return redirect('/auth/login')
   }
 
-  const conversation = await getOrCreateConversation(
-    user.id,
-    params.userId
-  )
+  const conversation = await getOrCreateConversation(user.id, params.userId);
 
   if (!conversation) {
     return redirect(`/servers/${params.serverId}`)

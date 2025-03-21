@@ -1,19 +1,26 @@
 'use client'
 
+import { hiddenConversation } from '@/actions/conversation'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/user-avatar'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { cn } from '@/lib/utils'
 import { User } from '@prisma/client'
-import { useParams, useRouter } from 'next/navigation'
+import { X } from 'lucide-react'
+import { useParams, usePathname, useRouter } from 'next/navigation'
+import { useTransition } from 'react'
 
 interface MemberProps {
   user: User
 }
 
 export const DMItem = ({ user }: MemberProps) => {
+  const currentUser = useCurrentUser()
   const router = useRouter()
+  const pathname = usePathname()
   const params = useParams()
   const userId = params?.userId || ''
+  const [isPending, startTransition] = useTransition()
 
   // const icon = roleIconMap[member.role]
 
@@ -21,13 +28,32 @@ export const DMItem = ({ user }: MemberProps) => {
     router.push(`/me/${user.id}`)
   }
 
+  const onHidden = (e: any) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    startTransition(async () => {
+      if(!currentUser || !currentUser.id) return
+
+      const userOneId = currentUser.id 
+      const userTwoId = user.id
+
+      await hiddenConversation(userOneId, userTwoId)
+
+      if(pathname?.includes(`/${userTwoId}`)) {
+        router.replace('/me')
+      }
+    })
+  }
+
   return (
     <button
       onClick={onClick}
       className={cn(
-        'group mb-1 flex w-full items-center gap-x-2 rounded-md px-2 py-2 transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50',
+        'group mb-1 flex w-full items-center gap-x-2 rounded-md px-2 py-1.5 pr-2.5 transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50',
         userId === user.id && 'bg-zinc-700/20 dark:bg-zinc-700'
       )}
+      disabled={isPending}
     >
       <UserAvatar imageUrl={user.image!} name={user.name!} />
       <p
@@ -39,6 +65,7 @@ export const DMItem = ({ user }: MemberProps) => {
       >
         {user.name}
       </p>
+      <X className='size-4 ml-auto' onClick={onHidden}/>
       {/* {icon} */}
     </button>
   )

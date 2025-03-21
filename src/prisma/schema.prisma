@@ -66,6 +66,9 @@ model User {
   conversationsInitiated Conversation[] @relation("UserOne")
   conversationsReceived  Conversation[] @relation("UserTwo")
 
+  hiddenConversationsBy HiddenConversation[] @relation("HiddenBy")
+  hiddenConversationsUsers HiddenConversation[] @relation("HiddenUser")
+
   friendsInitiated Friend[] @relation("FriendOne")
   friendsReceived  Friend[] @relation("FriendTwo")
 
@@ -214,11 +217,25 @@ model Conversation {
   userTwo   User @relation("UserTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
 
   directMessages DirectMessage[]
-
-  isVisible Boolean @default(true)
+  hiddenConversations HiddenConversation[]
 
   @@unique([userOneId, userTwoId])
   @@index([userTwoId])
+}
+
+model HiddenConversation {
+  id String @id @default(uuid())
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  userId String
+  user User @relation("HiddenBy", fields: [userId], references: [id], onDelete: Cascade)
+
+  hiddenUserId String
+  hiddenUser   User @relation("HiddenUser", fields: [hiddenUserId], references: [id], onDelete: Cascade)
+
+  isActive Boolean
 }
 
 model DirectMessage {
