@@ -1,6 +1,6 @@
 import { ChatHeader } from '@/components/chat/chat-header'
 import { ChatInput } from '@/components/chat/chat-input'
-import { ChatMessages } from '@/components/chat/chat-messages'
+import { ChatChannelMessages } from '@/components/chat/chat-channel-messages'
 import { MediaRoom } from '@/components/media-room'
 import { getOrCreateConversation } from '@/data/conversation'
 import { getCurrentMemberOfServerWithUser } from '@/data/member'
@@ -45,12 +45,12 @@ const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
     return redirect(`/servers/${params.serverId}`)
   }
 
-  const { memberOne, memberTwo } = conversation
+  const { userOne, userTwo } = conversation
 
-  const otherMember = memberOne.userId === user.id ? memberTwo : memberOne
+  const otherUser = userOne.id === user.id ? userTwo : userOne
 
-  const otherMemberName = otherMember.user.name || ''
-  const otherImage = otherMember.user.image || ''
+  const otherMemberName = otherUser.name || ''
+  const otherImage = otherUser.image || ''
 
   return (
     <div className="flex h-full flex-col bg-white dark:bg-[#313338]">
@@ -65,7 +65,7 @@ const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
       )}
       {!searchParams.video && (
         <>
-          <ChatMessages
+          <ChatChannelMessages
             member={currentMember}
             name={otherMemberName}
             chatId={conversation.id}

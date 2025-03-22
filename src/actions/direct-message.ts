@@ -1,8 +1,9 @@
-'use server'
+'use server';
 
-import { currentUser } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { DirectMessage } from '@prisma/client'
+import { currentUser } from '@/lib/auth';
+import { db } from '@/lib/db';
+import { DirectMessage } from '@prisma/client';
+
 
 const DIRECT_MESSAGES_BATCH = 10
 
@@ -37,11 +38,7 @@ export const getDirectMessageByConversationId = async ({
           conversationId,
         },
         include: {
-          member: {
-            include: {
-              user: true,
-            },
-          },
+          user: true,
         },
         orderBy: {
           createdAt: 'desc',
@@ -54,11 +51,7 @@ export const getDirectMessageByConversationId = async ({
           conversationId,
         },
         include: {
-          member: {
-            include: {
-              user: true,
-            },
-          },
+          user: true,
         },
         orderBy: {
           createdAt: 'desc',

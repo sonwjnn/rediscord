@@ -28,42 +28,25 @@ export default async function handler(
         id: conversationId as string,
         OR: [
           {
-            memberOne: {
-              userId: user.id,
-            },
+            userOne: {
+              is: { id: user.id }
+            }
           },
           {
-            memberTwo: {
-              userId: user.id,
-            },
-          },
-        ],
+            userTwo: {
+              is: { id: user.id }
+            }
+          }
+        ]
       },
       include: {
-        memberOne: {
-          include: {
-            user: true,
-          },
-        },
-        memberTwo: {
-          include: {
-            user: true,
-          },
-        },
-      },
+        userOne: true,
+        userTwo: true
+      }
     })
 
     if (!conversation) {
       return res.status(404).json({ error: 'Conversation not found' })
-    }
-
-    const member =
-      conversation.memberOne.userId === user.id
-        ? conversation.memberOne
-        : conversation.memberTwo
-
-    if (!member) {
-      return res.status(404).json({ error: 'Member not found' })
     }
 
     let directMessage = await db.directMessage.findFirst({
@@ -72,11 +55,7 @@ export default async function handler(
         conversationId: conversationId as string,
       },
       include: {
-        member: {
-          include: {
-            user: true,
-          },
-        },
+        user: true,
       },
     })
 
@@ -84,10 +63,10 @@ export default async function handler(
       return res.status(404).json({ error: 'Message not found' })
     }
 
-    const isMessageOwner = directMessage.memberId === member.id
-    const isAdmin = member.role === MemberRole.ADMIN
-    const isModerator = member.role === MemberRole.MODERATOR
-    const canModify = isMessageOwner || isAdmin || isModerator
+    const isMessageOwner = directMessage.userId === user.id
+    // const isAdmin = member.role === MemberRole.ADMIN
+    // const isModerator = member.role === MemberRole.MODERATOR
+    const canModify = isMessageOwner 
 
     if (!canModify) {
       return res.status(401).json({ error: 'Unauthorized' })
@@ -104,11 +83,7 @@ export default async function handler(
           deleted: true,
         },
         include: {
-          member: {
-            include: {
-              user: true,
-            },
-          },
+          user: true,
         },
       })
     }
@@ -126,11 +101,7 @@ export default async function handler(
           content,
         },
         include: {
-          member: {
-            include: {
-              user: true,
-            },
-          },
+          user: true,
         },
       })
     }

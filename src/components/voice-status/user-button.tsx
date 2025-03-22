@@ -32,7 +32,7 @@ export const UserButton = () => {
 						/>
 
 						<div>
-							<div className='line-clamp-1 text-xs font-semibold'>
+							<div className='line-clamp-1 text-sm font-medium'>
 								{user?.name}
 							</div>
 							<div className='line-clamp-1 text-[11px] text-zinc-500 dark:text-zinc-400'>

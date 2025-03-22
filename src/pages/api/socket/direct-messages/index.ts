@@ -31,42 +31,25 @@ export default async function handler(
         id: conversationId as string,
         OR: [
           {
-            memberOne: {
-              userId: user.id,
-            },
+            userOne: {
+              is: { id: user.id }
+            }
           },
           {
-            memberTwo: {
-              userId: user.id,
-            },
-          },
-        ],
+            userTwo: {
+              is: { id: user.id }
+            }
+          }
+        ]
       },
       include: {
-        memberOne: {
-          include: {
-            user: true,
-          },
-        },
-        memberTwo: {
-          include: {
-            user: true,
-          },
-        },
-      },
-    })
+        userOne: true,
+        userTwo: true
+      }
+    });
 
     if (!conversation) {
       return res.status(404).json({ message: 'Conversation not found' })
-    }
-
-    const member =
-      conversation.memberOne.userId === user.id
-        ? conversation.memberOne
-        : conversation.memberTwo
-
-    if (!member) {
-      return res.status(404).json({ message: 'Member not found' })
     }
 
     const message = await db.directMessage.create({
@@ -74,14 +57,10 @@ export default async function handler(
         content,
         fileUrl,
         conversationId: conversationId as string,
-        memberId: member.id,
+        userId: user.id,
       },
       include: {
-        member: {
-          include: {
-            user: true,
-          },
-        },
+        user: true,
       },
     })
 

@@ -38,7 +38,7 @@ export const DirectMessages = () => {
                 'text-black transition group-hover:text-white dark:text-zinc-200 dark:group-hover:text-white',
                 isMeRoute && 'text-white dark:text-white'
               )}
-              size={25}
+              size={28}
             />
           </div>
         </button>

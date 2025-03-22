@@ -1,57 +1,56 @@
 'use client'
 
-import { Hint } from '@/components/hint'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useModal } from '@/store/use-modal-store'
-import { ServerWithMembersWithUsers } from '@/types'
-import { ChannelType, MemberRole } from '@prisma/client'
-import { Plus, Settings } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { LucideIcon } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import React from 'react'
+import { IconType } from "react-icons";
 
 interface SectionProps {
   label: string
-  role?: MemberRole
-  sectionType: 'channels' | 'members'
-  channelType?: ChannelType
-  server?: ServerWithMembersWithUsers
-  isSettings?: boolean
+  href: string
+  icon: React.ReactNode
+  disabled?: boolean
 }
 
 export const Section = ({
   label,
-  role,
-  sectionType,
-  channelType,
-  server,
-  isSettings = false,
+  href,
+  icon,
+  disabled
 }: SectionProps) => {
-  const { onOpen } = useModal()
+  const pathname = usePathname()
+  const router = useRouter()
 
+  const onClick = () => {
+    if(disabled) return
+
+    router.push(href)
+  }
+
+  const isActive = !disabled && href === pathname
+  
   return (
-    <div className="flex items-center justify-between py-2">
-      <p className="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400">
+    <button
+      onClick={onClick}
+      className={cn(
+        'group mb-1 flex w-full items-center gap-x-2 rounded-md px-3 py-2 transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50',
+        isActive && 'bg-zinc-700/20 dark:bg-zinc-700'
+      )}
+    >
+      {icon}
+      <p
+        className={cn(
+          'line-clamp-1 text-base ml-2 font-medium text-zinc-500 transition group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300',
+          isActive &&
+            'text-primary dark:text-zinc-200 dark:group-hover:text-white'
+        )}
+      >
         {label}
       </p>
-      {role !== MemberRole.GUEST && sectionType === 'channels' && (
-        <Hint label="Create Channel" side="top">
-          <button
-            onClick={() => onOpen('createChannel', { channelType, server })}
-            className="text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
-          >
-            <Plus className="size-4" />
-          </button>
-        </Hint>
-      )}
-      {isSettings && role === MemberRole.ADMIN && sectionType === 'members' && (
-        <Hint label="Manage Members" side="top">
-          <button
-            onClick={() => onOpen('members', { server })}
-            className="text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
-          >
-            <Settings className="size-4" />
-          </button>
-        </Hint>
-      )}
-    </div>
+    </button>
   )
 }
 

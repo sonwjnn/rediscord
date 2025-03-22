@@ -1,6 +1,6 @@
 import { ChatHeader } from '@/components/chat/chat-header'
 import { ChatInput } from '@/components/chat/chat-input'
-import { ChatMessages } from '@/components/chat/chat-messages'
+import { ChatChannelMessages } from '@/components/chat/chat-channel-messages'
 import { MediaRoom } from '@/components/media-room'
 import { getChannelById } from '@/data/channel'
 import { getCurrentMemberOfServer } from '@/data/member'
@@ -47,7 +47,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
       <Container members={server?.members} server={server}>
         {channel.type === ChannelType.TEXT && (
           <>
-            <ChatMessages
+            <ChatChannelMessages
               member={member}
               server={server}
               name={channel.name}

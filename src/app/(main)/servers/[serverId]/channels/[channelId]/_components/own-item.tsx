@@ -62,7 +62,7 @@ export const OwnItem = ({ role, server }: OwnItemProps) => {
             />
             <div
               className={cn(
-                'text-sm font-semibold text-zinc-500 transition group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300'
+                'text-base font-medium text-zinc-500 transition group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300'
                 // params?.memberId === member.id &&
                 // 	'text-primary dark:text-zinc-200 dark:group-hover:text-white',
               )}

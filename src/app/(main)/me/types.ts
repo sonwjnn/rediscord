@@ -1,0 +1,1 @@
+export type TabsType = "ONLINE" | "ALL" | "PENDING" | "ADD_FRIEND";

@@ -1,32 +1,17 @@
-import { Hint } from '@/components/hint'
+
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getConversationsByUserId } from '@/data/direct-message'
 import { currentUser } from '@/lib/auth'
 import { MOCK_CHANNELS, MOCK_MEMBER } from '@/lib/mock'
-import { ChannelType, MemberRole } from '@prisma/client'
-import { Hash, Mic, Plus, ShieldAlert, ShieldCheck, Video } from 'lucide-react'
 import { redirect } from 'next/navigation'
 
-import { ServerChannelSkeleton } from './channel'
 import { DMItem, DMItemSkeleton } from './dm-item'
-import { HeaderSkeleton } from './header'
 import { Search, SearchSkeleton } from './search'
-
-const iconMap = {
-  [ChannelType.TEXT]: <Hash className="mr-2 size-4" />,
-  [ChannelType.AUDIO]: <Mic className="mr-2 size-4" />,
-  [ChannelType.VIDEO]: <Video className="mr-2 size-4" />,
-}
-
-const roleIconMap = {
-  [MemberRole.GUEST]: null,
-  [MemberRole.MODERATOR]: (
-    <ShieldCheck className="mr-2 size-4 text-indigo-500" />
-  ),
-  [MemberRole.ADMIN]: <ShieldAlert className="mr-2 size-4 text-rose-500" />,
-}
+import { Section } from './section'
+import { FaUserFriends } from "react-icons/fa";
+import { RiVipCrownFill } from "react-icons/ri";
 
 export const DMSidebar = async () => {
   const user = await currentUser()
@@ -43,7 +28,7 @@ export const DMSidebar = async () => {
 
   const formattedData = conversations.map(item => ({
     ...item,
-    member: item.memberOne.userId !== user.id ? item.memberOne : item.memberTwo,
+    user: item.userOne.id !== user.id ? item.userOne : item.userTwo,
   }))
 
   return (
@@ -96,7 +81,22 @@ export const DMSidebar = async () => {
         </div>
         <Separator className="my-2 rounded-md bg-zinc-200 dark:bg-zinc-700" />
 
-        {!!formattedData?.length && (
+        <div className="space-y-1.5">
+        <Section
+          label="Friends"
+          href="/me"
+          icon={<FaUserFriends className="size-5 flex-shrink-0 text-zinc-500 dark:text-zinc-400"/>}
+        />
+
+        <Section
+          label="Nitro"
+          href="/nitro"
+          icon={<RiVipCrownFill className="size-5 flex-shrink-0 text-zinc-500 dark:text-zinc-400"/>}
+          disabled
+        />
+        </div>
+        
+
           <div className="mb-2">
             <div className="flex items-center justify-between py-2">
               <p className="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400">
@@ -108,13 +108,12 @@ export const DMSidebar = async () => {
                 </button>
               </Hint> */}
             </div>
-            <div className="space-y-[2px]">
+            <div className="space-y-0.5">
               {formattedData.map(item => (
-                <DMItem key={item.id} member={item.member} />
+                <DMItem key={item.id} user={item.user} />
               ))}
             </div>
           </div>
-        )}
       </ScrollArea>
     </aside>
   )
@@ -127,14 +126,6 @@ const SectionSkeleton = ({ type }: { type: 'channel' | 'member' }) => {
         <Skeleton className="h-3 w-20 " />
       </div>
       <ul className="space-y-[2px]">
-        {type === 'channel' && (
-          <>
-            {[...Array(2)].map((_, i) => (
-              <ServerChannelSkeleton key={i} />
-            ))}
-          </>
-        )}
-
         {type === 'member' && (
           <>
             {[...Array(MOCK_MEMBER)].map((_, i) => (
@@ -150,7 +141,6 @@ const SectionSkeleton = ({ type }: { type: 'channel' | 'member' }) => {
 export const DMSidebarSkeleton = () => {
   return (
     <aside className="flex h-full w-full flex-col bg-[#F2F3F5] text-primary dark:bg-[#2B2D31]">
-      <HeaderSkeleton />
       <div className="mt-2">
         <SearchSkeleton />
       </div>
