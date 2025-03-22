@@ -1,27 +1,25 @@
 'use client'
 
 import { Hint } from '@/components/hint'
-import { MemberProfile } from '@/components/member/member-profile'
 import { Spinner } from '@/components/spinner'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/user-avatar'
-import { getServerById } from '@/data/server'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { cn } from '@/lib/utils'
 import { ChatItemSchema } from '@/schemas'
 import { useModal } from '@/store/use-modal-store'
 import { MemberWithUser, ServerWithMembersWithUsers } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Member, MemberRole, Server, User } from '@prisma/client'
+import { Member, MemberRole } from '@prisma/client'
 import axios from 'axios'
 import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from 'lucide-react'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import qs from 'query-string'
-import { Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -149,7 +147,7 @@ export const ChatItem = ({
           <div className="flex items-center gap-x-2">
             <div className="flex items-center">
               <MemberProfileWrapper server={server} member={member}>
-                <p className="cursor-pointer text-sm font-semibold text-zinc-600 hover:underline dark:text-zinc-300">
+                <p className="cursor-pointer text-base font-medium text-zinc-600 hover:underline dark:text-zinc-300">
                   {member.user.name}
                 </p>
               </MemberProfileWrapper>
@@ -191,7 +189,7 @@ export const ChatItem = ({
           {!isEditing && (
             <p
               className={cn(
-                'text-sm text-zinc-600 dark:text-zinc-300',
+                'text-base text-zinc-600 dark:text-zinc-300',
                 deleted &&
                   'mt-1 text-xs italic text-zinc-500 dark:text-zinc-400'
               )}

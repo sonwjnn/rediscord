@@ -7,7 +7,7 @@ import { ServerWithMembersWithUsers } from '@/types'
 import { Member, Message, User } from '@prisma/client'
 import { format } from 'date-fns'
 import { Loader2, ServerCrash } from 'lucide-react'
-import { ElementRef, Fragment, useRef } from 'react'
+import { ComponentRef, Fragment, useRef } from 'react'
 
 import { ChatItem, ChatItemSkeleton } from './chat-item'
 import { ChatWelcome } from './chat-welcome'
@@ -47,8 +47,8 @@ export const ChatChannelMessages = ({
   const addKey = `chat:${chatId}:messages`
   const updateKey = `chat:${chatId}:messages:update`
 
-  const chatRef = useRef<ElementRef<'div'>>(null)
-  const bottomRef = useRef<ElementRef<'div'>>(null)
+  const chatRef = useRef<ComponentRef<'div'>>(null)
+  const bottomRef = useRef<ComponentRef<'div'>>(null)
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useChatQuery({

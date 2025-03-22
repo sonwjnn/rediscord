@@ -8,7 +8,6 @@ import { MOCK_CHANNELS, MOCK_MEMBER } from '@/lib/mock'
 import { redirect } from 'next/navigation'
 
 import { DMItem, DMItemSkeleton } from './dm-item'
-import { HeaderSkeleton } from './header'
 import { Search, SearchSkeleton } from './search'
 import { Section } from './section'
 import { FaUserFriends } from "react-icons/fa";
@@ -142,7 +141,6 @@ const SectionSkeleton = ({ type }: { type: 'channel' | 'member' }) => {
 export const DMSidebarSkeleton = () => {
   return (
     <aside className="flex h-full w-full flex-col bg-[#F2F3F5] text-primary dark:bg-[#2B2D31]">
-      <HeaderSkeleton />
       <div className="mt-2">
         <SearchSkeleton />
       </div>

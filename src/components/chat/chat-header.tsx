@@ -43,7 +43,7 @@ export const ChatHeader = ({
     <div className="text-md flex h-12 items-center border-b-2 border-neutral-200 px-3 font-semibold  dark:border-neutral-800">
       <MobileToggle serverId={serverId} />
       {type === 'channel' && (
-        <Hash className="mr-2 size-5 text-zinc-500 dark:text-zinc-400" />
+        <Hash className="mr-2 size-6 text-zinc-500 dark:text-zinc-400" />
       )}
       {type === 'conversation' && (
         <UserAvatar
@@ -52,7 +52,7 @@ export const ChatHeader = ({
           className="mr-2 size-8 md:h-8 md:w-8"
         />
       )}
-      <p className="text-md font-semibold text-black dark:text-white">{name}</p>
+      <p className="text-base font-semibold text-black dark:text-white">{name}</p>
       <div className="ml-auto flex items-center">
         {type === 'channel' && (
           <div className="mr-2 cursor-pointer">

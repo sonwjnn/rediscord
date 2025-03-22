@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        gg: ['gg-sans', 'Noto Sans', 'Helvetica', 'sans-serif'],
+      },
       colors: {
         black: 'hsl(210, 7%, 6%)',
         border: 'hsl(var(--border))',

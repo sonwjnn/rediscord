@@ -35,3 +35,22 @@ export const getUserByUsername = async (name: string) => {
     return null
   }
 }
+
+export const getOtherUserByUsername = async (userId: string, name: string) => {
+  try {
+
+    const user = await db.user.findFirst({
+      where: {
+        name,
+        NOT: {
+          id: userId
+        }
+      },
+    })
+
+    return user
+  } catch (error) {
+    console.log(error)
+    return null
+  }
+}

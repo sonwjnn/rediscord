@@ -72,9 +72,6 @@ model User {
   friendsInitiated Friend[] @relation("FriendOne")
   friendsReceived  Friend[] @relation("FriendTwo")
 
-  requesting  Request[] @relation("Requesting")
-  requestedBy Request[] @relation("RequestedBy")
-
   blocking  Block[] @relation("Blocking")
   blockedBy Block[] @relation("BlockedBy")
 
@@ -258,6 +255,12 @@ model DirectMessage {
   @@index([conversationId])
 }
 
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
 model Friend {
   id String @id @default(cuid())
 
@@ -267,18 +270,7 @@ model Friend {
   userTwoId String
   userTwo   User   @relation(name: "FriendTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
 
-  @@unique([userOneId, userTwoId])
-  @@index([userTwoId])
-}
-
-model Request {
-  id String @id @default(cuid())
-
-  userOneId String
-  userOne   User   @relation(name: "Requesting", fields: [userOneId], references: [id], onDelete: Cascade)
-
-  userTwoId String
-  userTwo   User   @relation(name: "RequestedBy", fields: [userTwoId], references: [id], onDelete: Cascade)
+  status FriendStatus @default(PENDING)
 
   @@unique([userOneId, userTwoId])
   @@index([userTwoId])
