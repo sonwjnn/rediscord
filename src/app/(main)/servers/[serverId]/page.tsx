@@ -9,13 +9,15 @@ interface ServerPageProps {
 }
 
 const ServerPage = async ({ params }: ServerPageProps) => {
+  const awaitedParams = await params;
+  
   const user = await currentUser()
 
   if (!user) {
     return redirect('/auth/login')
   }
 
-  const server = await getServerWithChannelsById(params.serverId)
+  const server = await getServerWithChannelsById(awaitedParams.serverId)
 
   if (!server) {
     return redirect('/')

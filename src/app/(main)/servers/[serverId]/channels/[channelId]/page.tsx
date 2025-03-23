@@ -19,9 +19,11 @@ interface ChannelIdPageProps {
 }
 
 const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
-  const channel = await getChannelById(params.channelId)
+  const awaitedParams = await params;
+  
+  const channel = await getChannelById(awaitedParams.channelId)
 
-  const member = await getCurrentMemberOfServer(params.serverId)
+  const member = await getCurrentMemberOfServer(awaitedParams.serverId)
 
   const user = await currentUser()
 
@@ -29,7 +31,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
     return redirect('/')
   }
 
-  const server = await getServerWithChannelsWithMembers(params.serverId)
+  const server = await getServerWithChannelsWithMembers(awaitedParams.serverId)
 
   if (!channel || !member || !server) {
     return redirect('/')

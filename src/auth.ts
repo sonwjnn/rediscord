@@ -19,6 +19,7 @@ export const {
     signIn: '/auth/login',
     error: '/auth/error',
   },
+  session: { strategy: "jwt" },
   events: {
     async linkAccount({ user }) {
       await db.user.update({
@@ -30,6 +31,9 @@ export const {
     },
   },
   callbacks: {
+    authorized({ auth }) {
+      return !!auth?.user?.id;;
+    },
     async signIn({ user, account }) {
       if (account?.provider !== 'credentials') {
         return true
@@ -86,6 +90,7 @@ export const {
       const existingAccount = await getAccountByUserId(existingUser.id)
 
       token.isOAuth = !!existingAccount
+      token.id = existingUser.id
       token.name = existingUser.name
       token.image = existingUser.image
       token.email = existingUser.email
@@ -99,6 +104,5 @@ export const {
     },
   },
   adapter: PrismaAdapter(db),
-  session: { strategy: 'jwt' },
   ...authConfig,
 })

@@ -9,11 +9,11 @@ interface Friend {
   status: Statuses | null
 }
 
-export const useGetOnlineFriends = (userId: string) => {
+export const useGetOnlineFriends = () => {
   return useQuery<Friend[]>({
-    queryKey: ["online-friends", userId],
+    queryKey: ["online-friends"],
     queryFn: async () => {
-      const response = await fetch(`/api/friends/online?userId=${userId}`);
+      const response = await fetch(`/api/friends/online`);
       return response.json();
     }
   });

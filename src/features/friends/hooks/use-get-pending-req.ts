@@ -14,11 +14,11 @@ interface Response  {
   outgoing: Friend[]
 }
 
-export const useGetPendingReq = (userId: string) => {
+export const useGetPendingReq = () => {
   return useQuery<Response>({
-    queryKey: ["pending-req", userId],
+    queryKey: ["pending-req"],
     queryFn: async () => {
-      const response = await fetch(`/api/friends/pending?userId=${userId}`);
+      const response = await fetch(`/api/friends/pending`);
       return response.json();
     }
   });

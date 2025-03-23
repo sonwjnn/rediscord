@@ -17,16 +17,19 @@ interface UserIdPageProps {
 }
 
 const UserIdPage = async ({ params, searchParams }: UserIdPageProps) => {
+  const awaitedParams = await params;
+  const awaitedSearchParams = await searchParams;
+  
   const user = await currentUser()
 
   if (!user || !user.id) {
     return redirect('/auth/login')
   }
 
-  const conversation = await getOrCreateConversation(user.id, params.userId);
+  const conversation = await getOrCreateConversation(user.id, awaitedParams.userId);
 
   if (!conversation) {
-    return redirect(`/servers/${params.serverId}`)
+    return redirect(`/servers/${awaitedParams.serverId}`)
   }
 
   const { userOne, userTwo } = conversation
@@ -43,13 +46,13 @@ const UserIdPage = async ({ params, searchParams }: UserIdPageProps) => {
       <ChatHeader
         imageUrl={otherImage}
         name={otherUserName}
-        serverId={params.serverId}
+        serverId={awaitedParams.serverId}
         type="conversation"
       />
-      {searchParams.video && (
+      {awaitedSearchParams.video && (
         <MediaRoom chatId={conversation.id} video={true} audio={true} />
       )}
-      {!searchParams.video && (
+      {!awaitedSearchParams.video && (
         <>
           <ChatDirectMessages
             currentUser={user}

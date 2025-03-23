@@ -1,7 +1,5 @@
 import { db } from '@/lib/db'
 
-
-
 export const findConversation = async (userOneId: string, userTwoId: string) => {
   try {
     const conversation = await db.conversation.findFirst({

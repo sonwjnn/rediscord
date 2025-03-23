@@ -11,6 +11,15 @@ export default async function handler(
   }
 
   try {
+    // const encodedUser = req.headers['x-auth-user'] as string
+    // let user = null
+    
+    // if (encodedUser) {
+    //   const decodedUser = Buffer.from(encodedUser, 'base64').toString()
+    //   user = JSON.parse(decodedUser)
+    // }
+
+
     const { content, fileUrl, user } = req.body
     const { conversationId } = req.query
 

@@ -9,11 +9,11 @@ interface Friend {
   status: Statuses | null
 }
 
-export const useGetAllFriends = (userId: string) => {
+export const useGetAllFriends = () => {
   return useQuery<Friend[]>({
-    queryKey: ["all-friends", userId],
+    queryKey: ["all-friends"],
     queryFn: async () => {
-      const response = await fetch(`/api/friends/all?userId=${userId}`);
+      const response = await fetch(`/api/friends/all`);
       return response.json();
     }
   });

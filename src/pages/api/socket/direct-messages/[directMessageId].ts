@@ -15,6 +15,7 @@ export default async function handler(
     const { directMessageId, conversationId } = req.query
     const { content, user } = req.body
 
+
     if (!user) {
       return res.status(401).json({ error: 'Unauthorized' })
     }

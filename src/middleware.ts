@@ -24,15 +24,23 @@ export default auth((req) => {
 	const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
 	const isAuthRoute = authRoutes.includes(nextUrl.pathname)
 
+	const response = NextResponse.next()
+	
+	if (isLoggedIn && req.auth) {
+    // console.log("req.auth", req.auth.user)
+		const encodedUser = Buffer.from(JSON.stringify(req.auth.user)).toString('base64')
+		response.headers.set('x-auth-user', encodedUser)
+	}
+
 	if (isApiAuthRoute || isApiWebhooksRoute || isApiUploadthingRoute) {
-		return NextResponse.next()
+		return response
 	}
 
 	if (isAuthRoute) {
 		if (isLoggedIn) {
 			return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
 		}
-		return NextResponse.next()
+		return response
 	}
 
 	if (!isLoggedIn && !isPublicRoute) {
@@ -48,7 +56,7 @@ export default auth((req) => {
 		)
 	}
 
-	return NextResponse.next()
+	return response
 })
 
 export const config = {

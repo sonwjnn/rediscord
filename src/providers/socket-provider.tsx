@@ -23,7 +23,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const socketInstance = new (ClientIO as any)(
-      process.env.NEXT_PUBLIC_SITE_URL!,
+      process.env.NEXT_PUBLIC_SITE_URL || window.location.origin,
       {
         path: '/api/socket/io',
         addTrailingSlash: false,
@@ -37,6 +37,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     socketInstance.on('disconnect', () => {
       setIsConnected(false)
     })
+
+    socketInstance.on('error', (err: any) => {
+      console.error('Socket error:', err);
+    });
 
     setSocket(socketInstance)
 
