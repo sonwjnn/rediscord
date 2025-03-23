@@ -14,7 +14,9 @@ const ServerIdLayout = async ({
   children: React.ReactNode
   params: { serverId: string }
 }) => {
-  const server = await getServerById(params.serverId)
+  const awaitedParams = await params;
+  
+  const server = await getServerById(awaitedParams.serverId)
 
   if (!server) {
     return redirect('/')
@@ -24,7 +26,7 @@ const ServerIdLayout = async ({
     <div className="h-full">
       <div className="fixed inset-y-0 z-20 hidden h-full w-60 flex-col md:flex">
         <Suspense fallback={<ServerSidebarSkeleton />}>
-          <ServerSidebar serverId={params.serverId} />
+          <ServerSidebar serverId={awaitedParams.serverId} />
         </Suspense>
         <Suspense fallback={<VoiceStatusSkeleton />}>
           <VoiceStatus />

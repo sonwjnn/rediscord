@@ -9,6 +9,7 @@ import { User } from '@prisma/client'
 import { X } from 'lucide-react'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import { useTransition } from 'react'
+import { Hint } from '../hint'
 
 interface MemberProps {
   user: User
@@ -55,7 +56,7 @@ export const DMItem = ({ user }: MemberProps) => {
       )}
       disabled={isPending}
     >
-      <UserAvatar imageUrl={user.image!} name={user.name!} />
+      <UserAvatar imageUrl={user.image!} name={user.name!} status={user.status} />
       <p
         className={cn(
           'text-sm font-semibold text-zinc-500 transition group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300',
@@ -65,7 +66,9 @@ export const DMItem = ({ user }: MemberProps) => {
       >
         {user.name}
       </p>
-      <X className='size-4 ml-auto' onClick={onHidden}/>
+      <Hint label="Hidden this dm">
+        <X className='size-4 ml-auto text-zinc-400 hover:text-white transition' onClick={onHidden}/>
+      </Hint>
       {/* {icon} */}
     </button>
   )

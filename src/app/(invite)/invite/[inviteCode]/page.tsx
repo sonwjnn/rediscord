@@ -8,11 +8,13 @@ interface InviteCodePageProps {
 }
 
 const InviteCodePage = async ({ params }: InviteCodePageProps) => {
-  if (!params.inviteCode) {
+  const awaitedParams = await params;
+  
+  if (!awaitedParams.inviteCode) {
     return redirect('/')
   }
 
-  const server = await updateMembersServerByInviteCode(params.inviteCode)
+  const server = await updateMembersServerByInviteCode(awaitedParams.inviteCode)
 
   if (!server) {
     return redirect('/')

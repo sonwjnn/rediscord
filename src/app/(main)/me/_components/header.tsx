@@ -30,13 +30,13 @@ const Header = ({}: HeaderProps) => {
   ]
 
   return (
-    <div className="flex h-12 items-center p-2 border border-b-neutral-800">
+    <div className="flex h-12 items-center p-2 border border-b-zinc-200 dark:border-b-neutral-800">
       <div className="flex h-6 items-center gap-x-3">
         <div className="flex gap-x-1 text-base font-semibold">
           <FaUserFriends className="mx-2 size-6 flex-shrink-0 text-zinc-500 dark:text-zinc-400" />
-          <p className="text-zinc-300">Friends</p>
+          <p className="text-zinc-600 dark:text-zinc-300">Friends</p>
         </div>
-        <Separator orientation="vertical" className="bg-neutral-600"/>
+        <Separator orientation="vertical" className="bg-zinc-300 dark:bg-neutral-600"/>
         <div className="flex h-6 items-center gap-x-3">
           {tabs.map(item => (
             <Link key={item.href} href={item.href}>

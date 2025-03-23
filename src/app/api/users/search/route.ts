@@ -4,8 +4,10 @@ import { getOtherUserByUsername } from "@/data/user"
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url)
-    const username = searchParams.get("username")
-    const userId = searchParams.get("userId")
+    const awaitedSearchParams = await searchParams;
+    
+    const username = awaitedSearchParams.get("username")
+    const userId = awaitedSearchParams.get("userId")
 
     if (!userId) {
       return new NextResponse("UserId is required", { status: 400 })

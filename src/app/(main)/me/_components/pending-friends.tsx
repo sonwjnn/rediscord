@@ -3,14 +3,9 @@
 import { LoaderIcon } from "lucide-react";
 import { PendingList } from "./pending-list";
 import { useGetPendingReq } from "@/features/friends/hooks/use-get-pending-req";
-import { useState } from "react";
 
-type PendingFriendsProps = {
-  userId: string
-}
-
-const PendingFriends = async ({userId}: PendingFriendsProps) => {
-  const { data: friends, isLoading } = useGetPendingReq(userId);
+const PendingFriends = () => {
+  const { data: friends, isLoading } = useGetPendingReq();
 
   if(isLoading) {
     return (
@@ -22,7 +17,7 @@ const PendingFriends = async ({userId}: PendingFriendsProps) => {
 
 
   return (
-    <div className="flex flex-col px-6">
+    <div className="flex flex-col p-6">
       <PendingList 
         incoming={friends?.incoming ?? []}
         outgoing={friends?.outgoing ?? []}

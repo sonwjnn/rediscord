@@ -1,5 +1,5 @@
 import { auth } from "@/auth"
-import { getAllFriendsByUserId, getOnlineFriendsByUserId } from "@/data/friend"
+import { getOnlineFriendsByUserId } from "@/data/friend"
 import { NextResponse } from "next/server"
 
 export async function GET(
@@ -7,16 +7,10 @@ export async function GET(
 ) {
   try {
     const session = await auth()
-
-    if (!session?.user?.id) {
-      return new NextResponse("Unauthorized", { status: 401 })
-    }
-
-    const { searchParams } = new URL(req.url)
-    const userId = searchParams.get("userId")
+    const userId = session?.user?.id;
 
     if (!userId) {
-      return new NextResponse("User ID is required", { status: 400 })
+      return new NextResponse("Unauthorized", { status: 401 })
     }
 
     const friends = await getOnlineFriendsByUserId(userId)
