@@ -18,20 +18,12 @@ export default auth((req) => {
 
 	const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
 	const isApiWebhooksRoute = nextUrl.pathname.startsWith(apiWebhooksPrefix)
-	const isApiUploadthingRoute = nextUrl.pathname.startsWith(
-		apiUploadthingPrefix,
-	)
+	const isApiUploadthingRoute = nextUrl.pathname.startsWith(apiUploadthingPrefix)
 	const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
 	const isAuthRoute = authRoutes.includes(nextUrl.pathname)
 
 	const response = NextResponse.next()
 	
-	if (isLoggedIn && req.auth) {
-    // console.log("req.auth", req.auth.user)
-		const encodedUser = Buffer.from(JSON.stringify(req.auth.user)).toString('base64')
-		response.headers.set('x-auth-user', encodedUser)
-	}
-
 	if (isApiAuthRoute || isApiWebhooksRoute || isApiUploadthingRoute) {
 		return response
 	}

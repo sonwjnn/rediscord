@@ -10,6 +10,7 @@ interface Friend {
 }
 
 export const useGetAllFriends = () => {
+
   return useQuery<Friend[]>({
     queryKey: ["all-friends"],
     queryFn: async () => {

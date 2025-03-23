@@ -19,7 +19,6 @@ export const {
     signIn: '/auth/login',
     error: '/auth/error',
   },
-  session: { strategy: "jwt" },
   events: {
     async linkAccount({ user }) {
       await db.user.update({
@@ -103,6 +102,8 @@ export const {
       return token
     },
   },
+  session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
+  jwt: { maxAge: 30 * 24 * 60 * 60 },
   adapter: PrismaAdapter(db),
   ...authConfig,
 })

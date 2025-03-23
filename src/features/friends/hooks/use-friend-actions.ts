@@ -1,3 +1,4 @@
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -11,11 +12,12 @@ interface FriendActionResponse {
 
 // Send friend request hook
 export const useSendFriendRequest = () => {
+  const currentUser = useCurrentUser()
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (username: string): Promise<FriendActionResponse> => {
-      const response = await fetch("/api/friends/send", {
+      const response = await fetch(`/api/friends/send?userId=${currentUser?.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,11 +44,12 @@ export const useSendFriendRequest = () => {
 
 // Accept friend request hook
 export const useAcceptFriendRequest = () => {
+  const currentUser = useCurrentUser()
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (friendId: string): Promise<FriendActionResponse> => {
-      const response = await fetch(`/api/friends/accept/${friendId}`, {
+      const response = await fetch(`/api/friends/accept/${friendId}?userId=${currentUser?.id}`, {
         method: "PATCH",
       });
       
@@ -71,11 +74,12 @@ export const useAcceptFriendRequest = () => {
 
 // Reject friend request hook
 export const useRejectFriendRequest = () => {
+  const currentUser = useCurrentUser()
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (friendId: string): Promise<FriendActionResponse> => {
-      const response = await fetch(`/api/friends/reject/${friendId}`, {
+      const response = await fetch(`/api/friends/reject/${friendId}?userId=${currentUser?.id}`, {
         method: "PATCH",
       });
       
@@ -98,11 +102,12 @@ export const useRejectFriendRequest = () => {
 
 // Cancel friend request hook
 export const useCancelFriendRequest = () => {
+  const currentUser = useCurrentUser()
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (friendId: string): Promise<FriendActionResponse> => {
-      const response = await fetch(`/api/friends/cancel/${friendId}`, {
+      const response = await fetch(`/api/friends/cancel/${friendId}?userId=${currentUser?.id}`, {
         method: "DELETE",
       });
       
@@ -126,10 +131,11 @@ export const useCancelFriendRequest = () => {
 // Delete friend hook
 export const useDeleteFriend = () => {
   const queryClient = useQueryClient();
+  const currentUser = useCurrentUser()
 
   return useMutation({
     mutationFn: async (friendId: string): Promise<FriendActionResponse> => {
-      const response = await fetch(`/api/friends/delete/${friendId}`, {
+      const response = await fetch(`/api/friends/delete/${friendId}?userId=${currentUser?.id}`, {
         method: "DELETE",
       });
       
