@@ -10,6 +10,7 @@ import { useCurrentUser } from '@/hooks/use-current-user'
 import { stringToColor } from '@/lib/utils'
 import { MemberWithUser } from '@/types'
 import { Server } from '@prisma/client'
+import { useQueryClient } from '@tanstack/react-query'
 import { usePalette } from 'color-thief-react'
 import { format } from 'date-fns'
 import { Forward, MessageCircleMore } from 'lucide-react'
@@ -25,6 +26,7 @@ interface MemberProfileProps {
 export const MemberProfile = ({ server, member }: MemberProfileProps) => {
   const user = useCurrentUser()
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const [bgColor, setBgColor] = useState<string>('')
   const { data: color } = usePalette(member?.user?.image as string, 10, 'hex', {

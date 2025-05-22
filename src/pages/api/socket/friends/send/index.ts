@@ -1,9 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "next";
 import { db } from "@/lib/db";
-
+import { NextApiResponseServerIo } from '@/types'
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponseServerIo
 ) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -99,8 +99,18 @@ export default async function handler(
         userOneId: userId as string,
         userTwoId: receivedUser.id,
         status: "PENDING"
+      },
+      include: {
+        userOne: true,
+        userTwo: true
       }
     });
+    
+    // Emit socket event to both users
+    if (res.socket.server.io) {
+      res.socket.server.io.to(userId as string).emit("friend:add", data);
+      res.socket.server.io.to(receivedUser.id).emit("friend:add", data);
+    }
     
     return res.status(200).json({ 
       success: "You have successfully sent a friend request.",

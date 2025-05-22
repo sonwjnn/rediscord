@@ -6,50 +6,52 @@ import { MOCK_SERVERS } from '@/lib/mock'
 import { redirect } from 'next/navigation'
 
 import { Actions } from './actions'
+import { DirectMessages } from './direct-messages'
 import { Item, ItemSkeleton } from './item'
 import { Wrapper } from './wrapper'
-import { DirectMessages } from './direct-messages'
 
 export const Navbar = async () => {
-	const user = await currentUser()
+  const user = await currentUser()
 
-	if (!user) {
-		return redirect('/')
-	}
-	const servers = await getSeversByuserId(user.id as string)
+  if (!user) {
+    return redirect('/')
+  }
+  const servers = await getSeversByuserId(user.id as string)
 
-	if (!servers) {
-		return <NavbarSkeleton />
-	}
+  if (!servers) {
+    return <NavbarSkeleton />
+  }
 
-	return (
-		<Wrapper>
-			<DirectMessages />
-			<Separator className='mx-auto h-[2px] w-10 rounded-md bg-zinc-300 dark:bg-zinc-700' />
-			<ScrollArea className='w-full flex-1'>
-				{servers.map((server) => (
-					<div key={server.id} className='mb-4'>
-						<Item
-							id={server.id}
-							initialChannelId={server?.channels[0]?.id}
-							name={server.name}
-							imageUrl={server.image}
-						/>
-					</div>
-				))}
+  return (
+    <Wrapper>
+      <DirectMessages />
+      <Separator className="mx-auto h-[2px] w-10 rounded-md bg-zinc-300 dark:bg-[#2b2d31]" />
+      <ScrollArea className="w-full flex-1">
+        {servers.map(server => (
+          <div key={server.id} className="mb-4">
+            <Item
+              id={server.id}
+              initialChannelId={server?.channels[0]?.id}
+              name={server.name}
+              imageUrl={server.image}
+            />
+          </div>
+        ))}
 
-				<Actions />
-			</ScrollArea>
-		</Wrapper>
-	)
+        <Actions />
+      </ScrollArea>
+    </Wrapper>
+  )
 }
 
 export const NavbarSkeleton = () => {
-	return (
-		<ul className='space-y-4 px-2 lg:pt-0'>
-			<ItemSkeleton />
-			<Separator className='mx-auto h-[2px] w-10 rounded-md bg-zinc-300 dark:bg-zinc-700' />
-			{[...Array(MOCK_SERVERS)].map((_, i) => <ItemSkeleton key={i} />)}
-		</ul>
-	)
+  return (
+    <ul className="space-y-4 p-2">
+      <ItemSkeleton />
+      <Separator className="mx-auto h-[2px] w-10 rounded-md bg-zinc-300 dark:bg-zinc-700" />
+      {[...Array(MOCK_SERVERS)].map((_, i) => (
+        <ItemSkeleton key={i} />
+      ))}
+    </ul>
+  )
 }

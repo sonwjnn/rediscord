@@ -1,35 +1,45 @@
+'use client'
 
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getConversationsByUserId } from '@/data/direct-message'
+import { useGetUserConversations } from '@/features/conversations/hooks/use-get-user-conversations'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { currentUser } from '@/lib/auth'
 import { MOCK_CHANNELS, MOCK_MEMBER } from '@/lib/mock'
 import { redirect } from 'next/navigation'
+import { FaUserFriends } from 'react-icons/fa'
+import { RiVipCrownFill } from 'react-icons/ri'
 
 import { DMItem, DMItemSkeleton } from './dm-item'
 import { Search, SearchSkeleton } from './search'
 import { Section } from './section'
-import { FaUserFriends } from "react-icons/fa";
-import { RiVipCrownFill } from "react-icons/ri";
 
-export const DMSidebar = async () => {
-  const user = await currentUser()
+export const DMSidebar = () => {
+  const user = useCurrentUser()
 
-  if (!user || !user.id) {
-    return redirect('/')
+  const { data: conversations, isLoading: conversationsLoading } =
+    useGetUserConversations()
+
+  // if (!user || !conversations) {
+  //   return redirect('/')
+  // }
+
+  if (conversationsLoading) {
+    return <DMSidebarSkeleton />
   }
 
-  const conversations = await getConversationsByUserId(user.id)
-
   if (!conversations) {
-    return redirect('/')
+    return <div>no conversations</div>
   }
 
   const formattedData = conversations.map(item => ({
     ...item,
-    user: item.userOne.id !== user.id ? item.userOne : item.userTwo,
+    user: item.userOne.id !== user?.id ? item.userOne : item.userTwo,
   }))
+
+  console.log(formattedData)
 
   return (
     <aside className="flex h-full w-full flex-col bg-[#F2F3F5] text-primary dark:bg-[#2B2D31]">
@@ -82,38 +92,41 @@ export const DMSidebar = async () => {
         <Separator className="my-2 rounded-md bg-zinc-200 dark:bg-zinc-700" />
 
         <div className="space-y-1.5">
-        <Section
-          label="Friends"
-          href="/me"
-          icon={<FaUserFriends className="size-5 flex-shrink-0 text-zinc-500 dark:text-zinc-400"/>}
-        />
+          <Section
+            label="Friends"
+            href="/me"
+            icon={
+              <FaUserFriends className="size-5 flex-shrink-0 text-zinc-500 dark:text-zinc-400" />
+            }
+          />
 
-        <Section
-          label="Nitro"
-          href="/nitro"
-          icon={<RiVipCrownFill className="size-5 flex-shrink-0 text-zinc-500 dark:text-zinc-400"/>}
-          disabled
-        />
+          <Section
+            label="Nitro"
+            href="/nitro"
+            icon={
+              <RiVipCrownFill className="size-5 flex-shrink-0 text-zinc-500 dark:text-zinc-400" />
+            }
+            disabled
+          />
         </div>
-        
 
-          <div className="mb-2">
-            <div className="flex items-center justify-between py-2">
-              <p className="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400">
-                Direct Messages
-              </p>
-              {/* <Hint label="Create DM" side="top">
+        <div className="mb-2">
+          <div className="flex items-center justify-between py-2">
+            <p className="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400">
+              Direct Messages
+            </p>
+            {/* <Hint label="Create DM" side="top">
                 <button className="text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300">
                   <Plus className="size-4" />
                 </button>
               </Hint> */}
-            </div>
-            <div className="space-y-0.5">
-              {formattedData.map(item => (
-                <DMItem key={item.id} user={item.user} />
-              ))}
-            </div>
           </div>
+          <div className="space-y-0.5">
+            {formattedData.map(item => (
+              <DMItem key={item.id} user={item.user} conversationId={item.id} />
+            ))}
+          </div>
+        </div>
       </ScrollArea>
     </aside>
   )

@@ -1,5 +1,6 @@
 'use client'
 
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { io as ClientIO } from 'socket.io-client'
 
@@ -18,6 +19,7 @@ export const useSocket = () => {
 }
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
+  const currentUser = useCurrentUser()
   const [socket, setSocket] = useState(null)
   const [isConnected, setIsConnected] = useState(false)
 
@@ -27,6 +29,9 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       {
         path: '/api/socket/io',
         addTrailingSlash: false,
+        auth: {
+          userId: currentUser?.id
+        }
       }
     )
 
@@ -47,7 +52,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       socketInstance.disconnect()
     }
-  }, [])
+  }, [currentUser])
 
   return (
     <SocketContext.Provider value={{ socket, isConnected }}>

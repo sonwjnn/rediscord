@@ -51,7 +51,7 @@ export const Item = ({ id, initialChannelId, imageUrl, name }: ItemProps) => {
 export const ItemSkeleton = () => {
   return (
     <li>
-      <Skeleton className="mx-3 flex h-[48px] w-[48px] overflow-hidden rounded-[24px] transition-all ease-linear" />
+      <Skeleton className="mx-auto flex h-[48px] w-[48px] overflow-hidden rounded-[24px] transition-all ease-linear" />
     </li>
   )
 }

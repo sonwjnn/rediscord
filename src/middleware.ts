@@ -1,60 +1,64 @@
 import authConfig from '@/auth.config'
 import {
-	apiAuthPrefix,
-	apiUploadthingPrefix,
-	apiWebhooksPrefix,
-	authRoutes,
-	DEFAULT_LOGIN_REDIRECT,
-	publicRoutes,
+  DEFAULT_LOGIN_REDIRECT,
+  apiAuthPrefix,
+  apiPrefix,
+  apiUploadthingPrefix,
+  apiWebhooksPrefix,
+  authRoutes,
+  publicRoutes,
 } from '@/routes'
 import NextAuth from 'next-auth'
 import { NextResponse } from 'next/server'
 
 const { auth } = NextAuth(authConfig)
 
-export default auth((req) => {
-	const { nextUrl } = req
-	const isLoggedIn = !!req.auth
+export default auth(req => {
+  const { nextUrl } = req
+  const isLoggedIn = !!req.auth
 
-	const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
-	const isApiWebhooksRoute = nextUrl.pathname.startsWith(apiWebhooksPrefix)
-	const isApiUploadthingRoute = nextUrl.pathname.startsWith(apiUploadthingPrefix)
-	const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
-	const isAuthRoute = authRoutes.includes(nextUrl.pathname)
+  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
+  const isApiWebhooksRoute = nextUrl.pathname.startsWith(apiWebhooksPrefix)
+  const isApiUploadthingRoute =
+    nextUrl.pathname.startsWith(apiUploadthingPrefix)
+  const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
+  const isAuthRoute = authRoutes.includes(nextUrl.pathname)
+  const isApiRoute = nextUrl.pathname.startsWith(apiPrefix)
 
-	const response = NextResponse.next()
-	
-	if (isApiAuthRoute || isApiWebhooksRoute || isApiUploadthingRoute) {
-		return response
-	}
+  const response = NextResponse.next()
 
-	if (isAuthRoute) {
-		if (isLoggedIn) {
-			return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
-		}
-		return response
-	}
+  if (
+    isApiAuthRoute ||
+    isApiWebhooksRoute ||
+    isApiUploadthingRoute ||
+    isApiRoute
+  ) {
+    return response
+  }
 
-	if (!isLoggedIn && !isPublicRoute) {
-		let callbackUrl = nextUrl.pathname
-		if (nextUrl.search) {
-			callbackUrl += nextUrl.search
-		}
+  if (isAuthRoute) {
+    if (isLoggedIn) {
+      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
+    }
+    return response
+  }
 
-		const encodedCallbackUrl = encodeURIComponent(callbackUrl)
+  if (!isLoggedIn && !isPublicRoute) {
+    let callbackUrl = nextUrl.pathname
+    if (nextUrl.search) {
+      callbackUrl += nextUrl.search
+    }
 
-		return Response.redirect(
-			new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl),
-		)
-	}
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl)
 
-	return response
+    return Response.redirect(
+      new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
+    )
+  }
+
+  return response
 })
 
 export const config = {
-	matcher: [
-		'/((?!.+\\.[\\w]+$|_next).*)',
-		'/',
-		'/(api|trpc)(.*)',
-	],
+  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 }

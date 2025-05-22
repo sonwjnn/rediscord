@@ -1,18 +1,24 @@
 "use client"
 
 import { LoaderIcon, Search } from "lucide-react";
-import { useGetOnlineFriends } from "@/features/friends/hooks/use-get-online-friends";
 import { Section } from "./section";
 import { UserItem } from "./user-item";
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useGetOnlineFriends } from "@/features/friends/hooks/use-get-online-friends";
+import { useFriendSocket } from "@/hooks/use-friend-socket";
 
 
 const OnlineFriends = () => {
   const { data: friends, isLoading } = useGetOnlineFriends();
   const [searchQuery, setSearchQuery] = useState("");
+  
+  useFriendSocket({
+    addKey: "friend:add",
+    updateKey: "friend:update",
+    queryKey: "online-friends"
+  });
 
-  // Lọc bạn bè theo từ khóa tìm kiếm
   const filteredFriends = useMemo(() => {
     if (!friends) return [];
     if (!searchQuery.trim()) return friends;
