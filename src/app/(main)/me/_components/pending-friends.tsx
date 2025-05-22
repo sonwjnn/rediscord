@@ -1,29 +1,34 @@
-"use client"
+"use client";
 
-import { LoaderIcon } from "lucide-react";
-import { PendingList } from "./pending-list";
 import { useGetPendingReq } from "@/features/friends/hooks/use-get-pending-req";
+import { LoaderIcon } from "lucide-react";
+import { PendingList } from './pending-list'
+import { useFriendSocket } from "@/hooks/use-friend-socket";
 
 const PendingFriends = () => {
-  const { data: friends, isLoading } = useGetPendingReq();
+  const { data: friends, isLoading } = useGetPendingReq()
 
-  if(isLoading) {
+  useFriendSocket({
+    addKey: "friend:add",
+    updateKey: "friend:update",
+    queryKey: "pending-req"
+  });
+
+  if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-[300px] w-full">
-        <LoaderIcon className="h-6 w-6 animate-spin"/>
+      <div className="flex h-[300px] w-full items-center justify-center">
+        <LoaderIcon className="h-6 w-6 animate-spin" />
       </div>
     )
   }
 
-
   return (
     <div className="flex flex-col p-6">
-      <PendingList 
+      <PendingList
         incoming={friends?.incoming ?? []}
         outgoing={friends?.outgoing ?? []}
       />
     </div>
-  );
-};
-
+  )
+}
 export default PendingFriends;

@@ -4,7 +4,7 @@
  * @type {string[]}
  */
 
-export const publicRoutes = [] as string [];
+export const publicRoutes = [] as string[]
 
 /**
  * An array of routes that are used for authentication .
@@ -12,38 +12,41 @@ export const publicRoutes = [] as string [];
  * @type {string[]}
  */
 export const authRoutes = [
-  "/auth/login",
-  "/auth/register",
-  "/auth/error",
-  "/auth/reset",
-  "/auth/new-password",
-  "/auth/new-verification"
-];
+  '/auth/login',
+  '/auth/register',
+  '/auth/error',
+  '/auth/reset',
+  '/auth/new-password',
+  '/auth/new-verification',
+]
 
 /**
  * The prefix for API authentication routes.
  * Routes that start with this prefix are used for API authentication purposes.
  * @type {string}
  */
-export const apiAuthPrefix = "/api/auth";
+export const apiAuthPrefix = '/api/auth'
 
 /**
  * The prefix for API webhooks routes.
  * Routes that start with this prefix are used for API webhooks purposes.
  * @type {string}
  */
-export const apiWebhooksPrefix = "/api/webhooks";
+export const apiWebhooksPrefix = '/api/webhooks'
 
 /**
  * The prefix for API upload image routes.
  * Routes that start with this prefix are used for API uploadthing purposes.
  * @type {string}
  */
-export const apiUploadthingPrefix = "/api/uploadthing";
+export const apiUploadthingPrefix = '/api/uploadthing'
 
 /**
  * The default redirect path after logging in.
  * @type {string}
  */
-export const DEFAULT_LOGIN_REDIRECT = "/";
-export const DEFAULT_SETTINGS_REDIRECT = "/settings/profile";
+
+export const apiPrefix = '/api'
+
+export const DEFAULT_LOGIN_REDIRECT = '/me'
+export const DEFAULT_SETTINGS_REDIRECT = '/settings/profile'

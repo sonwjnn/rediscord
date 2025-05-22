@@ -1,27 +1,32 @@
 'use client'
 
-import { hiddenConversation } from '@/actions/conversation'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/user-avatar'
+import { useHiddenConversation } from '@/features/conversations/hooks/use-hidden-conversation'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { cn } from '@/lib/utils'
 import { User } from '@prisma/client'
+import { useQueryClient } from '@tanstack/react-query'
 import { X } from 'lucide-react'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import { useTransition } from 'react'
+
 import { Hint } from '../hint'
 
 interface MemberProps {
   user: User
+  conversationId: string
 }
 
-export const DMItem = ({ user }: MemberProps) => {
+export const DMItem = ({ user, conversationId }: MemberProps) => {
   const currentUser = useCurrentUser()
   const router = useRouter()
   const pathname = usePathname()
   const params = useParams()
   const userId = params?.userId || ''
-  const [isPending, startTransition] = useTransition()
+  const queryClient = useQueryClient()
+  const { mutate: hiddenConversation, isPending } =
+    useHiddenConversation(conversationId)
 
   // const icon = roleIconMap[member.role]
 
@@ -33,18 +38,12 @@ export const DMItem = ({ user }: MemberProps) => {
     e.preventDefault()
     e.stopPropagation()
 
-    startTransition(async () => {
-      if(!currentUser || !currentUser.id) return
+    const userTwoId = userId
+    hiddenConversation()
 
-      const userOneId = currentUser.id 
-      const userTwoId = user.id
-
-      await hiddenConversation(userOneId, userTwoId)
-
-      if(pathname?.includes(`/${userTwoId}`)) {
-        router.replace('/me')
-      }
-    })
+    if (pathname?.includes(`/${userTwoId}`)) {
+      router.replace('/me')
+    }
   }
 
   return (
@@ -56,7 +55,11 @@ export const DMItem = ({ user }: MemberProps) => {
       )}
       disabled={isPending}
     >
-      <UserAvatar imageUrl={user.image!} name={user.name!} status={user.status} />
+      <UserAvatar
+        imageUrl={user.image!}
+        name={user.name!}
+        status={user.status}
+      />
       <p
         className={cn(
           'text-sm font-semibold text-zinc-500 transition group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300',
@@ -67,7 +70,10 @@ export const DMItem = ({ user }: MemberProps) => {
         {user.name}
       </p>
       <Hint label="Hidden this dm">
-        <X className='size-4 ml-auto text-zinc-400 hover:text-white transition' onClick={onHidden}/>
+        <X
+          className="ml-auto size-4 text-zinc-400 transition hover:text-white"
+          onClick={onHidden}
+        />
       </Hint>
       {/* {icon} */}
     </button>

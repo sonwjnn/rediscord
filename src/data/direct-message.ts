@@ -4,18 +4,15 @@ export const getConversationsByUserId = async (userId: string) => {
   try {
     const conversations = await db.conversation.findMany({
       where: {
-        OR: [
-          { userOneId: userId },
-          { userTwoId: userId },
-        ],
+        OR: [{ userOneId: userId }, { userTwoId: userId }],
         NOT: {
           hiddenConversations: {
             some: {
               userId: userId,
-              isActive: false
-            }
-          }
-        }
+              isActive: false,
+            },
+          },
+        },
       },
 
       include: {
@@ -34,10 +31,7 @@ export const getFirstConversationsByUserId = async (userId: string) => {
   try {
     const [conversation] = await db.conversation.findMany({
       where: {
-        OR: [
-          { userOneId: userId },
-          { userTwoId: userId },
-        ],
+        OR: [{ userOneId: userId }, { userTwoId: userId }],
       },
 
       include: {

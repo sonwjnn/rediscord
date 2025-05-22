@@ -14,8 +14,8 @@ const ServerIdLayout = async ({
   children: React.ReactNode
   params: { serverId: string }
 }) => {
-  const awaitedParams = await params;
-  
+  const awaitedParams = await params
+
   const server = await getServerById(awaitedParams.serverId)
 
   if (!server) {

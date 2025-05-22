@@ -12,6 +12,14 @@ import { LoginSchema } from '@/schemas'
 import { AuthError } from 'next-auth'
 import * as z from 'zod'
 
+const handleSuccess = (
+  message: string,
+  twoFactor: boolean = false,
+  canLogin: boolean = false
+) => {
+  return { success: message, twoFactor, canLogin }
+}
+
 export const login = async (
   values: z.infer<typeof LoginSchema>,
   callbackUrl?: string | null
@@ -19,7 +27,7 @@ export const login = async (
   const validatedFields = LoginSchema.safeParse(values)
 
   if (!validatedFields.success) {
-    return { error: 'Invalid fields!' }
+    return handleSuccess('Invalid fields!')
   }
 
   const { email, password, code } = validatedFields.data
@@ -27,14 +35,11 @@ export const login = async (
   const existingUser = await getUserByEmail(email)
 
   if (!existingUser || !existingUser.email) {
-    return { error: 'Email does not exist!' }
+    return handleSuccess('Email does not exist!')
   }
 
   if (!existingUser.password) {
-    return {
-      error:
-        'Invalid login method, account already linked with Google or Github',
-    }
+    return handleSuccess('Is provider account')
   }
 
   if (!existingUser.emailVerified) {
@@ -47,7 +52,7 @@ export const login = async (
       verificationToken.token
     )
 
-    return { success: 'Confirmation email sent!' }
+    return handleSuccess('Confirmation email sent!')
   }
 
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
@@ -55,17 +60,17 @@ export const login = async (
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email)
 
       if (!twoFactorToken) {
-        return { error: 'Invalid code!' }
+        return handleSuccess('Invalid code!')
       }
 
       if (twoFactorToken.token !== code) {
-        return { error: 'Invalid code!' }
+        return handleSuccess('Invalid code!')
       }
 
       const hasExpired = new Date(twoFactorToken.expires) < new Date()
 
       if (hasExpired) {
-        return { error: 'Code expired!' }
+        return handleSuccess('Code expired!')
       }
 
       await db.twoFactorToken.delete({
@@ -92,28 +97,9 @@ export const login = async (
 
       await sendTwoFactorEmail(twoFactorToken.email, twoFactorToken.token)
 
-      return { twoFactor: true }
+      return handleSuccess('Two factor code sent!', true)
     }
   }
 
-  try {
-    await signIn('credentials', {
-      email,
-      password,
-      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
-    })
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return { error: 'Invalid credentials' }
-        default:
-          return { error: 'Something went wrong!' }
-      }
-    }
-
-    throw error
-  }
-
-  return { success: 'Email sent' }
+  return handleSuccess('Login successful!', false, true)
 }

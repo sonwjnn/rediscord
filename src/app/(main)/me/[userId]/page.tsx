@@ -1,58 +1,64 @@
-import { ChatDirectMessages } from '@/components/chat/chat-direct-messages';
-import { ChatHeader } from '@/components/chat/chat-header';
-import { ChatInput } from '@/components/chat/chat-input';
-import { MediaRoom } from '@/components/media-room';
-import { getOrCreateConversation } from '@/actions/conversation'
-import { currentUser } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+'use client'
 
-interface UserIdPageProps {
-  params: {
-    userId: string
-    serverId: string
+import {
+  ChatDirectMessages,
+  ChatMessagesSkeleton,
+} from '@/components/chat/chat-direct-messages'
+import { ChatHeader } from '@/components/chat/chat-header'
+import { ChatInput } from '@/components/chat/chat-input'
+import { MediaRoom } from '@/components/media-room'
+import { useGetOrCreateConversations } from '@/features/conversations/hooks/use-get-or-create-conversation'
+import { useCurrentUser } from '@/hooks/use-current-user'
+import { useParams, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
+
+const UserIdPage = () => {
+  const params = useParams()
+  const searchParams = useSearchParams()
+  const serverId = (params?.serverId as string) || ''
+  const userId = (params?.userId as string) || ''
+  const video = searchParams?.get('video') === 'true'
+  const user = useCurrentUser()
+  const {
+    mutate,
+    data: conversation,
+    isPending,
+  } = useGetOrCreateConversations(userId)
+
+  useEffect(() => {
+    ;(() => {
+      mutate()
+    })()
+  }, [])
+
+  if (isPending) {
+    return <ChatMessagesSkeleton />
   }
-  searchParams: {
-    video?: boolean
-  }
-}
 
-const UserIdPage = async ({ params, searchParams }: UserIdPageProps) => {
-  const awaitedParams = await params;
-  const awaitedSearchParams = await searchParams;
-  
-  const user = await currentUser()
+  if (!conversation) return null
 
-  if (!user || !user.id) {
-    return redirect('/auth/login')
-  }
-
-  const conversation = await getOrCreateConversation(user.id, awaitedParams.userId);
-
-  if (!conversation) {
-    return redirect(`/servers/${awaitedParams.serverId}`)
-  }
-
-  const { userOne, userTwo } = conversation
-
-  const otherUser = userOne.id === user.id ? userTwo : userOne
+  const otherUser =
+    conversation?.userOne.id === user?.id
+      ? conversation?.userTwo
+      : conversation?.userOne
 
   const otherUserName = otherUser.name || ''
   const otherImage = otherUser.image || ''
 
-  if(!user) return null
+  if (!user) return null
 
   return (
     <div className="flex h-full flex-col bg-white dark:bg-[#313338]">
       <ChatHeader
         imageUrl={otherImage}
         name={otherUserName}
-        serverId={awaitedParams.serverId}
+        serverId={serverId}
         type="conversation"
       />
-      {awaitedSearchParams.video && (
+      {video && (
         <MediaRoom chatId={conversation.id} video={true} audio={true} />
       )}
-      {!awaitedSearchParams.video && (
+      {!video && (
         <>
           <ChatDirectMessages
             currentUser={user}

@@ -6,12 +6,18 @@ import { UserItem } from "./user-item";
 import { LoaderIcon, Search } from "lucide-react";
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useFriendSocket } from "@/hooks/use-friend-socket";
 
 const AllFriends = () => {
   const { data: friends, isLoading } = useGetAllFriends();
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Lọc bạn bè theo từ khóa tìm kiếm
+  useFriendSocket({
+    addKey: "friend:add",
+    updateKey: "friend:update",
+    queryKey: "all-friends"
+  });
+
   const filteredFriends = useMemo(() => {
     if (!friends) return [];
     if (!searchQuery.trim()) return friends;
@@ -93,5 +99,4 @@ const AllFriends = () => {
     </div>
   );
 };
-
 export default AllFriends;

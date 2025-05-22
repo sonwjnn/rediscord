@@ -12,6 +12,8 @@ import {
 
 // In Next.js, this file would be called: app/providers.jsx
 
+// In Next.js, this file would be called: app/providers.jsx
+
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
