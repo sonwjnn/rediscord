@@ -1,4 +1,3 @@
-import { findConversation } from '@/data/conversation'
 import { currentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'

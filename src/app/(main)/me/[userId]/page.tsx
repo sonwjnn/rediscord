@@ -12,6 +12,8 @@ import { useCurrentUser } from '@/hooks/use-current-user'
 import { useParams, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 
+import { UserIdLoading } from './user-id-loading'
+
 const UserIdPage = () => {
   const params = useParams()
   const searchParams = useSearchParams()
@@ -32,7 +34,7 @@ const UserIdPage = () => {
   }, [])
 
   if (isPending) {
-    return <ChatMessagesSkeleton />
+    return <UserIdLoading />
   }
 
   if (!conversation) return null

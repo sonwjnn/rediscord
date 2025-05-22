@@ -13,10 +13,30 @@ export const useHiddenConversation = (conversationId: string) => {
         throw new Error('Failed to hide conversation')
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['user-conversations'],
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['user-conversations'] })
+
+      const previousConversations = queryClient.getQueryData([
+        'user-conversations',
+      ])
+
+      queryClient.setQueryData(['user-conversations'], (old: any) => {
+        if (!old) return old
+
+        return Array.isArray(old)
+          ? old.filter(conversation => conversation.id !== conversationId)
+          : old
       })
+
+      return { previousConversations }
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previousConversations) {
+        queryClient.setQueryData(
+          ['user-conversations'],
+          context.previousConversations
+        )
+      }
     },
   })
 }
