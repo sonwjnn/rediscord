@@ -1,20 +1,18 @@
 import { updateMembersServerByInviteCode } from '@/actions/server'
 import { redirect } from 'next/navigation'
 
-interface InviteCodePageProps {
-  params: {
-    inviteCode: string
-  }
-}
+const InviteCodePage = async ({
+  params,
+}: {
+  params: Promise<{ inviteCode: string }>
+}) => {
+  const { inviteCode } = await params
 
-const InviteCodePage = async ({ params }: InviteCodePageProps) => {
-  const awaitedParams = await params;
-  
-  if (!awaitedParams.inviteCode) {
+  if (!inviteCode) {
     return redirect('/')
   }
 
-  const server = await updateMembersServerByInviteCode(awaitedParams.inviteCode)
+  const server = await updateMembersServerByInviteCode(inviteCode)
 
   if (!server) {
     return redirect('/')

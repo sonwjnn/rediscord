@@ -1,6 +1,6 @@
+import { ChatChannelMessages } from '@/components/chat/chat-channel-messages'
 import { ChatHeader } from '@/components/chat/chat-header'
 import { ChatInput } from '@/components/chat/chat-input'
-import { ChatChannelMessages } from '@/components/chat/chat-channel-messages'
 import { MediaRoom } from '@/components/media-room'
 import { getChannelById } from '@/data/channel'
 import { getCurrentMemberOfServer } from '@/data/member'
@@ -12,18 +12,18 @@ import { redirect } from 'next/navigation'
 import { Container } from './_components/container'
 
 interface ChannelIdPageProps {
-  params: {
+  params: Promise<{
     serverId: string
     channelId: string
-  }
+  }>
 }
 
 const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
-  const awaitedParams = await params;
-  
-  const channel = await getChannelById(awaitedParams.channelId)
+  const { serverId, channelId } = await params
 
-  const member = await getCurrentMemberOfServer(awaitedParams.serverId)
+  const channel = await getChannelById(channelId)
+
+  const member = await getCurrentMemberOfServer(serverId)
 
   const user = await currentUser()
 
@@ -31,7 +31,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
     return redirect('/')
   }
 
-  const server = await getServerWithChannelsWithMembers(awaitedParams.serverId)
+  const server = await getServerWithChannelsWithMembers(serverId)
 
   if (!channel || !member || !server) {
     return redirect('/')

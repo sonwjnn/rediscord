@@ -3,14 +3,14 @@ import { currentUser } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 
 interface ServerPageProps {
-  params: {
+  params: Promise<{
     serverId: string
-  }
+  }>
 }
 
 const ServerPage = async ({ params }: ServerPageProps) => {
-  const awaitedParams = await params;
-  
+  const awaitedParams = await params
+
   const user = await currentUser()
 
   if (!user) {
