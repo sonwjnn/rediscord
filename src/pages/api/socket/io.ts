@@ -17,6 +17,19 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
       path: path,
       // @ts-ignore
       addTrailingSlash: false,
+      transports: ['websocket', 'polling'],
+
+      pingTimeout: 60000, // 60 seconds
+      pingInterval: 25000, // 25 seconds
+      upgradeTimeout: 30000, // 30 seconds
+      maxHttpBufferSize: 1e6, // 1MB
+
+      allowEIO3: true,
+
+      connectionStateRecovery: {
+        maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
+        skipMiddlewares: true,
+      },
     })
     res.socket.server.io = io
   }

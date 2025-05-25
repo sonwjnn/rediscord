@@ -66,7 +66,7 @@ model User {
   conversationsInitiated Conversation[] @relation("UserOne")
   conversationsReceived  Conversation[] @relation("UserTwo")
 
-  hiddenConversationsBy HiddenConversation[] @relation("HiddenBy")
+  hiddenConversationsBy    HiddenConversation[] @relation("HiddenBy")
   hiddenConversationsUsers HiddenConversation[] @relation("HiddenUser")
 
   friendsInitiated Friend[] @relation("FriendOne")
@@ -74,6 +74,8 @@ model User {
 
   blocking  Block[] @relation("Blocking")
   blockedBy Block[] @relation("BlockedBy")
+
+  conversationReactions ConversationReaction[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -148,10 +150,11 @@ model Member {
   serverId String
   server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
-  messages       Message[]
+  messages Message[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  ServerReaction ServerReaction[]
 
   @@index([userId])
   @@index([serverId])
@@ -197,6 +200,8 @@ model Message {
 
   deleted Boolean @default(false)
 
+  serverReactions ServerReaction[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -208,13 +213,14 @@ model Conversation {
   id String @id @default(uuid())
 
   userOneId String
-  userOne   User @relation("UserOne", fields: [userOneId], references: [id], onDelete: Cascade)
+  userOne   User   @relation("UserOne", fields: [userOneId], references: [id], onDelete: Cascade)
 
   userTwoId String
-  userTwo   User @relation("UserTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
+  userTwo   User   @relation("UserTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
 
-  directMessages DirectMessage[]
-  hiddenConversations HiddenConversation[]
+  directMessages        DirectMessage[]
+  hiddenConversations   HiddenConversation[]
+  conversationReactions ConversationReaction[]
 
   @@unique([userOneId, userTwoId])
   @@index([userTwoId])
@@ -227,10 +233,10 @@ model HiddenConversation {
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
   userId String
-  user User @relation("HiddenBy", fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation("HiddenBy", fields: [userId], references: [id], onDelete: Cascade)
 
   hiddenUserId String
-  hiddenUser   User @relation("HiddenUser", fields: [hiddenUserId], references: [id], onDelete: Cascade)
+  hiddenUser   User   @relation("HiddenUser", fields: [hiddenUserId], references: [id], onDelete: Cascade)
 
   isActive Boolean
 }
@@ -241,7 +247,7 @@ model DirectMessage {
   fileUrl String? @db.Text
 
   userId String
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
@@ -286,4 +292,28 @@ model Block {
   @@unique([blockerId, blockedId])
   @@index([blockerId])
   @@index([blockedId])
+}
+
+model ServerReaction {
+  id String @id @default(cuid())
+
+  messageId String
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  emoji String
+}
+
+model ConversationReaction {
+  id String @id @default(cuid())
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  emoji String
 }
