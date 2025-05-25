@@ -3,8 +3,9 @@
 import { Hint } from '@/components/hint'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import Image from 'next/image'
 import { useParams, usePathname, useRouter } from 'next/navigation'
+
+import { ServerAvatar } from '../server-avatar'
 
 interface ItemProps {
   id: string
@@ -34,15 +35,13 @@ export const Item = ({ id, initialChannelId, imageUrl, name }: ItemProps) => {
               : 'h-[8px]'
           )}
         />
-        <div
-          className={cn(
-            'group relative mx-3 flex h-[48px] w-[48px] overflow-hidden rounded-[24px] transition-all ease-linear active:translate-y-[1px] group-hover:rounded-[16px]',
-            params?.serverId === id &&
-              'rounded-[16px] bg-primary/10 text-primary'
-          )}
-        >
-          <Image fill src={imageUrl} alt="Channel" sizes="100%" />
-        </div>
+
+        <ServerAvatar
+          name={name}
+          imageUrl={imageUrl}
+          size="md"
+          isActive={params?.serverId === id}
+        />
       </button>
     </Hint>
   )
