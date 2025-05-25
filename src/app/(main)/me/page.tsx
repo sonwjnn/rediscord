@@ -1,46 +1,52 @@
-import { Suspense } from "react";
-import Header from "./_components/header";
-import OnlineFriends from "./_components/online-friends";
-import AllFriends from "./_components/all-friends";
-import PendingFriends from "./_components/pending-friends";
-import AddFriend from "./_components/add-friend";
-import { TabsType } from "./types";
+import { Suspense } from 'react'
+
+import AddFriend from './_components/add-friend'
+import AllFriends from './_components/all-friends'
+import Header from './_components/header'
+import OnlineFriends from './_components/online-friends'
+import PendingFriends from './_components/pending-friends'
+import { TabsType } from './types'
 
 const FriendLayout = async ({
   searchParams,
 }: {
-  searchParams: { tabs?: string };
+  searchParams: Promise<{ tabs?: string }>
 }) => {
-  const tab = ((await searchParams)?.tabs || "ONLINE") as TabsType
-  
+  const { tabs } = await searchParams
+
+  const tab = (tabs as TabsType) || 'ONLINE'
+
   const renderContent = () => {
     switch (tab) {
-      case "ONLINE":
-        return <OnlineFriends />;
-      case "ALL":
-        return <AllFriends />;
-      case "PENDING":
-        return <PendingFriends />;
-      case "ADD_FRIEND":
-        return <AddFriend />;
+      case 'ONLINE':
+        return <OnlineFriends />
+      case 'ALL':
+        return <AllFriends />
+      case 'PENDING':
+        return <PendingFriends />
+      case 'ADD_FRIEND':
+        return <AddFriend />
       default:
-        return <OnlineFriends />;
+        return <OnlineFriends />
     }
-  };
+  }
 
   return (
     <div className="flex flex-col">
       <Header />
       {renderContent()}
     </div>
-  );
-};
+  )
+}
 
-// Wrap with Suspense to handle any async operations
-export default function Page(props: { searchParams: { tabs?: string } }) {
+export default function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ tabs?: string }>
+}) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <FriendLayout searchParams={props.searchParams} />
+      <FriendLayout searchParams={searchParams} />
     </Suspense>
-  );
+  )
 }
