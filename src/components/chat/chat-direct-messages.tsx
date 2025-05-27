@@ -7,6 +7,7 @@ import { DirectMessage, User } from '@prisma/client'
 import { format } from 'date-fns'
 import { Loader2, ServerCrash } from 'lucide-react'
 import { ComponentRef, Fragment, useRef } from 'react'
+import { useMemo } from 'react'
 
 import { ExtendedUser } from '../../../next-auth'
 import { ChatDirectItem } from './chat-direct-item'
@@ -71,6 +72,29 @@ export const ChatDirectMessages = ({
       </div>
     )
   }
+
+  const messages = useMemo(() => {
+    return (
+      data?.pages?.reduce((acc, page) => {
+        return [...acc, ...page.items]
+      }, [] as DirectMessage[]) || []
+    )
+  }, [data]) as DirectMessage[]
+
+  const groupedMessages = messages?.reduce(
+    (groups, message) => {
+      const date = new Date(message.createdAt)
+      const dateKey = format(date, 'YYYY-MM-DD')
+      if (!groups[dateKey]) {
+        groups[dateKey] = []
+      }
+      groups[dateKey]?.unshift(message)
+      return groups
+    },
+    {} as Record<string, DirectMessage[]>
+  )
+
+  console.log(groupedMessages)
 
   return (
     <div ref={chatRef} className="flex flex-1 flex-col overflow-y-auto py-4">

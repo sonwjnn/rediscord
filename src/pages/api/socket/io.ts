@@ -26,6 +26,13 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
 
       allowEIO3: true,
 
+      perMessageDeflate: {
+        threshold: 2048, // Only compress data if message is larger than this value (in bytes)
+      },
+
+      // Set websocket settings
+      wsEngine: 'ws',
+
       connectionStateRecovery: {
         maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
         skipMiddlewares: true,

@@ -5,14 +5,27 @@ import { useChatScroll } from '@/hooks/use-chat-scroll'
 import { useChatSocket } from '@/hooks/use-chat-socket'
 import { ServerWithMembersWithUsers } from '@/types'
 import { Member, Message, ServerReaction, User } from '@prisma/client'
-import { format } from 'date-fns'
+import { differenceInMinutes, format, sub } from 'date-fns'
 import { Loader2, ServerCrash } from 'lucide-react'
-import { ComponentRef, Fragment, useRef } from 'react'
+import { ComponentRef, Fragment, useMemo, useRef } from 'react'
 
 import { ChatItem, ChatItemSkeleton } from './chat-item'
 import { ChatWelcome } from './chat-welcome'
 
-const DATE_FORMAT = 'd MMM yyyy, HH:mm'
+const DATE_FORMAT = 'yyyy-MM-dd'
+
+const TIME_THRESHOLD = 5
+
+const formatDateLabel = (dateStr: string) => {
+  const date = format(dateStr, DATE_FORMAT)
+
+  const today = format(new Date(), DATE_FORMAT)
+  const yesterday = format(sub(new Date(), { days: 1 }), DATE_FORMAT)
+
+  if (date === today) return 'Today'
+  if (date === yesterday) return 'Yesterday'
+  return ''
+}
 
 type MessageWithMemberWithUser = Message & {
   member: Member & {
@@ -83,6 +96,29 @@ export const ChatChannelMessages = ({
     )
   }
 
+  const messages = useMemo(() => {
+    return (
+      data?.pages?.reduce((acc, page) => {
+        return [...acc, ...page.items]
+      }, [] as MessageWithMemberWithUser[]) || []
+    )
+  }, [data]) as MessageWithMemberWithUser[]
+
+  const groupedMessages = useMemo(() => {
+    return messages?.reduce(
+      (groups, message) => {
+        const date = new Date(message.createdAt)
+        const dateKey = format(date, 'yyyy-MM-dd')
+        if (!groups[dateKey]) {
+          groups[dateKey] = []
+        }
+        groups[dateKey]?.unshift(message)
+        return groups
+      },
+      {} as Record<string, MessageWithMemberWithUser[]>
+    )
+  }, [messages])
+
   return (
     <div ref={chatRef} className="flex flex-1 flex-col overflow-y-auto py-4">
       {!hasNextPage && <div className="flex-1" />}
@@ -102,27 +138,44 @@ export const ChatChannelMessages = ({
         </div>
       )}
       <div className="mt-auto flex flex-col-reverse">
-        {data?.pages?.map((group, i) => (
-          <Fragment key={i}>
-            {group.items.map((message: MessageWithMemberWithUser) => (
-              <ChatItem
-                key={message.id}
-                id={message.id}
-                currentMember={member}
-                server={server}
-                channelId={channelId!}
-                member={message.member}
-                content={message.content}
-                reactions={message.reactions}
-                fileUrl={message.fileUrl}
-                deleted={message.deleted}
-                timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
-                isUpdated={message.updatedAt !== message.createdAt}
-                socketUrl={socketUrl}
-                socketQuery={socketQuery}
-              />
-            ))}
-          </Fragment>
+        {Object.entries(groupedMessages || {}).map(([dateKey, messages]) => (
+          <div key={dateKey}>
+            <div className="relative my-2 text-center">
+              <hr className="absolute left-0 right-0 top-1/2 border-t border-zinc-200 dark:border-zinc-800" />
+              <span className="relative inline-block rounded-full border border-zinc-200 bg-zinc-200 px-4 py-1 text-xs shadow-sm dark:border-zinc-800 dark:bg-zinc-800">
+                {formatDateLabel(dateKey)}
+              </span>
+            </div>
+            {messages.map((message: MessageWithMemberWithUser, index) => {
+              const prevMessage = messages[index - 1]
+              const isCompact =
+                prevMessage &&
+                prevMessage.member?.user?.id === message.member?.user?.id &&
+                differenceInMinutes(
+                  new Date(message.createdAt),
+                  new Date(prevMessage.createdAt)
+                ) < TIME_THRESHOLD
+              return (
+                <ChatItem
+                  key={message.id}
+                  id={message.id}
+                  currentMember={member}
+                  server={server}
+                  channelId={channelId!}
+                  isCompact={isCompact}
+                  member={message.member}
+                  content={message.content}
+                  reactions={message.reactions}
+                  fileUrl={message.fileUrl}
+                  deleted={message.deleted}
+                  timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+                  isUpdated={message.updatedAt !== message.createdAt}
+                  socketUrl={socketUrl}
+                  socketQuery={socketQuery}
+                />
+              )
+            })}
+          </div>
         ))}
       </div>
       <div ref={bottomRef} />

@@ -37,7 +37,7 @@ export const ServerReactions = ({
         >
           <button
             className={cn(
-              'flex h-6 items-center gap-x-1 rounded-full border border-transparent bg-slate-200/70 px-2 text-slate-800 dark:bg-[#292524] dark:text-slate-200',
+              'flex h-6 items-center gap-x-1 rounded-full border border-transparent bg-slate-200/70 px-2 text-slate-800 dark:bg-zinc-800 dark:text-slate-200',
               currentMemberId &&
                 reaction.memberIds?.includes(currentMemberId) &&
                 'border-blue-500 bg-blue-100/70 text-blue-500 dark:border-blue-500 dark:bg-blue-500/70 dark:text-white'
@@ -62,7 +62,7 @@ export const ServerReactions = ({
         hint="Add reaction"
         onEmojiSelect={emoji => onChange(emoji)}
       >
-        <button className="flex h-7 items-center gap-x-1 rounded-full border border-transparent bg-slate-200/70 px-3 text-slate-800 hover:border-slate-500">
+        <button className="flex h-7 items-center gap-x-1 rounded-full border border-transparent bg-slate-200/70 px-3 text-slate-800 hover:border-slate-500 dark:bg-zinc-800 dark:text-zinc-500">
           <MdOutlineAddReaction />
         </button>
       </EmojiPopover>
