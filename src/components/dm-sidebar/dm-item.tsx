@@ -2,7 +2,7 @@
 
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/user-avatar'
-import { useHiddenConversation } from '@/features/conversations/hooks/use-hidden-conversation'
+import { useHiddenConversation } from '@/features/conversations/api/use-hidden-conversation'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { cn } from '@/lib/utils'
 import { User } from '@prisma/client'

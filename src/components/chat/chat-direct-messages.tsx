@@ -3,44 +3,40 @@
 import { useChatQuery } from '@/hooks/use-chat-query'
 import { useChatScroll } from '@/hooks/use-chat-scroll'
 import { useChatSocket } from '@/hooks/use-chat-socket'
-import { Message, User } from '@prisma/client'
+import { DirectMessage, User } from '@prisma/client'
 import { format } from 'date-fns'
 import { Loader2, ServerCrash } from 'lucide-react'
 import { ComponentRef, Fragment, useRef } from 'react'
 
+import { ExtendedUser } from '../../../next-auth'
+import { ChatDirectItem } from './chat-direct-item'
 import { ChatItemSkeleton } from './chat-item'
 import { ChatWelcome } from './chat-welcome'
-import { ChatDirectItem } from './chat-direct-item'
-import { ExtendedUser } from '../../../next-auth'
 
 const DATE_FORMAT = 'd MMM yyyy, HH:mm'
 
-type MessageWithUser = Message & {
+type MessageWithUser = DirectMessage & {
   user: User
 }
 
 interface ChatDirectMessagesProps {
   name: string
   currentUser: ExtendedUser
-  chatId: string
   socketUrl: string
   socketQuery: Record<string, string>
   conversationId: string
-  type: 'channel' | 'conversation'
 }
 
 export const ChatDirectMessages = ({
   name,
   currentUser,
-  chatId,
   socketUrl,
   socketQuery,
   conversationId,
-  type,
 }: ChatDirectMessagesProps) => {
-  const queryKey = `chat:${chatId}`
-  const addKey = `chat:${chatId}:messages`
-  const updateKey = `chat:${chatId}:messages:update`
+  const queryKey = `chat:${conversationId}`
+  const addKey = `chat:${conversationId}:messages`
+  const updateKey = `chat:${conversationId}:messages:update`
 
   const chatRef = useRef<ComponentRef<'div'>>(null)
   const bottomRef = useRef<ComponentRef<'div'>>(null)
@@ -48,7 +44,7 @@ export const ChatDirectMessages = ({
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useChatQuery({
       queryKey,
-      type,
+      type: 'conversation',
       channelId: '',
       conversationId: conversationId || '',
     })
@@ -79,7 +75,7 @@ export const ChatDirectMessages = ({
   return (
     <div ref={chatRef} className="flex flex-1 flex-col overflow-y-auto py-4">
       {!hasNextPage && <div className="flex-1" />}
-      {!hasNextPage && <ChatWelcome type={type} name={name} />}
+      {!hasNextPage && <ChatWelcome type="conversation" name={name} />}
       {hasNextPage && (
         <div className="flex justify-center">
           {isFetchingNextPage ? (
@@ -103,6 +99,7 @@ export const ChatDirectMessages = ({
                 id={message.id}
                 currentUser={currentUser}
                 otherUser={message.user}
+                conversationId={message.conversationId}
                 content={message.content}
                 fileUrl={message.fileUrl}
                 deleted={message.deleted}

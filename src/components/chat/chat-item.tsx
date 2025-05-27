@@ -7,13 +7,19 @@ import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/user-avatar'
+import { useReactionSocket } from '@/features/reactions/api/use-reaction-socket'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { cn } from '@/lib/utils'
 import { ChatItemSchema } from '@/schemas'
 import { useModal } from '@/store/use-modal-store'
 import { MemberWithUser, ServerWithMembersWithUsers } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Member, MemberRole } from '@prisma/client'
+import {
+  ConversationReaction,
+  Member,
+  MemberRole,
+  ServerReaction,
+} from '@prisma/client'
 import axios from 'axios'
 import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from 'lucide-react'
 import Image from 'next/image'
@@ -24,15 +30,24 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import { MemberProfileWrapper } from '../member/member-profile-wrapper'
+import { ServerReactions } from '../reactions'
+import { Toolbar } from './toolbar'
 
 interface ChatItemProps {
   id: string
   content: string
   member: MemberWithUser
   server?: ServerWithMembersWithUsers
+  reactions?: Array<
+    Omit<ServerReaction, 'memberId'> & {
+      count: number
+      memberIds: string[]
+    }
+  >
   timestamp: string
   fileUrl: string | null
   deleted: boolean
+  channelId: string
   currentMember: Member
   isUpdated: boolean
   socketUrl: string
@@ -53,11 +68,24 @@ export const ChatItem = ({
   timestamp,
   fileUrl,
   deleted,
+  reactions,
   currentMember,
+  channelId,
   isUpdated,
   socketUrl,
   socketQuery,
 }: ChatItemProps) => {
+  const addKey = `message:${id}:reaction:add`
+  const removeKey = `message:${id}:reaction:remove`
+  const queryKey = `chat:${channelId}`
+
+  useReactionSocket({
+    addKey,
+    removeKey,
+    queryKey,
+    type: 'server',
+  })
+
   const user = useCurrentUser()
   const [isEditing, setIsEditing] = useState(false)
 
@@ -115,6 +143,26 @@ export const ChatItem = ({
       content: content,
     })
   }, [form, content])
+
+  const handleReaction = async (value: string) => {
+    try {
+      const url = qs.stringifyUrl({
+        url: `/api/socket/messages/${id}/reactions`,
+      })
+      console.log(url, {
+        emoji: value,
+        userId: user?.id,
+        serverId: params?.serverId,
+      })
+      await axios.post(url, {
+        emoji: value,
+        userId: user?.id,
+        serverId: params?.serverId,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const fileType = fileUrl?.split('.').pop()
 
@@ -187,21 +235,29 @@ export const ChatItem = ({
             </div>
           )}
           {!isEditing && (
-            <p
-              className={cn(
-                'text-base text-zinc-600 dark:text-zinc-300',
-                deleted &&
-                  'mt-1 text-xs italic text-zinc-500 dark:text-zinc-400'
-              )}
-            >
-              {content}
-              {isUpdated && !deleted && (
-                <span className="mx-2 text-[10px] text-zinc-500 dark:text-zinc-400">
-                  (edited)
-                </span>
-              )}
-            </p>
+            <div className="flex w-full flex-col">
+              <p
+                className={cn(
+                  'text-base text-zinc-600 dark:text-zinc-300',
+                  deleted &&
+                    'mt-1 text-xs italic text-zinc-500 dark:text-zinc-400'
+                )}
+              >
+                {content}
+                {isUpdated && !deleted && (
+                  <span className="mx-2 text-[10px] text-zinc-500 dark:text-zinc-400">
+                    (edited)
+                  </span>
+                )}
+              </p>
+              <ServerReactions
+                data={reactions || []}
+                currentMemberId={currentMember.id}
+                onChange={handleReaction}
+              />
+            </div>
           )}
+
           {isEditing && (
             <Form {...form}>
               <form
@@ -238,28 +294,20 @@ export const ChatItem = ({
           )}
         </div>
       </div>
-      {canDeleteMessage && (
-        <div className="absolute -top-2 right-5 hidden items-center gap-x-2 rounded-sm border bg-white p-1 group-hover:flex dark:bg-zinc-800">
-          {canEditMessage && (
-            <Hint label="Edit">
-              <Edit
-                onClick={() => setIsEditing(true)}
-                className="ml-auto h-4 w-4 cursor-pointer text-zinc-500 transition hover:text-zinc-600 dark:hover:text-zinc-300"
-              />
-            </Hint>
-          )}
-          <Hint label="Delete">
-            <Trash
-              onClick={() =>
-                onOpen('deleteMessage', {
-                  apiUrl: `${socketUrl}/${id}`,
-                  query: socketQuery,
-                })
-              }
-              className="ml-auto h-4 w-4 cursor-pointer text-zinc-500 transition hover:text-zinc-600 dark:hover:text-zinc-300"
-            />
-          </Hint>
-        </div>
+      {!isEditing && (
+        <Toolbar
+          canDelete={canDeleteMessage}
+          canEdit={canEditMessage}
+          isPending={isLoading}
+          onEdit={() => setIsEditing(true)}
+          onDelete={() =>
+            onOpen('deleteMessage', {
+              apiUrl: `${socketUrl}/${id}`,
+              query: socketQuery,
+            })
+          }
+          onReaction={handleReaction}
+        />
       )}
     </div>
   )

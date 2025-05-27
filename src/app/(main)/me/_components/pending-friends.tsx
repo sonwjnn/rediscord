@@ -1,18 +1,19 @@
-"use client";
+'use client'
 
-import { useGetPendingReq } from "@/features/friends/hooks/use-get-pending-req";
-import { LoaderIcon } from "lucide-react";
+import { useGetPendingReq } from '@/features/friends/api/use-get-pending-req'
+import { useFriendSocket } from '@/hooks/use-friend-socket'
+import { LoaderIcon } from 'lucide-react'
+
 import { PendingList } from './pending-list'
-import { useFriendSocket } from "@/hooks/use-friend-socket";
 
 const PendingFriends = () => {
   const { data: friends, isLoading } = useGetPendingReq()
 
   useFriendSocket({
-    addKey: "friend:add",
-    updateKey: "friend:update",
-    queryKey: "pending-req"
-  });
+    addKey: 'friend:add',
+    updateKey: 'friend:update',
+    queryKey: 'pending-req',
+  })
 
   if (isLoading) {
     return (
@@ -31,4 +32,4 @@ const PendingFriends = () => {
     </div>
   )
 }
-export default PendingFriends;
+export default PendingFriends

@@ -9,17 +9,14 @@ export const useGetOrCreateConversations = (userTwoId?: string) => {
     mutationFn: async () => {
       if (!userTwoId) return null
 
-      const response = await fetch(
-        `/api/user-conversations/user/${userTwoId}`,
-        {
-          method: 'POST',
-        }
-      )
+      const response = await fetch(`/api/conversations/user/${userTwoId}`, {
+        method: 'POST',
+      })
       return await response.json()
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['user-conversations'],
+        queryKey: ['conversations'],
       })
     },
   })

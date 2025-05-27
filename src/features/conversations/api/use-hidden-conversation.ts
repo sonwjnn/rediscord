@@ -5,7 +5,7 @@ export const useHiddenConversation = (conversationId: string) => {
 
   return useMutation({
     mutationFn: async () => {
-      const res = await fetch(`/api/user-conversations/${conversationId}`, {
+      const res = await fetch(`/api/conversations/${conversationId}`, {
         method: 'DELETE',
       })
 
@@ -14,13 +14,11 @@ export const useHiddenConversation = (conversationId: string) => {
       }
     },
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['user-conversations'] })
+      await queryClient.cancelQueries({ queryKey: ['conversations'] })
 
-      const previousConversations = queryClient.getQueryData([
-        'user-conversations',
-      ])
+      const previousConversations = queryClient.getQueryData(['conversations'])
 
-      queryClient.setQueryData(['user-conversations'], (old: any) => {
+      queryClient.setQueryData(['conversations'], (old: any) => {
         if (!old) return old
 
         return Array.isArray(old)
@@ -33,7 +31,7 @@ export const useHiddenConversation = (conversationId: string) => {
     onError: (_error, _variables, context) => {
       if (context?.previousConversations) {
         queryClient.setQueryData(
-          ['user-conversations'],
+          ['conversations'],
           context.previousConversations
         )
       }

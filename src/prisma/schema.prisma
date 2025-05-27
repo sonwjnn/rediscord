@@ -125,8 +125,9 @@ model Server {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  members  Member[]
-  channels Channel[]
+  members         Member[]
+  channels        Channel[]
+  serverReactions ServerReaction[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -156,8 +157,7 @@ model Member {
   updatedAt      DateTime         @updatedAt
   ServerReaction ServerReaction[]
 
-  @@index([userId])
-  @@index([serverId])
+  @@index([userId, serverId])
 }
 
 enum ChannelType {
@@ -218,9 +218,8 @@ model Conversation {
   userTwoId String
   userTwo   User   @relation("UserTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
 
-  directMessages        DirectMessage[]
-  hiddenConversations   HiddenConversation[]
-  conversationReactions ConversationReaction[]
+  directMessages      DirectMessage[]
+  hiddenConversations HiddenConversation[]
 
   @@unique([userOneId, userTwoId])
   @@index([userTwoId])
@@ -239,6 +238,8 @@ model HiddenConversation {
   hiddenUser   User   @relation("HiddenUser", fields: [hiddenUserId], references: [id], onDelete: Cascade)
 
   isActive Boolean
+
+  @@index([conversationId, userId, hiddenUserId])
 }
 
 model DirectMessage {
@@ -253,6 +254,8 @@ model DirectMessage {
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
   deleted Boolean @default(false)
+
+  conversationReactions ConversationReaction[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -297,6 +300,9 @@ model Block {
 model ServerReaction {
   id String @id @default(cuid())
 
+  serverId String
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
   messageId String
   message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
@@ -304,16 +310,20 @@ model ServerReaction {
   member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
 
   emoji String
+
+  @@index([messageId])
 }
 
 model ConversationReaction {
   id String @id @default(cuid())
 
-  conversationId String
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  messageId String
+  message   DirectMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   emoji String
+
+  @@index([messageId])
 }

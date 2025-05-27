@@ -4,9 +4,9 @@ import { UserConversationResponse } from '../types'
 
 export const useGetUserConversations = () => {
   return useQuery<UserConversationResponse[]>({
-    queryKey: ['user-conversations'],
+    queryKey: ['conversations'],
     queryFn: async () => {
-      const response = await fetch(`/api/user-conversations`)
+      const response = await fetch(`/api/conversations`)
       return await response.json()
     },
   })

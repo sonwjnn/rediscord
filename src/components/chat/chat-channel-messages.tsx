@@ -4,7 +4,7 @@ import { useChatQuery } from '@/hooks/use-chat-query'
 import { useChatScroll } from '@/hooks/use-chat-scroll'
 import { useChatSocket } from '@/hooks/use-chat-socket'
 import { ServerWithMembersWithUsers } from '@/types'
-import { Member, Message, User } from '@prisma/client'
+import { Member, Message, ServerReaction, User } from '@prisma/client'
 import { format } from 'date-fns'
 import { Loader2, ServerCrash } from 'lucide-react'
 import { ComponentRef, Fragment, useRef } from 'react'
@@ -18,6 +18,12 @@ type MessageWithMemberWithUser = Message & {
   member: Member & {
     user: User
   }
+  reactions?: Array<
+    Omit<ServerReaction, 'memberId'> & {
+      count: number
+      memberIds: string[]
+    }
+  >
 }
 
 interface ChatMessagesProps {
@@ -27,9 +33,7 @@ interface ChatMessagesProps {
   chatId: string
   socketUrl: string
   socketQuery: Record<string, string>
-  channelId?: string
-  conversationId?: string
-  type: 'channel' | 'conversation'
+  channelId: string
 }
 
 export const ChatChannelMessages = ({
@@ -40,8 +44,6 @@ export const ChatChannelMessages = ({
   socketUrl,
   socketQuery,
   channelId,
-  conversationId,
-  type,
 }: ChatMessagesProps) => {
   const queryKey = `chat:${chatId}`
   const addKey = `chat:${chatId}:messages`
@@ -53,9 +55,9 @@ export const ChatChannelMessages = ({
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useChatQuery({
       queryKey,
-      type,
+      type: 'channel',
       channelId: channelId || '',
-      conversationId: conversationId || '',
+      conversationId: '',
     })
   useChatSocket({ queryKey, addKey, updateKey })
   useChatScroll({
@@ -84,7 +86,7 @@ export const ChatChannelMessages = ({
   return (
     <div ref={chatRef} className="flex flex-1 flex-col overflow-y-auto py-4">
       {!hasNextPage && <div className="flex-1" />}
-      {!hasNextPage && <ChatWelcome type={type} name={name} />}
+      {!hasNextPage && <ChatWelcome type="channel" name={name} />}
       {hasNextPage && (
         <div className="flex justify-center">
           {isFetchingNextPage ? (
@@ -108,8 +110,10 @@ export const ChatChannelMessages = ({
                 id={message.id}
                 currentMember={member}
                 server={server}
+                channelId={channelId!}
                 member={message.member}
                 content={message.content}
+                reactions={message.reactions}
                 fileUrl={message.fileUrl}
                 deleted={message.deleted}
                 timestamp={format(new Date(message.createdAt), DATE_FORMAT)}

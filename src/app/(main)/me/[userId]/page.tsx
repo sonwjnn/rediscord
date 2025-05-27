@@ -7,7 +7,7 @@ import {
 import { ChatHeader } from '@/components/chat/chat-header'
 import { ChatInput } from '@/components/chat/chat-input'
 import { MediaRoom } from '@/components/media-room'
-import { useGetOrCreateConversations } from '@/features/conversations/hooks/use-get-or-create-conversation'
+import { useGetOrCreateConversations } from '@/features/conversations/api/use-get-or-create-conversation'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { useParams, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
@@ -65,8 +65,6 @@ const UserIdPage = () => {
           <ChatDirectMessages
             currentUser={user}
             name={otherUserName}
-            chatId={conversation.id}
-            type="conversation"
             conversationId={conversation.id}
             socketUrl="/api/socket/direct-messages"
             socketQuery={{

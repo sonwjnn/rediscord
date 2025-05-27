@@ -15,16 +15,19 @@ const buttonVariants = cva(
           'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50',
+        ghost:
+          'text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50',
         link: 'text-primary underline-offset-4 hover:underline',
         primary: 'bg-indigo-500 text-white hover:bg-indigo-500/90',
-        green: 'bg-green-600 hover:bg-green-600 text-white dark:text-white dark:bg-[#248045] dark:hover:bg-[#248045]'
+        green:
+          'bg-green-600 hover:bg-green-600 text-white dark:text-white dark:bg-[#248045] dark:hover:bg-[#248045]',
       },
       size: {
         default: 'h-10 px-4 py-2',
         sm: 'h-9 rounded-md px-3',
         lg: 'h-11 rounded-md px-8',
         icon: 'size-10',
+        iconSm: 'h-8 w-8',
       },
     },
     defaultVariants: {
