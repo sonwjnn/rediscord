@@ -21,11 +21,7 @@ This project aims to deliver a real-time chat application that fosters efficient
 - 🌐 **Deployment:** Deploy the website on Vercel. 
 
 ## Tech Stack
-
-- **IDE:** Visual Studio Code for front-end and back-end development.  
-- **Database Management:** PostgreSQL managed using NeonDB and.  
-- **Browsers:** Google Chrome and Microsoft Edge Dev.  
-- **Back-end:** Server actions of NextJS, Prisma ORM, TypeScript.  
+- **Back-end:** NextJS, Server Actions, TypeScript, PostgreSQL with Prisma ORM, .  
 - **Front-end:** NextJS, ReactJS, TypeScript, TailwindCSS, ShadcnUI, AuthJS.  
 
 ## Cloning the repository
