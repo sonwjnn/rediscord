@@ -56,7 +56,6 @@ export const LoginForm = ({}: LoginFormProps) => {
       login(values, callbackUrl)
         .then(data => {
           if (data.canLogin) {
-            alert(values)
             form.reset()
             setSuccess(data.success)
             signIn('credentials', {

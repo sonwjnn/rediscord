@@ -1,6 +1,7 @@
 'use client'
 
 import { Hint } from '@/components/hint'
+import { Reactions } from '@/components/reactions'
 import { Spinner } from '@/components/spinner'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
@@ -32,7 +33,6 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import { MemberProfileWrapper } from '../member/member-profile-wrapper'
-import { ServerReactions } from '../reactions'
 import { Toolbar } from './toolbar'
 
 const DATE_FORMAT = 'yyyy-MM-dd'
@@ -43,7 +43,7 @@ const formatFullTime = (date: Date) => {
 
   if (format(date, DATE_FORMAT) === today) return 'Today'
   if (format(date, DATE_FORMAT) === yesterday) return 'Yesterday'
-  return format(date, 'MMM D, YYYY') + ' at ' + format(date, 'h:mm:ss a')
+  return format(date, 'MMM dd, yyyy') + ' at ' + format(date, 'h:mm:ss a')
 }
 
 interface ChatItemProps {
@@ -249,10 +249,11 @@ export const ChatItem = ({
                     </span>
                   )}
                 </p>
-                <ServerReactions
-                  data={reactions || []}
+                <Reactions
+                  serverData={reactions || []}
                   currentMemberId={currentMember.id}
                   onChange={handleReaction}
+                  type="server"
                 />
               </div>
             )}
@@ -386,10 +387,11 @@ export const ChatItem = ({
                   </span>
                 )}
               </p>
-              <ServerReactions
-                data={reactions || []}
+              <Reactions
+                serverData={reactions || []}
                 currentMemberId={currentMember.id}
                 onChange={handleReaction}
+                type="server"
               />
             </div>
           )}

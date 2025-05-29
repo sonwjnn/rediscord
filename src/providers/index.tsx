@@ -20,10 +20,9 @@ export const Providers = ({ children }: ProvidersProps) => {
       storageKey="discord-theme"
     >
       <SocketProvider>
-        <Toaster/>
-        <ModalProvider />
         <QueryProvider>
           <Toaster />
+          <ModalProvider />
           {children}
         </QueryProvider>
       </SocketProvider>

@@ -3,6 +3,7 @@
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { ReactNode, useState } from 'react'
+import { useDarkMode } from 'usehooks-ts'
 
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import {
@@ -30,6 +31,7 @@ export const EmojiPopover = ({
   hint = 'Emoji',
   onEmojiSelect,
 }: EmojiPopoverProps) => {
+  const { isDarkMode } = useDarkMode()
   const [popoverOpen, setPopoverOpen] = useState(false)
   const [tooltipOpen, setTooltipOpen] = useState(false)
 
@@ -60,7 +62,7 @@ export const EmojiPopover = ({
           <Picker
             data={data}
             onEmojiSelect={handleSelect}
-            theme="dark"
+            theme={isDarkMode ? 'dark' : 'light'}
             previewPosition="none"
             skinTonePosition="none"
           />

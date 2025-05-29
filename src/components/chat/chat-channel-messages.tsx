@@ -7,15 +7,14 @@ import { ServerWithMembersWithUsers } from '@/types'
 import { Member, Message, ServerReaction, User } from '@prisma/client'
 import { differenceInMinutes, format, sub } from 'date-fns'
 import { Loader2, ServerCrash } from 'lucide-react'
-import { ComponentRef, Fragment, useMemo, useRef } from 'react'
+import { ComponentRef, useRef } from 'react'
 
 import { ChatItem, ChatItemSkeleton } from './chat-item'
 import { ChatWelcome } from './chat-welcome'
 
-const DATE_FORMAT = 'yyyy-MM-dd'
-
 const TIME_THRESHOLD = 5
 
+const DATE_FORMAT = 'yyyy-MM-dd'
 const formatDateLabel = (dateStr: string) => {
   const date = format(dateStr, DATE_FORMAT)
 
@@ -24,7 +23,7 @@ const formatDateLabel = (dateStr: string) => {
 
   if (date === today) return 'Today'
   if (date === yesterday) return 'Yesterday'
-  return ''
+  return format(date, 'MMM dd, yyyy')
 }
 
 type MessageWithMemberWithUser = Message & {
@@ -96,28 +95,22 @@ export const ChatChannelMessages = ({
     )
   }
 
-  const messages = useMemo(() => {
-    return (
-      data?.pages?.reduce((acc, page) => {
-        return [...acc, ...page.items]
-      }, [] as MessageWithMemberWithUser[]) || []
-    )
-  }, [data]) as MessageWithMemberWithUser[]
+  const messages = (data?.pages?.reduce((acc, page) => {
+    return [...acc, ...page.items]
+  }, []) || []) as MessageWithMemberWithUser[]
 
-  const groupedMessages = useMemo(() => {
-    return messages?.reduce(
-      (groups, message) => {
-        const date = new Date(message.createdAt)
-        const dateKey = format(date, 'yyyy-MM-dd')
-        if (!groups[dateKey]) {
-          groups[dateKey] = []
-        }
-        groups[dateKey]?.unshift(message)
-        return groups
-      },
-      {} as Record<string, MessageWithMemberWithUser[]>
-    )
-  }, [messages])
+  const groupedMessages = messages.reduce(
+    (groups, message) => {
+      const date = new Date(message.createdAt)
+      const dateKey = format(date, 'yyyy-MM-dd')
+      if (!groups[dateKey]) {
+        groups[dateKey] = []
+      }
+      groups[dateKey]?.unshift(message)
+      return groups
+    },
+    {} as Record<string, MessageWithMemberWithUser[]>
+  )
 
   return (
     <div ref={chatRef} className="flex flex-1 flex-col overflow-y-auto py-4">
@@ -146,7 +139,7 @@ export const ChatChannelMessages = ({
                 {formatDateLabel(dateKey)}
               </span>
             </div>
-            {messages.map((message: MessageWithMemberWithUser, index) => {
+            {messages.map((message, index) => {
               const prevMessage = messages[index - 1]
               const isCompact =
                 prevMessage &&

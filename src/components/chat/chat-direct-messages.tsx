@@ -3,21 +3,37 @@
 import { useChatQuery } from '@/hooks/use-chat-query'
 import { useChatScroll } from '@/hooks/use-chat-scroll'
 import { useChatSocket } from '@/hooks/use-chat-socket'
-import { DirectMessage, User } from '@prisma/client'
-import { format } from 'date-fns'
+import { ConversationReaction, DirectMessage, User } from '@prisma/client'
+import { differenceInMinutes, format, sub } from 'date-fns'
 import { Loader2, ServerCrash } from 'lucide-react'
-import { ComponentRef, Fragment, useRef } from 'react'
-import { useMemo } from 'react'
+import { ComponentRef, useRef } from 'react'
 
 import { ExtendedUser } from '../../../next-auth'
 import { ChatDirectItem } from './chat-direct-item'
 import { ChatItemSkeleton } from './chat-item'
 import { ChatWelcome } from './chat-welcome'
 
-const DATE_FORMAT = 'd MMM yyyy, HH:mm'
+const TIME_THRESHOLD = 5
+const DATE_FORMAT = 'yyyy-MM-dd'
+const formatDateLabel = (dateStr: string) => {
+  const date = format(dateStr, DATE_FORMAT)
+
+  const today = format(new Date(), DATE_FORMAT)
+  const yesterday = format(sub(new Date(), { days: 1 }), DATE_FORMAT)
+
+  if (date === today) return 'Today'
+  if (date === yesterday) return 'Yesterday'
+  return format(date, 'MMM dd, yyyy')
+}
 
 type MessageWithUser = DirectMessage & {
   user: User
+  reactions?: Array<
+    Omit<ConversationReaction, 'userId'> & {
+      count: number
+      memberIds: string[]
+    }
+  >
 }
 
 interface ChatDirectMessagesProps {
@@ -73,28 +89,22 @@ export const ChatDirectMessages = ({
     )
   }
 
-  const messages = useMemo(() => {
-    return (
-      data?.pages?.reduce((acc, page) => {
-        return [...acc, ...page.items]
-      }, [] as DirectMessage[]) || []
-    )
-  }, [data]) as DirectMessage[]
+  const messages = (data?.pages?.reduce((acc, page) => {
+    return [...acc, ...page.items]
+  }, []) || []) as MessageWithUser[]
 
-  const groupedMessages = messages?.reduce(
+  const groupedMessages = messages.reduce(
     (groups, message) => {
       const date = new Date(message.createdAt)
-      const dateKey = format(date, 'YYYY-MM-DD')
+      const dateKey = format(date, 'yyyy-MM-dd')
       if (!groups[dateKey]) {
         groups[dateKey] = []
       }
       groups[dateKey]?.unshift(message)
       return groups
     },
-    {} as Record<string, DirectMessage[]>
+    {} as Record<string, MessageWithUser[]>
   )
-
-  console.log(groupedMessages)
 
   return (
     <div ref={chatRef} className="flex flex-1 flex-col overflow-y-auto py-4">
@@ -115,25 +125,44 @@ export const ChatDirectMessages = ({
         </div>
       )}
       <div className="mt-auto flex flex-col-reverse">
-        {data?.pages?.map((group, i) => (
-          <Fragment key={i}>
-            {group.items.map((message: MessageWithUser) => (
-              <ChatDirectItem
-                key={message.id}
-                id={message.id}
-                currentUser={currentUser}
-                otherUser={message.user}
-                conversationId={message.conversationId}
-                content={message.content}
-                fileUrl={message.fileUrl}
-                deleted={message.deleted}
-                timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
-                isUpdated={message.updatedAt !== message.createdAt}
-                socketUrl={socketUrl}
-                socketQuery={socketQuery}
-              />
-            ))}
-          </Fragment>
+        {Object.entries(groupedMessages || {}).map(([dateKey, messages]) => (
+          <div key={dateKey}>
+            <div className="relative my-2 text-center">
+              <hr className="absolute left-0 right-0 top-1/2 border-t border-zinc-200 dark:border-zinc-800" />
+              <span className="relative inline-block rounded-full border border-zinc-200 bg-zinc-200 px-4 py-1 text-xs shadow-sm dark:border-zinc-800 dark:bg-zinc-800">
+                {formatDateLabel(dateKey)}
+              </span>
+            </div>
+
+            {messages.map((message, index) => {
+              const prevMessage = messages[index - 1]
+              const isCompact =
+                prevMessage &&
+                prevMessage?.user?.id === message?.user?.id &&
+                differenceInMinutes(
+                  new Date(message.createdAt),
+                  new Date(prevMessage.createdAt)
+                ) < TIME_THRESHOLD
+              return (
+                <ChatDirectItem
+                  key={message.id}
+                  id={message.id}
+                  currentUser={currentUser}
+                  otherUser={message.user}
+                  conversationId={message.conversationId}
+                  content={message.content}
+                  fileUrl={message.fileUrl}
+                  isCompact={isCompact}
+                  reactions={message.reactions}
+                  deleted={message.deleted}
+                  timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+                  isUpdated={message.updatedAt !== message.createdAt}
+                  socketUrl={socketUrl}
+                  socketQuery={socketQuery}
+                />
+              )
+            })}
+          </div>
         ))}
       </div>
       <div ref={bottomRef} />

@@ -31,8 +31,6 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
       },
 
       // Set websocket settings
-      wsEngine: 'ws',
-
       connectionStateRecovery: {
         maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
         skipMiddlewares: true,

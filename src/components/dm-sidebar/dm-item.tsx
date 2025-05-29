@@ -86,7 +86,10 @@ export const DMItemSkeleton = () => (
       'group mb-1 flex w-full items-center gap-x-2 rounded-md px-2 py-2 transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50'
     }
   >
-    <Skeleton className="size-8 rounded-full" />
-    <Skeleton className="h-4 w-40" />
+    <Skeleton className="size-8 shrink-0 rounded-full" />
+    <div className="mt-1 flex w-full flex-col gap-y-1">
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-2 w-1/2" />
+    </div>
   </div>
 )

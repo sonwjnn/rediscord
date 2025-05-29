@@ -39,8 +39,6 @@ export const DMSidebar = () => {
     user: item.userOne.id !== user?.id ? item.userOne : item.userTwo,
   }))
 
-  console.log(formattedData)
-
   return (
     <aside className="flex h-full w-full flex-col bg-[#F2F3F5] text-primary dark:bg-[#2B2D31]">
       {/* <Header server={server} role={role} /> */}
@@ -136,7 +134,7 @@ const SectionSkeleton = ({ type }: { type: 'channel' | 'member' }) => {
   return (
     <>
       <div className="mb-1 px-2">
-        <Skeleton className="h-3 w-20 " />
+        <Skeleton className="h-8 w-full " />
       </div>
       <ul className="space-y-[2px]">
         {type === 'member' && (
@@ -160,12 +158,23 @@ export const DMSidebarSkeleton = () => {
 
       <Separator className="my-2 rounded-md bg-zinc-200 dark:bg-zinc-700" />
 
-      <div className="space-y-2">
-        {[...Array(MOCK_CHANNELS)].map((_, i) => (
+      <div className="w-full space-y-2">
+        {Array.from({ length: 2 }).map((_, i) => (
           <SectionSkeleton type="channel" key={i} />
         ))}
 
-        <SectionSkeleton type="member" />
+        <DMItemSkeleton />
+        <DMItemSkeleton />
+        <DMItemSkeleton />
+        <DMItemSkeleton />
+        <DMItemSkeleton />
+        <DMItemSkeleton />
+        <DMItemSkeleton />
+        <DMItemSkeleton />
+        <DMItemSkeleton />
+        <DMItemSkeleton />
+        <DMItemSkeleton />
+        <DMItemSkeleton />
       </div>
     </aside>
   )

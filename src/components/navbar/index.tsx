@@ -16,6 +16,7 @@ export const Navbar = async () => {
   if (!user) {
     return redirect('/')
   }
+
   const servers = await getSeversByuserId(user.id as string)
 
   if (!servers) {
